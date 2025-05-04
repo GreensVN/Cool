@@ -1,0 +1,22 @@
+local imageId = "rbxassetid://103154634955659"
+
+local function applyImage(part)
+    if part:IsA("BasePart") then
+        for _, child in ipairs(part:GetChildren()) do
+            if child:IsA("Decal") then
+                child:Destroy()
+            end
+        end
+
+        for _, face in ipairs(Enum.NormalId:GetEnumItems()) do
+            local decal = Instance.new("Decal")
+            decal.Texture = imageId
+            decal.Face = face
+            decal.Parent = part
+        end
+    end
+end
+
+for _, descendant in ipairs(workspace:GetDescendants()) do
+    applyImage(descendant)
+end
