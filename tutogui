@@ -557,3 +557,27 @@ local function QFCS_fake_script() -- Frame.Dragify
 	dragify(script.Parent)
 end
 coroutine.wrap(QFCS_fake_script)()
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = ScreenGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+ToggleButton.Position = UDim2.new(0.01, 0, 0.01, 0)
+ToggleButton.Size = UDim2.new(0, 100, 0, 40)
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Text = "Hide GUI"
+ToggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+ToggleButton.TextScaled = true
+ToggleButton.TextSize = 14.000
+ToggleButton.TextWrapped = true
+
+local guiVisible = true
+ToggleButton.MouseButton1Click:Connect(function()
+    guiVisible = not guiVisible
+    Frame.Visible = guiVisible
+    if guiVisible then
+        ToggleButton.Text = "Hide GUI"
+    else
+        ToggleButton.Text = "Show GUI"
+    end
+end)
