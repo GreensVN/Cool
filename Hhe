@@ -1,14 +1,8 @@
-local Button1 = Instance.new("TextButton")
-Button1.Parent = game.StarterGui.ScreenGui
-Button1.Size = UDim2.new(0.2, 0, 0.1, 0)
-Button1.Position = UDim2.new(0.1, 0, 0.2, 0)
-Button1.Text = "HACK"
-Button1.TextSize = 18
-Button1.MouseButton1Click:Connect(function()
-    game.ReplicatedStorage.NotificationEvent:FireServer("ĐÃ BỊ HACK BỞI GREENSVN!")
+game.ReplicatedStorage.ChangeSkyboxEvent.OnServerEvent:Connect(function(player)
+    game.Lighting.Skybox.Bk = "rbxassetid://103154634955659"
+    game.Lighting.Skybox.Dn = "rbxassetid://103154634955659"
+    game.Lighting.Skybox.Ft = "rbxassetid://103154634955659"
+    game.Lighting.Skybox.Lf = "rbxassetid://103154634955659"
+    game.Lighting.Skybox.Rt = "rbxassetid://103154634955659"
+    game.Lighting.Skybox.Up = "rbxassetid://103154634955659"
 end)
-game.ReplicatedStorage.NotificationEvent.OnServerEvent:Connect(function(player, message)
-    for _, plr in pairs(game.Players:GetPlayers()) do
-        local notification = Instance.new("Hint")
-        notification.Parent = game.Workspace
-        notification.Text
