@@ -1,26 +1,14 @@
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.CoreGui
-local Title = Instance.new("TextLabel")
-Title.Parent = ScreenGui
-Title.Size = UDim2.new(0.5, 0, 0.1, 0)
-Title.Position = UDim2.new(0.25, 0, 0.05, 0)
-Title.Text = "GREENSVN GUI"
-Title.TextSize = 24
 local Button1 = Instance.new("TextButton")
-Button1.Parent = ScreenGui
+Button1.Parent = game.StarterGui.ScreenGui
 Button1.Size = UDim2.new(0.2, 0, 0.1, 0)
 Button1.Position = UDim2.new(0.1, 0, 0.2, 0)
-Button1.Text = "Button"
+Button1.Text = "HACK"
 Button1.TextSize = 18
 Button1.MouseButton1Click:Connect(function()
     game.ReplicatedStorage.NotificationEvent:FireServer("ĐÃ BỊ HACK BỞI GREENSVN!")
 end)
 game.ReplicatedStorage.NotificationEvent.OnServerEvent:Connect(function(player, message)
     for _, plr in pairs(game.Players:GetPlayers()) do
-        local notification = Instance.new("Message")
-        notification.Parent = plr.PlayerGui
-        notification.Text = message
-        wait(2)
-        notification:Destroy()
-    end
-end)
+        local notification = Instance.new("Hint")
+        notification.Parent = game.Workspace
+        notification.Text
