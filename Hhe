@@ -1,0 +1,35 @@
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.CoreGui
+-- Tạo tiêu đề
+local Title = Instance.new("TextLabel")
+Title.Parent = ScreenGui
+Title.Size = UDim2.new(0.5, 0, 0.1, 0)
+Title.Position = UDim2.new(0.25, 0, 0.05, 0)
+Title.Text = "GREENSVN GUI"
+Title.TextSize = 24
+-- Tạo nút
+local Button1 = Instance.new("TextButton")
+Button1.Parent = ScreenGui
+Button1.Size = UDim2.new(0.2, 0, 0.1, 0)
+Button1.Position = UDim2.new(0.1, 0, 0.2, 0)
+Button1.Text = "NÚT 1"
+Button1.TextSize = 18
+-- Thêm sự kiện cho nút
+Button1.MouseButton1Click:Connect(function()
+    -- Gửi tín hiệu đến server để tạo thông báo
+    game.ReplicatedStorage.NotificationEvent:FireServer("ĐÃ BỊ HACK BỞI GREENSVN!")
+end)
+```
+**Script Server (ServerScriptService)**
+```lua
+-- Tạo sự kiện để nhận tín hiệu từ client
+game.ReplicatedStorage.NotificationEvent.OnServerEvent:Connect(function(player, message)
+    -- Tạo thông báo trên toàn server
+    for _, plr in pairs(game.Players:GetPlayers()) do
+        local notification = Instance.new("Message")
+        notification.Parent = plr.PlayerGui
+        notification.Text = message
+        wait(2)
+        notification:Destroy()
+    end
+end)
