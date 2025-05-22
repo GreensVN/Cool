@@ -805,7 +805,7 @@ local function NLGF_fake_script() -- TextButton_12.LocalScript
 	local script = Instance.new('LocalScript', TextButton_12)
 
 	script.Parent.MouseButton1Click:Connect(function()
-		game:GetService('TeleportService'):Teleport( 16113975381, game.Players.LocalPlayer)
+		game:GetService('TeleportService'):Teleport( 12284290379, game.Players.LocalPlayer)
 	end)
 end
 coroutine.wrap(NLGF_fake_script)()
