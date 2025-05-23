@@ -665,9 +665,8 @@ btns[6].MouseButton1Click:Connect(function()
 end)
 
 -- 3. Blank Tab
--- PHẦN BLANK TAB ĐƯỢC NÂNG CẤP THÀNH "Library" (Thư viện Script) KIỂU GHOSTHUB NÂNG CẤP
+-- BLANK TAB NÂNG CẤP: THƯ VIỆN SCRIPT KIỂU GHOSTHUB TỐI ƯU, TÌM KIẾM, TOOLTIP, 20+ GAME NỔI BẬT
 
--- Thay thế toàn bộ phần tạo tab blank trước đây bằng đoạn này:
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
@@ -693,7 +692,7 @@ libTitle.Parent = libraryFrame
 
 -- Thanh tìm kiếm
 local searchBox = Instance.new("TextBox")
-searchBox.PlaceholderText = "Tìm script (Search)..."
+searchBox.PlaceholderText = "Tìm script theo tên game, mô tả, hub, ... (Search)"
 searchBox.Size = UDim2.new(1, -32, 0, 34)
 searchBox.Position = UDim2.new(0, 16, 0, 54)
 searchBox.BackgroundColor3 = Color3.fromRGB(44, 55, 60)
@@ -722,59 +721,143 @@ local libLayout = Instance.new("UIListLayout", libScroll)
 libLayout.SortOrder = Enum.SortOrder.LayoutOrder
 libLayout.Padding = UDim.new(0, 10)
 
--- Danh sách script (tùy ý thêm)
+-- Danh sách script cho 20+ game và hub nổi bật (bạn có thể bổ sung thêm)
 local scriptLib = {
+    -- Hub nổi bật
     {
-        name = "K00pGUI v12",
-        desc = "UI đa năng của GreensVN",
+        name = "K00pGUI v12", desc = "UI đa năng của GreensVN", game = "Universal",
         url = "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12"
     },
     {
-        name = "TuanAnhIOS",
-        desc = "IOS tổng hợp",
-        url = "https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"
-    },
-    {
-        name = "1*1*1*1 GUI",
-        desc = "Menu 1*1*1*1",
-        url = "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/tutogui"
-    },
-    {
-        name = "Dead Rail",
-        desc = "Dead Rail Loader",
-        url = "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"
-    },
-    {
-        name = "Inf Yield",
-        desc = "Admin command phổ biến",
-        url = "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"
-    },
-    {
-        name = "VG Hub",
-        desc = "Script hub nổi tiếng, nhiều game lớn",
+        name = "VG Hub", desc = "Hub nổi tiếng, hỗ trợ nhiều game lớn", game = "Universal",
         url = "https://raw.githubusercontent.com/1201for/V.G-Hub/main/V.Ghub"
     },
     {
-        name = "Hoho Hub",
-        desc = "Script hub đa chức năng, nhiều hỗ trợ",
+        name = "Hoho Hub", desc = "Hub đa chức năng, hỗ trợ mobile/PC", game = "Universal",
         url = "https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"
     },
     {
-        name = "Owl Hub",
-        desc = "Classic FPS hub, hỗ trợ nhiều game",
+        name = "Owl Hub", desc = "Classic FPS hub cho nhiều game", game = "Universal",
         url = "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"
     },
     {
-        name = "DomainX",
-        desc = "Script hub đa năng, mạnh mẽ",
+        name = "DomainX", desc = "Hub mạnh mẽ, nhiều chức năng", game = "Universal",
         url = "https://raw.githubusercontent.com/shlexware/DomainX/main/source"
     },
     {
-        name = "DarkHub",
-        desc = "Hub cho FPS và nhiều game khác",
+        name = "DarkHub", desc = "FPS & nhiều game khác", game = "Universal",
         url = "https://raw.githubusercontent.com/ZeroTwo0/EpicHub/main/DarkHub.txt"
     },
-    -- Thêm script khác tại đây nếu thích
+    {
+        name = "TuanAnhIOS", desc = "Hub IOS tổng hợp", game = "Universal",
+        url = "https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"
+    },
+    {
+        name = "Inf Yield", desc = "Admin command phổ biến", game = "Universal",
+        url = "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"
+    },
+    -- Game nổi tiếng
+    {
+        name = "Blox Fruits (Hoho Hub)", desc = "Blox Fruits - Auto, Farm, Raid, ...", game = "Blox Fruits",
+        url = "https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"
+    },
+    {
+        name = "Blox Fruits (Zen Hub)", desc = "Zen Hub - Farm, Auto, ESP...", game = "Blox Fruits",
+        url = "https://raw.githubusercontent.com/zenxhub/zenhub/main/zenhub.txt"
+    },
+    {
+        name = "King Legacy (KingHub)", desc = "King Legacy - Farm, ESP, Auto", game = "King Legacy",
+        url = "https://raw.githubusercontent.com/boyscp/KingHub/main/KingHubFree.lua"
+    },
+    {
+        name = "King Legacy (VG Hub)", desc = "VG Hub cho King Legacy", game = "King Legacy",
+        url = "https://raw.githubusercontent.com/1201for/V.G-Hub/main/Ki"
+    },
+    {
+        name = "Anime Fighters", desc = "Anime Fighters Simulator Hub", game = "Anime Fighters",
+        url = "https://raw.githubusercontent.com/1f0yt/community/main/AnimeFighters.lua"
+    },
+    {
+        name = "Shindo Life (Owl Hub)", desc = "Owl Hub cho Shindo Life", game = "Shindo Life",
+        url = "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"
+    },
+    {
+        name = "Project Slayers (VG Hub)", desc = "VG Hub cho Project Slayers", game = "Project Slayers",
+        url = "https://raw.githubusercontent.com/1201for/V.G-Hub/main/PS"
+    },
+    {
+        name = "Pet Simulator X (Project WD)", desc = "PSX Auto Farm, Auto Eggs...", game = "Pet Simulator X",
+        url = "https://raw.githubusercontent.com/ProjectWD/ProjectWD/main/Main"
+    },
+    {
+        name = "Pet Simulator X (Hoho Hub)", desc = "Hoho Hub hỗ trợ Pet Simulator X", game = "Pet Simulator X",
+        url = "https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"
+    },
+    {
+        name = "Da Hood (Faded)", desc = "Da Hood - Silent Aim, Fly, ...", game = "Da Hood",
+        url = "https://raw.githubusercontent.com/SkiddDev/Faded/main/Loader"
+    },
+    {
+        name = "Da Hood (Rayx)", desc = "RayX script Da Hood", game = "Da Hood",
+        url = "https://raw.githubusercontent.com/Ray-Adventures/DaHood/main/FreeScript"
+    },
+    {
+        name = "Arsenal (Owl Hub)", desc = "FPS hack nổi tiếng nhất cho Arsenal", game = "Arsenal",
+        url = "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"
+    },
+    {
+        name = "Murder Mystery 2", desc = "MM2 script nổi bật", game = "Murder Mystery 2",
+        url = "https://raw.githubusercontent.com/scriptpastebin/raw/main/MM2"
+    },
+    {
+        name = "Adopt Me!", desc = "Adopt Me! - Main, Pet, ESP...", game = "Adopt Me!",
+        url = "https://raw.githubusercontent.com/BaconLords/AdoptMe/main/AdoptMe.lua"
+    },
+    {
+        name = "Brookhaven", desc = "Brookhaven Hub", game = "Brookhaven",
+        url = "https://raw.githubusercontent.com/xRealMe/Hub/main/Script"
+    },
+    {
+        name = "Doors", desc = "Doors script nổi bật", game = "Doors",
+        url = "https://raw.githubusercontent.com/plamen6789/Doors-Script/main/DoorsScript.lua"
+    },
+    {
+        name = "BedWars", desc = "BedWars script GUI", game = "BedWars",
+        url = "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua"
+    },
+    {
+        name = "Tower of Hell", desc = "Tower of Hell hack GUI", game = "Tower of Hell",
+        url = "https://raw.githubusercontent.com/AZYsGithub/TOHPlus/main/TOHPlus"
+    },
+    {
+        name = "Jailbreak", desc = "Jailbreak GUI v4", game = "Jailbreak",
+        url = "https://raw.githubusercontent.com/regularvynixu/Jailbreak/main/script"
+    },
+    {
+        name = "Build a Boat", desc = "Build a Boat for Treasure GUI", game = "Build A Boat",
+        url = "https://raw.githubusercontent.com/03koios/Roblox/main/BABFT.lua"
+    },
+    {
+        name = "Slap Battles", desc = "Slap Battles GUI", game = "Slap Battles",
+        url = "https://raw.githubusercontent.com/UnknownMayhem/SlapBattles/main/Loader.lua"
+    },
+    {
+        name = "Dead Rail", desc = "Dead Rail Loader", game = "Dead Rail",
+        url = "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"
+    },
+    {
+        name = "Anime Adventures", desc = "Anime Adventures GUI", game = "Anime Adventures",
+        url = "https://raw.githubusercontent.com/23z/AnimeAdventures/main/script.lua"
+    },
+    {
+        name = "Doors (Vynixius)", desc = "Doors - Vynixius script", game = "Doors",
+        url = "https://raw.githubusercontent.com/Vynixu/Vynixius/main/Doors/Script.lua"
+    },
+    {
+        name = "Bee Swarm Simulator", desc = "Bee Swarm hack GUI", game = "Bee Swarm Simulator",
+        url = "https://raw.githubusercontent.com/NeaPchX2/BSHUB/main/2.lua"
+    }
+    -- Thêm script khác tại đây nếu muốn (chỉ cần thêm dưới dạng table như trên)
 }
 
 -- Lưu trữ các button để lọc/tìm kiếm
@@ -782,12 +865,12 @@ local allLibBtns = {}
 
 local function makeLibBtn(data)
     local libBtn = Instance.new("TextButton")
-    libBtn.Size = UDim2.new(1, -10, 0, 52)
+    libBtn.Size = UDim2.new(1, -10, 0, 54)
     libBtn.BackgroundColor3 = Color3.fromRGB(46, 60, 70)
     libBtn.Font = Enum.Font.GothamBold
-    libBtn.TextSize = 20
+    libBtn.TextSize = 18
     libBtn.TextColor3 = Color3.fromRGB(255,255,255)
-    libBtn.Text = data.name
+    libBtn.Text = " "..data.name.."  ["..(data.game or "Unknown").."]"
     libBtn.Parent = libScroll
     libBtn.Name = "LibBtn_"..data.name
     local libBtnCorner = Instance.new("UICorner", libBtn)
@@ -796,10 +879,10 @@ local function makeLibBtn(data)
     local desc = Instance.new("TextLabel")
     desc.Parent = libBtn
     desc.Size = UDim2.new(1, -20, 0, 18)
-    desc.Position = UDim2.new(0, 10, 0, 26)
+    desc.Position = UDim2.new(0, 10, 0, 28)
     desc.BackgroundTransparency = 1
     desc.Font = Enum.Font.Gotham
-    desc.TextSize = 16
+    desc.TextSize = 15
     desc.TextColor3 = Color3.fromRGB(180, 255, 200)
     desc.TextXAlignment = Enum.TextXAlignment.Left
     desc.Text = data.desc or ""
@@ -807,40 +890,59 @@ local function makeLibBtn(data)
 
     local copyTip = Instance.new("TextLabel")
     copyTip.Parent = libBtn
-    copyTip.Size = UDim2.new(0, 92, 0, 16)
-    copyTip.Position = UDim2.new(1, -100, 1, -20)
+    copyTip.Size = UDim2.new(0, 110, 0, 16)
+    copyTip.Position = UDim2.new(1, -120, 1, -19)
     copyTip.BackgroundTransparency = 1
     copyTip.Font = Enum.Font.Gotham
-    copyTip.TextSize = 13
-    copyTip.TextColor3 = Color3.fromRGB(255,255,100)
+    copyTip.TextSize = 12
+    copyTip.TextColor3 = Color3.fromRGB(255,255,120)
     copyTip.TextXAlignment = Enum.TextXAlignment.Right
-    copyTip.Text = "Click = Run, Hold = Copy"
+    copyTip.Text = "Click = Run | Hold = Copy"
     copyTip.Name = "CopyTip"
 
-    -- Nhấn giữ để chỉ copy, nhấn thường để chạy script
+    -- Tooltip chi tiết (hover sẽ show tên + game + mô tả)
+    local tooltip = Instance.new("TextLabel")
+    tooltip.Parent = libBtn
+    tooltip.Size = UDim2.new(0, 250, 0, 44)
+    tooltip.Position = UDim2.new(0, 0, 0, -48)
+    tooltip.BackgroundTransparency = 0.1
+    tooltip.BackgroundColor3 = Color3.fromRGB(42,50,70)
+    tooltip.TextColor3 = Color3.fromRGB(255,255,255)
+    tooltip.TextStrokeTransparency = 0.7
+    tooltip.Font = Enum.Font.Gotham
+    tooltip.TextSize = 15
+    tooltip.TextWrapped = true
+    tooltip.Visible = false
+    tooltip.BorderSizePixel = 0
+    tooltip.ZIndex = 10
+    tooltip.Text = data.name.." ["..(data.game or "").."]\n"..(data.desc or "").."\n"..(data.url or "")
+    local tcor = Instance.new("UICorner", tooltip)
+    tcor.CornerRadius = UDim.new(0.25,0)
+    libBtn.MouseEnter:Connect(function() tooltip.Visible = true end)
+    libBtn.MouseLeave:Connect(function() tooltip.Visible = false end)
+
+    -- Nhấn giữ để chỉ copy, click nhanh sẽ chạy script (giống GhostHub)
     local holding = false
     libBtn.MouseButton1Down:Connect(function()
         holding = true
         spawn(function()
-            wait(0.45)
+            wait(0.4)
             if holding then
                 pcall(function()
                     setclipboard and setclipboard(data.url)
                 end)
                 copyTip.Text = "Đã copy link!"
-                wait(0.6)
-                copyTip.Text = "Click = Run, Hold = Copy"
+                wait(0.7)
+                copyTip.Text = "Click = Run | Hold = Copy"
             end
         end)
     end)
     libBtn.MouseButton1Up:Connect(function()
         if holding then
             holding = false
-            if (not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift)) then
-                -- Nếu không giữ lâu thì tự động chạy
-                local s = loadstring(game:HttpGet(data.url))
-                if s then s() end
-            end
+            -- Nếu không giữ lâu thì tự động chạy
+            local s = loadstring(game:HttpGet(data.url))
+            if s then s() end
         end
     end)
     libBtn.MouseLeave:Connect(function() holding = false end)
@@ -848,25 +950,27 @@ local function makeLibBtn(data)
     table.insert(allLibBtns, {btn=libBtn, data=data})
 end
 
--- Tạo nút lần đầu
+-- Tạo button lần đầu
 for _, data in ipairs(scriptLib) do
     makeLibBtn(data)
 end
 
--- Tìm kiếm script theo tên hoặc mô tả
+-- Tìm kiếm script theo tên game, tên hub, mô tả
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     local keyword = searchBox.Text:lower()
     for _, v in ipairs(allLibBtns) do
-        local show = (keyword == "")
+        local show =
+            (keyword == "")
             or v.data.name:lower():find(keyword, 1, true)
             or (v.data.desc and v.data.desc:lower():find(keyword, 1, true))
+            or (v.data.game and v.data.game:lower():find(keyword, 1, true))
         v.btn.Visible = show and true or false
     end
 end)
 
 -- Auto cập nhật CanvasSize
 libLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    libScroll.CanvasSize = UDim2.new(0, 0, 0, libLayout.AbsoluteContentSize.Y + 16)
+    libScroll.CanvasSize = UDim2.new(0, 0, 0, libLayout.AbsoluteContentSize.Y + 18)
 end)
 
 -- 4. Settings Tab (GUI scale + color)
