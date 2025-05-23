@@ -1,4 +1,4 @@
--- GreensVN Hub V1.26 - All-in-One Script Hub (No Stealth, No Admin Detect, Welcome Popup, Tất cả tab vuốt được)
+-- GreensVN Hub V1.25 - All-in-One Script Hub (No Stealth, No Admin Detect, Welcome Popup, Hack Tab Scrollable)
 -- By Oxbl149 & GreensVN
 
 -- ==== ADMIN-STYLE WELCOME POPUP (viền trắng nổi bật cho popup + tên) ====
@@ -23,6 +23,7 @@ do
     main.Parent = preGui
     main.ClipsDescendants = true
 
+    -- White stroke viền ngoài popup
     local stroke = Instance.new("UIStroke", main)
     stroke.Color = Color3.fromRGB(255,255,255)
     stroke.Thickness = 4
@@ -40,6 +41,7 @@ do
     local cor = Instance.new("UICorner", main)
     cor.CornerRadius = UDim.new(0.19, 0)
 
+    -- Icon cảnh báo Roblox (dấu chấm than vàng)
     local icon = Instance.new("ImageLabel", main)
     icon.BackgroundTransparency = 1
     icon.Size = UDim2.new(0, 56, 0, 56)
@@ -47,6 +49,7 @@ do
     icon.Image = "rbxassetid://7733960981"
     icon.ZIndex = 2
 
+    -- Dòng Welcome (có stroke trắng rõ ràng)
     local label1 = Instance.new("TextLabel", main)
     label1.BackgroundTransparency = 1
     label1.Size = UDim2.new(1, -110, 0, 48)
@@ -61,12 +64,14 @@ do
     label1.TextXAlignment = Enum.TextXAlignment.Left
     label1.TextYAlignment = Enum.TextYAlignment.Center
 
+    -- UIStroke trắng bao quanh chữ (rất rõ)
     local label1Stroke = Instance.new("UIStroke", label1)
     label1Stroke.Color = Color3.fromRGB(255,255,255)
     label1Stroke.Thickness = 2
     label1Stroke.Transparency = 0
     label1Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 
+    -- Dòng cảm ơn
     local label2 = Instance.new("TextLabel", main)
     label2.BackgroundTransparency = 1
     label2.Size = UDim2.new(1, -60, 0, 38)
@@ -87,6 +92,7 @@ do
     label2Stroke.Transparency = 0.1
     label2Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 
+    -- Fade in
     main.BackgroundTransparency = 1
     icon.ImageTransparency = 1
     label1.TextTransparency = 1
@@ -106,6 +112,7 @@ do
 
     wait(2.5)
 
+    -- Fade out
     for i = 0, 1, 0.1 do
         main.BackgroundTransparency = i
         icon.ImageTransparency = i
@@ -118,7 +125,7 @@ do
     preGui:Destroy()
 end
 
--- ==== GUI CHÍNH VỚI CÁC TAB ĐỀU VUỐT ĐƯỢC ====
+-- ==== GUI CHÍNH VỚI HACK TAB SCROLLABLE ====
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -148,7 +155,7 @@ local function applyGuiColor(mainFrame, newColor)
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "greensvn hub v1.26"
+screenGui.Name = "greensvn hub v1.25"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -202,7 +209,7 @@ local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "greensvn hub v1.26"
+titleLabel.Text = "greensvn hub v1.25"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -265,65 +272,47 @@ for i, name in ipairs(tabNames) do
 end
 
 local tabFrames = {}
+local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
+local tabFramePos = UDim2.new(0, TAB_WIDTH, 0, 64)
 
--- Helper tạo tab scrollable
-local function createScrollableTab()
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, -TAB_WIDTH, 1, -64)
-    frame.Position = UDim2.new(0, TAB_WIDTH, 0, 64)
-    frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
-    frame.BorderSizePixel = 0
-    local cor = Instance.new("UICorner", frame)
-    cor.CornerRadius = UDim.new(0, 16)
-    local scroll = Instance.new("ScrollingFrame")
-    scroll.Name = "Scroll"
-    scroll.Size = UDim2.new(1, -12, 1, -12)
-    scroll.Position = UDim2.new(0, 6, 0, 6)
-    scroll.BackgroundTransparency = 1
-    scroll.BorderSizePixel = 0
-    scroll.ScrollBarThickness = 10
-    scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-    scroll.CanvasSize = UDim2.new(0, 0, 0, 420)
-    scroll.Parent = frame
-    local listLayout = Instance.new("UIListLayout", scroll)
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    listLayout.Padding = UDim.new(0, 10)
-    listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        scroll.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 18)
-    end)
-    return frame, scroll
-end
-
--- 1. Home Tab (scrollable)
-local homeFrame, homeScroll = createScrollableTab()
+-- 1. Home Tab (thêm viền trắng cho Welcome)
+local homeFrame = Instance.new("Frame")
+homeFrame.Size = tabFrameSpace
+homeFrame.Position = tabFramePos
 homeFrame.BackgroundColor3 = Color3.fromRGB(35, 38, 48)
+homeFrame.BorderSizePixel = 0
+homeFrame.Parent = mainFrame
 homeFrame.Visible = true
 tabFrames[1] = homeFrame
-homeFrame.Parent = mainFrame
-
-local homePadding = Instance.new("UIPadding", homeScroll)
+local homeCorner = Instance.new("UICorner", homeFrame)
+homeCorner.CornerRadius = UDim.new(0, 16)
+local homePadding = Instance.new("UIPadding", homeFrame)
 homePadding.PaddingTop = UDim.new(0, 10)
 homePadding.PaddingLeft = UDim.new(0, 40)
 
+-- Welcome line (có UIStroke viền trắng)
 local welcomeLabel = Instance.new("TextLabel")
 welcomeLabel.Size = UDim2.new(1, -40, 0, 36)
+welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
 welcomeLabel.BackgroundTransparency = 1
 welcomeLabel.Font = Enum.Font.GothamBlack
 welcomeLabel.TextSize = 30
 welcomeLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
-welcomeLabel.Parent = homeScroll
+welcomeLabel.Parent = homeFrame
 local welcomeStroke = Instance.new("UIStroke", welcomeLabel)
 welcomeStroke.Color = Color3.fromRGB(255,255,255)
 welcomeStroke.Thickness = 1.5
 welcomeStroke.Transparency = 0
 
+-- Roblox Avatar (UserThumbnail)
 local bigAvatar = Instance.new("ImageLabel")
 bigAvatar.Size = UDim2.new(0,130,0,130)
+bigAvatar.Position = UDim2.new(0, 0, 0, 40)
 bigAvatar.BackgroundTransparency = 1
 bigAvatar.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
-bigAvatar.Parent = homeScroll
+bigAvatar.Parent = homeFrame
 local bigAvatarCorner = Instance.new("UICorner", bigAvatar)
 bigAvatarCorner.CornerRadius = UDim.new(1, 0)
 spawn(function()
@@ -333,68 +322,79 @@ spawn(function()
     end
 end)
 
+-- Username/Name/UserId
 local nameLabel = Instance.new("TextLabel")
-nameLabel.Size = UDim2.new(1, -40, 0, 32)
+nameLabel.Size = UDim2.new(0, 330, 0, 32)
+nameLabel.Position = UDim2.new(0, 145, 0, 54)
 nameLabel.BackgroundTransparency = 1
 nameLabel.Font = Enum.Font.GothamBold
 nameLabel.TextSize = 25
 nameLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 nameLabel.TextXAlignment = Enum.TextXAlignment.Left
 nameLabel.Text = "Name: Loading..."
-nameLabel.Parent = homeScroll
+nameLabel.Parent = homeFrame
 
 local userLabel = Instance.new("TextLabel")
-userLabel.Size = UDim2.new(1, -40, 0, 26)
+userLabel.Size = UDim2.new(0, 330, 0, 26)
+userLabel.Position = UDim2.new(0, 145, 0, 86)
 userLabel.BackgroundTransparency = 1
 userLabel.Font = Enum.Font.Gotham
 userLabel.TextSize = 21
 userLabel.TextColor3 = Color3.fromRGB(200, 255, 200)
 userLabel.TextXAlignment = Enum.TextXAlignment.Left
 userLabel.Text = "Username: Loading..."
-userLabel.Parent = homeScroll
+userLabel.Parent = homeFrame
 
 local userIdLabel = Instance.new("TextLabel")
-userIdLabel.Size = UDim2.new(1, -40, 0, 24)
+userIdLabel.Size = UDim2.new(0, 330, 0, 24)
+userIdLabel.Position = UDim2.new(0, 145, 0, 116)
 userIdLabel.BackgroundTransparency = 1
 userIdLabel.Font = Enum.Font.Gotham
 userIdLabel.TextSize = 20
 userIdLabel.TextColor3 = Color3.fromRGB(200, 255, 255)
 userIdLabel.TextXAlignment = Enum.TextXAlignment.Left
 userIdLabel.Text = "UserId: Loading..."
-userIdLabel.Parent = homeScroll
+userIdLabel.Parent = homeFrame
 
+-- Place Name + PlaceId
 local placeLabel = Instance.new("TextLabel")
 placeLabel.Size = UDim2.new(1, -40, 0, 32)
+placeLabel.Position = UDim2.new(0, 0, 0, 172)
 placeLabel.BackgroundTransparency = 1
 placeLabel.TextColor3 = Color3.fromRGB(255,255,220)
 placeLabel.Font = Enum.Font.GothamBold
 placeLabel.TextSize = 20
 placeLabel.TextXAlignment = Enum.TextXAlignment.Left
 placeLabel.Text = "Place: Loading..."
-placeLabel.Parent = homeScroll
+placeLabel.Parent = homeFrame
 
+-- IP Address and Account Age
 local ipLabel = Instance.new("TextLabel")
 ipLabel.Size = UDim2.new(1, -40, 0, 26)
+ipLabel.Position = UDim2.new(0, 0, 0, 208)
 ipLabel.BackgroundTransparency = 1
 ipLabel.TextColor3 = Color3.fromRGB(255,255,180)
 ipLabel.Font = Enum.Font.Gotham
 ipLabel.TextSize = 19
 ipLabel.TextXAlignment = Enum.TextXAlignment.Left
 ipLabel.Text = "IP Address: Loading..."
-ipLabel.Parent = homeScroll
+ipLabel.Parent = homeFrame
 
 local ageLabel = Instance.new("TextLabel")
 ageLabel.Size = UDim2.new(1, -40, 0, 26)
+ageLabel.Position = UDim2.new(0, 0, 0, 234)
 ageLabel.BackgroundTransparency = 1
 ageLabel.TextColor3 = Color3.fromRGB(255,255,180)
 ageLabel.Font = Enum.Font.Gotham
 ageLabel.TextSize = 19
 ageLabel.TextXAlignment = Enum.TextXAlignment.Left
 ageLabel.Text = "Account Age: Loading..."
-ageLabel.Parent = homeScroll
+ageLabel.Parent = homeFrame
 
+-- Location (Province, Country, Capital, Continent)
 local geoLabel = Instance.new("TextLabel")
 geoLabel.Size = UDim2.new(1, -40, 0, 70)
+geoLabel.Position = UDim2.new(0, 0, 0, 260)
 geoLabel.BackgroundTransparency = 1
 geoLabel.TextColor3 = Color3.fromRGB(255,255,180)
 geoLabel.Font = Enum.Font.Gotham
@@ -402,8 +402,9 @@ geoLabel.TextSize = 19
 geoLabel.TextXAlignment = Enum.TextXAlignment.Left
 geoLabel.TextYAlignment = Enum.TextYAlignment.Top
 geoLabel.Text = "Vị trí của bạn: Đang tải..."
-geoLabel.Parent = homeScroll
+geoLabel.Parent = homeFrame
 
+-- Update user info
 local displayName = player.DisplayName or "Unknown"
 local username = player.Name or "Unknown"
 local userId = player.UserId or "Unknown"
@@ -413,6 +414,7 @@ userLabel.Text = "Username: "..username
 userIdLabel.Text = "UserId: "..userId
 ageLabel.Text = "Account Age: "..tostring(accountAge).." days"
 
+-- Place info (Name + PlaceId)
 placeLabel.Text = "Place: Đang tải..."
 spawn(function()
     local placeId = game.PlaceId
@@ -426,6 +428,7 @@ spawn(function()
     placeLabel.Text = ("Place: %s [ID: %s]"):format(placeName, tostring(placeId))
 end)
 
+-- Get location (province/country/capital/continent) + IP using public API
 spawn(function()
     local locationText = "Vị trí của bạn: Không xác định"
     local ipAddr = "Không xác định"
@@ -481,35 +484,60 @@ spawn(function()
     geoLabel.Text = locationText
 end)
 
--- 2. Hack Tab (scrollable)
-local tab2Frame, tab2Scroll = createScrollableTab()
+-- 2. Hack Tab (SCROLLABLE)
+local tab2Frame = Instance.new("Frame")
+tab2Frame.Size = tabFrameSpace
+tab2Frame.Position = tabFramePos
 tab2Frame.BackgroundColor3 = Color3.fromRGB(38, 40, 52)
+tab2Frame.BorderSizePixel = 0
+tab2Frame.Parent = mainFrame
 tab2Frame.Visible = false
 tabFrames[2] = tab2Frame
-tab2Frame.Parent = mainFrame
+local hackCorner = Instance.new("UICorner", tab2Frame)
+hackCorner.CornerRadius = UDim.new(0, 16)
 
-local hackBtnNames = {
+-- ScrollingFrame cho hack tab
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1, -12, 1, -12)
+scroll.Position = UDim2.new(0, 6, 0, 6)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 10
+scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+scroll.CanvasSize = UDim2.new(0, 0, 0, 420)
+scroll.Parent = tab2Frame
+
+local listLayout = Instance.new("UIListLayout", scroll)
+listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+listLayout.Padding = UDim.new(0, 10)
+
+local btns = {}
+local btnNames = {
     "k00pgui v12", "Anti Kick", "Anti Ban",
     "TuananhIOS", "1*1*1*1 gui", "Dead Rail"
 }
-local btns = {}
 for i=1,6 do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.93, 0, 0, 44)
     btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
-    btn.Text = hackBtnNames[i]
+    btn.Text = btnNames[i]
     btn.TextColor3 = Color3.new(1,1,1)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 20
-    btn.Name = hackBtnNames[i]
-    btn.Parent = tab2Scroll
+    btn.Name = btnNames[i]
+    btn.Parent = scroll
     local bcor = Instance.new("UICorner", btn)
     bcor.CornerRadius = UDim.new(0.3, 0)
     btns[i] = btn
 end
+listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scroll.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 18)
+end)
 
+-- Notification label for hack tab
 local notificationLabel = Instance.new("TextLabel")
 notificationLabel.Size = UDim2.new(1, -36, 0, 30)
+notificationLabel.Position = UDim2.new(0, 18, 0, 8)
 notificationLabel.BackgroundTransparency = 0.4
 notificationLabel.BackgroundColor3 = Color3.fromRGB(45, 130, 45)
 notificationLabel.Text = ""
@@ -519,7 +547,7 @@ notificationLabel.TextSize = 20
 notificationLabel.TextXAlignment = Enum.TextXAlignment.Center
 notificationLabel.TextYAlignment = Enum.TextYAlignment.Center
 notificationLabel.Visible = false
-notificationLabel.Parent = tab2Scroll
+notificationLabel.Parent = scroll
 local notifCorner = Instance.new("UICorner", notificationLabel)
 notifCorner.CornerRadius = UDim.new(0.5, 0)
 
@@ -636,89 +664,97 @@ btns[6].MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"))()
 end)
 
--- 3. Blank Tab (scrollable)
-local tab3Frame, tab3Scroll = createScrollableTab()
+-- 3. Blank Tab
+local tab3Frame = Instance.new("Frame")
+tab3Frame.Size = tabFrameSpace
+tab3Frame.Position = tabFramePos
+tab3Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tab3Frame.BorderSizePixel = 0
+tab3Frame.Parent = mainFrame
 tab3Frame.Visible = false
 tabFrames[3] = tab3Frame
-tab3Frame.Parent = mainFrame
-local blankLabel = Instance.new("TextLabel")
-blankLabel.Size = UDim2.new(1, -40, 0, 40)
-blankLabel.BackgroundTransparency = 1
-blankLabel.Text = "Blank Tab (Bạn có thể thêm nội dung ở đây)"
-blankLabel.Font = Enum.Font.Gotham
-blankLabel.TextSize = 22
-blankLabel.TextColor3 = Color3.fromRGB(255,255,255)
-blankLabel.TextXAlignment = Enum.TextXAlignment.Left
-blankLabel.Parent = tab3Scroll
+local blankCorner = Instance.new("UICorner", tab3Frame)
+blankCorner.CornerRadius = UDim.new(0, 16)
 
--- 4. Settings Tab (scrollable)
-local settingsFrame, settingsScroll = createScrollableTab()
+-- 4. Settings Tab (GUI scale + color)
+local settingsFrame = Instance.new("Frame")
+settingsFrame.Size = tabFrameSpace
+settingsFrame.Position = tabFramePos
 settingsFrame.BackgroundColor3 = Color3.fromRGB(37, 42, 53)
+settingsFrame.BorderSizePixel = 0
+settingsFrame.Parent = mainFrame
 settingsFrame.Visible = false
 tabFrames[4] = settingsFrame
-settingsFrame.Parent = mainFrame
+local settingsCorner = Instance.new("UICorner", settingsFrame)
+settingsCorner.CornerRadius = UDim.new(0, 16)
 
 local settingsTitle = Instance.new("TextLabel")
 settingsTitle.Text = "Settings"
-settingsTitle.Size = UDim2.new(1, -40, 0, 44)
+settingsTitle.Size = UDim2.new(1, 0, 0, 44)
+settingsTitle.Position = UDim2.new(0, 0, 0, 22)
 settingsTitle.BackgroundTransparency = 1
 settingsTitle.Font = Enum.Font.GothamBold
 settingsTitle.TextSize = 28
 settingsTitle.TextColor3 = Color3.fromRGB(120, 255, 120)
-settingsTitle.Parent = settingsScroll
+settingsTitle.Parent = settingsFrame
 
 local scaleLabel = Instance.new("TextLabel")
 scaleLabel.Text = "GUI Scale:"
-scaleLabel.Size = UDim2.new(1, -200, 0, 32)
+scaleLabel.Size = UDim2.new(0, 170, 0, 32)
+scaleLabel.Position = UDim2.new(0, 30, 0, 86)
 scaleLabel.BackgroundTransparency = 1
 scaleLabel.Font = Enum.Font.Gotham
 scaleLabel.TextSize = 22
 scaleLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
 scaleLabel.TextXAlignment = Enum.TextXAlignment.Left
-scaleLabel.Parent = settingsScroll
+scaleLabel.Parent = settingsFrame
 
 local scaleValue = Instance.new("TextLabel")
 scaleValue.Text = string.format("%.2f", currentScale)
 scaleValue.Size = UDim2.new(0, 60, 0, 32)
-scaleValue.Position = UDim2.new(0, 0, 0, 0)
+scaleValue.Position = UDim2.new(0, 200, 0, 86)
 scaleValue.BackgroundTransparency = 1
 scaleValue.Font = Enum.Font.GothamBold
 scaleValue.TextSize = 22
 scaleValue.TextColor3 = Color3.fromRGB(120, 255, 120)
 scaleValue.TextXAlignment = Enum.TextXAlignment.Center
-scaleValue.Parent = settingsScroll
+scaleValue.Parent = settingsFrame
 
 local minusBtn = Instance.new("TextButton")
 minusBtn.Text = "-"
 minusBtn.Size = UDim2.new(0, 40, 0, 32)
+minusBtn.Position = UDim2.new(0, 270, 0, 86)
 minusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
 minusBtn.Font = Enum.Font.GothamBold
 minusBtn.TextSize = 22
 minusBtn.TextColor3 = Color3.fromRGB(255,255,255)
-minusBtn.Parent = settingsScroll
+minusBtn.Parent = settingsFrame
 local minusCorner = Instance.new("UICorner", minusBtn)
 minusCorner.CornerRadius = UDim.new(0.5, 0)
 
 local plusBtn = Instance.new("TextButton")
 plusBtn.Text = "+"
 plusBtn.Size = UDim2.new(0, 40, 0, 32)
+plusBtn.Position = UDim2.new(0, 315, 0, 86)
 plusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
 plusBtn.Font = Enum.Font.GothamBold
 plusBtn.TextSize = 22
 plusBtn.TextColor3 = Color3.fromRGB(255,255,255)
-plusBtn.Parent = settingsScroll
+plusBtn.Parent = settingsFrame
 local plusCorner = Instance.new("UICorner", plusBtn)
 plusCorner.CornerRadius = UDim.new(0.5, 0)
 
+-- Color picker (basic: 5 colors)
 local colorLabel = Instance.new("TextLabel")
 colorLabel.Text = "GUI Color:"
-colorLabel.Size = UDim2.new(1, -200, 0, 32)
+colorLabel.Size = UDim2.new(0, 170, 0, 32)
+colorLabel.Position = UDim2.new(0, 30, 0, 150)
 colorLabel.BackgroundTransparency = 1
 colorLabel.Font = Enum.Font.Gotham
 colorLabel.TextSize = 22
 colorLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
 colorLabel.TextXAlignment = Enum.TextXAlignment.Left
-colorLabel.Parent = settingsScroll
+colorLabel.Parent = settingsFrame
 
 local colorChoices = {
     Color3.fromRGB(35, 38, 48), -- Default
@@ -731,9 +767,10 @@ local colorPickBtns = {}
 for i, col in ipairs(colorChoices) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0, 32, 0, 32)
+    btn.Position = UDim2.new(0, 200 + (i-1)*38, 0, 150)
     btn.BackgroundColor3 = col
     btn.Text = ""
-    btn.Parent = settingsScroll
+    btn.Parent = settingsFrame
     local cor = Instance.new("UICorner", btn)
     cor.CornerRadius = UDim.new(0.5, 0)
     colorPickBtns[i] = btn
@@ -743,6 +780,7 @@ for i, col in ipairs(colorChoices) do
     end)
 end
 
+-- Scale logic
 local function setScale(newScale)
     currentScale = math.clamp(newScale, MIN_SCALE, MAX_SCALE)
     scaleValue.Text = string.format("%.2f", currentScale)
@@ -755,22 +793,28 @@ minusBtn.MouseButton1Click:Connect(function()
     setScale(currentScale - SCALE_STEP)
 end)
 
--- 5. Credit Tab (scrollable)
-local creditFrame, creditScroll = createScrollableTab()
+-- 5. Credit Tab
+local creditFrame = Instance.new("Frame")
+creditFrame.Size = tabFrameSpace
+creditFrame.Position = tabFramePos
 creditFrame.BackgroundColor3 = Color3.fromRGB(40, 44, 50)
+creditFrame.BorderSizePixel = 0
+creditFrame.Parent = mainFrame
 creditFrame.Visible = false
 tabFrames[5] = creditFrame
-creditFrame.Parent = mainFrame
+local creditCorner = Instance.new("UICorner", creditFrame)
+creditCorner.CornerRadius = UDim.new(0, 16)
 local creditLabel = Instance.new("TextLabel")
 creditLabel.Text = "Made by Oxbl149"
-creditLabel.Size = UDim2.new(1, 0, 0, 80)
+creditLabel.Size = UDim2.new(1, 0, 1, 0)
+creditLabel.Position = UDim2.new(0, 0, 0, 0)
 creditLabel.BackgroundTransparency = 1
 creditLabel.Font = Enum.Font.GothamBold
 creditLabel.TextSize = 34
 creditLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 creditLabel.TextXAlignment = Enum.TextXAlignment.Center
 creditLabel.TextYAlignment = Enum.TextYAlignment.Center
-creditLabel.Parent = creditScroll
+creditLabel.Parent = creditFrame
 
 -- Tab logic
 for i, btn in ipairs(tabBtns) do
