@@ -357,9 +357,6 @@ end)
 -- GreensVN Hub V1 - Hack Tab 6 nút, không dùng bảng function, có scroll, mỗi nút gán riêng biệt.
 -- Copy phần này thay cho Hack Tab trong GUI của bạn!
 
--- GreensVN Hub V1 - Hack Tab 6 nút, không dùng bảng function, có scroll, mỗi nút gán riêng biệt (chỉ phần Hack Tab)
--- Copy phần này thay cho Hack Tab trong GUI của bạn!
-
 -- Tạo vùng scroll hack tab
 local tab2Frame = Instance.new("Frame")
 tab2Frame.Size = tabFrameSpace
