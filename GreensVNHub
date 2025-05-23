@@ -665,8 +665,6 @@ btns[6].MouseButton1Click:Connect(function()
 end)
 
 -- 3. Blank Tab
--- PHẦN BLANK TAB ĐƯỢC NÂNG CẤP THÀNH "Library" (Thư viện Script) KIỂU GHOSTHUB
--- Thay thế toàn bộ phần tạo tab blank trước đây bằng đoạn này:
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
