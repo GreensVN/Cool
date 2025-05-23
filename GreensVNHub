@@ -863,6 +863,8 @@ local scriptLib = {
 -- Lưu trữ các button để lọc/tìm kiếm
 local allLibBtns = {}
 
+-- ... (giữ nguyên mọi code libraryFrame, libTitle, searchBox...)
+
 local function makeLibBtn(data)
     local libBtn = Instance.new("TextButton")
     libBtn.Size = UDim2.new(1, -10, 0, 54)
@@ -940,9 +942,16 @@ local function makeLibBtn(data)
     libBtn.MouseButton1Up:Connect(function()
         if holding then
             holding = false
-            -- Nếu không giữ lâu thì tự động chạy
-            local s = loadstring(game:HttpGet(data.url))
-            if s then s() end
+            -- Nếu không giữ lâu thì tự động chạy, chống nil value!
+            local success, result = pcall(function()
+                local scr = loadstring(game:HttpGet(data.url))
+                if scr then scr() end
+            end)
+            if not success then
+                copyTip.Text = "Script lỗi/không hỗ trợ!"
+                wait(1.2)
+                copyTip.Text = "Click = Run | Hold = Copy"
+            end
         end
     end)
     libBtn.MouseLeave:Connect(function() holding = false end)
