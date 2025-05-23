@@ -155,7 +155,7 @@ local function applyGuiColor(mainFrame, newColor)
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "Greensvn hub v1.25"
+screenGui.Name = "greensvn hub v1.25"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -302,7 +302,7 @@ welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
 welcomeLabel.Parent = homeFrame
 local welcomeStroke = Instance.new("UIStroke", welcomeLabel)
-welcomeStroke.Color = Color3.fromRGB(120,255,120)
+welcomeStroke.Color = Color3.fromRGB(255,255,255)
 welcomeStroke.Thickness = 1.5
 welcomeStroke.Transparency = 0
 
