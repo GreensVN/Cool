@@ -664,9 +664,7 @@ btns[6].MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"))()
 end)
 
--- 3. Blank Tab
--- BLANK TAB NÂNG CẤP: THƯ VIỆN SCRIPT KIỂU GHOSTHUB TỐI ƯU, TÌM KIẾM, TOOLTIP, 20+ GAME NỔI BẬT
-
+-- 3. Blank Tab (Library tối ưu, chống lỗi nil value khi chạy script)
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
@@ -863,8 +861,6 @@ local scriptLib = {
 -- Lưu trữ các button để lọc/tìm kiếm
 local allLibBtns = {}
 
--- ... (giữ nguyên mọi code libraryFrame, libTitle, searchBox...)
-
 local function makeLibBtn(data)
     local libBtn = Instance.new("TextButton")
     libBtn.Size = UDim2.new(1, -10, 0, 54)
@@ -959,7 +955,10 @@ local function makeLibBtn(data)
     table.insert(allLibBtns, {btn=libBtn, data=data})
 end
 
--- Tìm kiếm script theo tên game, tên hub, mô tả
+for _, data in ipairs(scriptLib) do
+    makeLibBtn(data)
+end
+
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     local keyword = searchBox.Text:lower()
     for _, v in ipairs(allLibBtns) do
@@ -972,7 +971,6 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     end
 end)
 
--- Auto cập nhật CanvasSize
 libLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     libScroll.CanvasSize = UDim2.new(0, 0, 0, libLayout.AbsoluteContentSize.Y + 18)
 end)
