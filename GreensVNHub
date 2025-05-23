@@ -1,7 +1,7 @@
 -- GreensVN Hub V1 - All-in-One Script Hub (No Stealth, No Admin Detect, With Admin-Style Pre-GUI Welcome)
 -- By Oxbl149 & GreensVN
 
--- ==== ADMIN-STYLE WELCOME POPUP (tích hợp luôn trong script) ====
+-- ADMIN-STYLE WELCOME POPUP with extra white stroke for both popup & name (GreensVN Hub V1)
 do
     local player = game:GetService("Players").LocalPlayer
 
@@ -23,10 +23,11 @@ do
     main.Parent = preGui
     main.ClipsDescendants = true
 
+    -- White stroke viền ngoài popup
     local stroke = Instance.new("UIStroke", main)
     stroke.Color = Color3.fromRGB(255,255,255)
-    stroke.Thickness = 3
-    stroke.Transparency = 0.17
+    stroke.Thickness = 4
+    stroke.Transparency = 0 -- Đậm hơn
 
     local shadow = Instance.new("ImageLabel", main)
     shadow.Name = "Shadow"
@@ -48,7 +49,7 @@ do
     icon.Image = "rbxassetid://7733960981"
     icon.ZIndex = 2
 
-    -- Dòng Welcome
+    -- Dòng Welcome (có stroke trắng rõ ràng)
     local label1 = Instance.new("TextLabel", main)
     label1.BackgroundTransparency = 1
     label1.Size = UDim2.new(1, -110, 0, 48)
@@ -56,11 +57,19 @@ do
     label1.Font = Enum.Font.GothamBlack
     label1.TextSize = 32
     label1.TextColor3 = Color3.fromRGB(64, 44, 0)
-    label1.TextStrokeTransparency = 0.43
+    label1.TextStrokeTransparency = 0.12
+    label1.TextStrokeColor3 = Color3.fromRGB(255,255,255)
     label1.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
     label1.TextWrapped = true
     label1.TextXAlignment = Enum.TextXAlignment.Left
     label1.TextYAlignment = Enum.TextYAlignment.Center
+
+    -- UIStroke trắng bao quanh chữ (rất rõ)
+    local label1Stroke = Instance.new("UIStroke", label1)
+    label1Stroke.Color = Color3.fromRGB(255,255,255)
+    label1Stroke.Thickness = 2
+    label1Stroke.Transparency = 0
+    label1Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 
     -- Dòng cảm ơn
     local label2 = Instance.new("TextLabel", main)
@@ -70,22 +79,34 @@ do
     label2.Font = Enum.Font.Gotham
     label2.TextSize = 22
     label2.TextColor3 = Color3.fromRGB(100, 70, 0)
-    label2.TextStrokeTransparency = 0.68
+    label2.TextStrokeTransparency = 0.55
+    label2.TextStrokeColor3 = Color3.fromRGB(255,255,255)
     label2.Text = "Cảm ơn vì bạn đã tin tưởng và sử dụng"
     label2.TextWrapped = true
     label2.TextXAlignment = Enum.TextXAlignment.Left
     label2.TextYAlignment = Enum.TextYAlignment.Top
+
+    local label2Stroke = Instance.new("UIStroke", label2)
+    label2Stroke.Color = Color3.fromRGB(255,255,255)
+    label2Stroke.Thickness = 1.2
+    label2Stroke.Transparency = 0.1
+    label2Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 
     -- Fade in
     main.BackgroundTransparency = 1
     icon.ImageTransparency = 1
     label1.TextTransparency = 1
     label2.TextTransparency = 1
+    label1Stroke.Transparency = 1
+    label2Stroke.Transparency = 1
+
     for i = 0, 1, 0.08 do
         main.BackgroundTransparency = 1 - i
         icon.ImageTransparency = 1 - i
         label1.TextTransparency = 1 - i
         label2.TextTransparency = 1 - i
+        label1Stroke.Transparency = 1 - i
+        label2Stroke.Transparency = 1 - i
         task.wait(0.02)
     end
 
@@ -97,6 +118,8 @@ do
         icon.ImageTransparency = i
         label1.TextTransparency = i
         label2.TextTransparency = i
+        label1Stroke.Transparency = i
+        label2Stroke.Transparency = i
         task.wait(0.016)
     end
     preGui:Destroy()
