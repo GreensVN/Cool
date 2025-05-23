@@ -959,11 +959,6 @@ local function makeLibBtn(data)
     table.insert(allLibBtns, {btn=libBtn, data=data})
 end
 
--- Tạo button lần đầu
-for _, data in ipairs(scriptLib) do
-    makeLibBtn(data)
-end
-
 -- Tìm kiếm script theo tên game, tên hub, mô tả
 searchBox:GetPropertyChangedSignal("Text"):Connect(function()
     local keyword = searchBox.Text:lower()
