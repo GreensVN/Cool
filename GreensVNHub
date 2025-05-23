@@ -665,6 +665,9 @@ btns[6].MouseButton1Click:Connect(function()
 end)
 
 -- 3. Blank Tab
+-- PHẦN BLANK TAB ĐƯỢC NÂNG CẤP THÀNH "Library" (Thư viện Script) KIỂU GHOSTHUB NÂNG CẤP
+
+-- Thay thế toàn bộ phần tạo tab blank trước đây bằng đoạn này:
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
@@ -688,10 +691,26 @@ libTitle.TextColor3 = Color3.fromRGB(120, 255, 200)
 libTitle.TextXAlignment = Enum.TextXAlignment.Center
 libTitle.Parent = libraryFrame
 
+-- Thanh tìm kiếm
+local searchBox = Instance.new("TextBox")
+searchBox.PlaceholderText = "Tìm script (Search)..."
+searchBox.Size = UDim2.new(1, -32, 0, 34)
+searchBox.Position = UDim2.new(0, 16, 0, 54)
+searchBox.BackgroundColor3 = Color3.fromRGB(44, 55, 60)
+searchBox.TextColor3 = Color3.fromRGB(255,255,255)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 18
+searchBox.TextXAlignment = Enum.TextXAlignment.Left
+searchBox.Text = ""
+searchBox.ClearTextOnFocus = false
+searchBox.Parent = libraryFrame
+local searchCorner = Instance.new("UICorner", searchBox)
+searchCorner.CornerRadius = UDim.new(0.4, 0)
+
 -- ScrollingFrame chứa thư viện script
 local libScroll = Instance.new("ScrollingFrame")
-libScroll.Size = UDim2.new(1, -20, 1, -68)
-libScroll.Position = UDim2.new(0, 10, 0, 58)
+libScroll.Size = UDim2.new(1, -20, 1, -104)
+libScroll.Position = UDim2.new(0, 10, 0, 94)
 libScroll.BackgroundTransparency = 1
 libScroll.BorderSizePixel = 0
 libScroll.ScrollBarThickness = 10
@@ -730,10 +749,38 @@ local scriptLib = {
         desc = "Admin command phổ biến",
         url = "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"
     },
+    {
+        name = "VG Hub",
+        desc = "Script hub nổi tiếng, nhiều game lớn",
+        url = "https://raw.githubusercontent.com/1201for/V.G-Hub/main/V.Ghub"
+    },
+    {
+        name = "Hoho Hub",
+        desc = "Script hub đa chức năng, nhiều hỗ trợ",
+        url = "https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"
+    },
+    {
+        name = "Owl Hub",
+        desc = "Classic FPS hub, hỗ trợ nhiều game",
+        url = "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"
+    },
+    {
+        name = "DomainX",
+        desc = "Script hub đa năng, mạnh mẽ",
+        url = "https://raw.githubusercontent.com/shlexware/DomainX/main/source"
+    },
+    {
+        name = "DarkHub",
+        desc = "Hub cho FPS và nhiều game khác",
+        url = "https://raw.githubusercontent.com/ZeroTwo0/EpicHub/main/DarkHub.txt"
+    },
     -- Thêm script khác tại đây nếu thích
 }
 
-for i, data in ipairs(scriptLib) do
+-- Lưu trữ các button để lọc/tìm kiếm
+local allLibBtns = {}
+
+local function makeLibBtn(data)
     local libBtn = Instance.new("TextButton")
     libBtn.Size = UDim2.new(1, -10, 0, 52)
     libBtn.BackgroundColor3 = Color3.fromRGB(46, 60, 70)
@@ -742,7 +789,7 @@ for i, data in ipairs(scriptLib) do
     libBtn.TextColor3 = Color3.fromRGB(255,255,255)
     libBtn.Text = data.name
     libBtn.Parent = libScroll
-    libBtn.Name = "LibBtn"..i
+    libBtn.Name = "LibBtn_"..data.name
     local libBtnCorner = Instance.new("UICorner", libBtn)
     libBtnCorner.CornerRadius = UDim.new(0.35,0)
 
@@ -758,14 +805,64 @@ for i, data in ipairs(scriptLib) do
     desc.Text = data.desc or ""
     desc.Name = "Desc"
 
-    libBtn.MouseButton1Click:Connect(function()
-        pcall(function()
-            setclipboard and setclipboard(data.url)
+    local copyTip = Instance.new("TextLabel")
+    copyTip.Parent = libBtn
+    copyTip.Size = UDim2.new(0, 92, 0, 16)
+    copyTip.Position = UDim2.new(1, -100, 1, -20)
+    copyTip.BackgroundTransparency = 1
+    copyTip.Font = Enum.Font.Gotham
+    copyTip.TextSize = 13
+    copyTip.TextColor3 = Color3.fromRGB(255,255,100)
+    copyTip.TextXAlignment = Enum.TextXAlignment.Right
+    copyTip.Text = "Click = Run, Hold = Copy"
+    copyTip.Name = "CopyTip"
+
+    -- Nhấn giữ để chỉ copy, nhấn thường để chạy script
+    local holding = false
+    libBtn.MouseButton1Down:Connect(function()
+        holding = true
+        spawn(function()
+            wait(0.45)
+            if holding then
+                pcall(function()
+                    setclipboard and setclipboard(data.url)
+                end)
+                copyTip.Text = "Đã copy link!"
+                wait(0.6)
+                copyTip.Text = "Click = Run, Hold = Copy"
+            end
         end)
-        local s = loadstring(game:HttpGet(data.url))
-        if s then s() end
     end)
+    libBtn.MouseButton1Up:Connect(function()
+        if holding then
+            holding = false
+            if (not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift)) then
+                -- Nếu không giữ lâu thì tự động chạy
+                local s = loadstring(game:HttpGet(data.url))
+                if s then s() end
+            end
+        end
+    end)
+    libBtn.MouseLeave:Connect(function() holding = false end)
+
+    table.insert(allLibBtns, {btn=libBtn, data=data})
 end
+
+-- Tạo nút lần đầu
+for _, data in ipairs(scriptLib) do
+    makeLibBtn(data)
+end
+
+-- Tìm kiếm script theo tên hoặc mô tả
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local keyword = searchBox.Text:lower()
+    for _, v in ipairs(allLibBtns) do
+        local show = (keyword == "")
+            or v.data.name:lower():find(keyword, 1, true)
+            or (v.data.desc and v.data.desc:lower():find(keyword, 1, true))
+        v.btn.Visible = show and true or false
+    end
+end)
 
 -- Auto cập nhật CanvasSize
 libLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
