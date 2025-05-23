@@ -480,129 +480,76 @@ spawn(function()
 end)
 
 -- 2. Hack Tab (Scrollable)
--- ADMIN-STYLE WELCOME POPUP with extra white stroke for both popup & name (GreensVN Hub V1)
-do
-    local player = game:GetService("Players").LocalPlayer
+-- Hack Tab (scrollable, vuốt được cả mobile lẫn PC)
+local tab2Frame = Instance.new("Frame")
+tab2Frame.Size = tabFrameSpace
+tab2Frame.Position = tabFramePos
+tab2Frame.BackgroundColor3 = Color3.fromRGB(38, 40, 52)
+tab2Frame.BorderSizePixel = 0
+tab2Frame.Parent = mainFrame
+tab2Frame.Visible = false
+tabFrames[2] = tab2Frame
+local hackCorner = Instance.new("UICorner", tab2Frame)
+hackCorner.CornerRadius = UDim.new(0, 16)
 
-    local preGui = Instance.new("ScreenGui")
-    preGui.Name = "GreensVNHubWelcome"
-    preGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    preGui.IgnoreGuiInset = true
-    preGui.ResetOnSpawn = false
-    preGui.Parent = game:GetService("CoreGui")
+-- Tạo ScrollingFrame
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1, -12, 1, -12)
+scroll.Position = UDim2.new(0, 6, 0, 6)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 10
+scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+scroll.CanvasSize = UDim2.new(0, 0, 0, 420) -- Sẽ auto update bên dưới
+scroll.Parent = tab2Frame
 
-    local main = Instance.new("Frame")
-    main.Name = "Main"
-    main.AnchorPoint = Vector2.new(0.5, 0.5)
-    main.Position = UDim2.new(0.5, 0, 0.5, -20)
-    main.Size = UDim2.new(0, 465, 0, 140)
-    main.BackgroundColor3 = Color3.fromRGB(255, 226, 110)
-    main.BackgroundTransparency = 0
-    main.BorderSizePixel = 0
-    main.Parent = preGui
-    main.ClipsDescendants = true
+-- ListLayout cho các nút tự động xếp dọc
+local listLayout = Instance.new("UIListLayout", scroll)
+listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+listLayout.Padding = UDim.new(0, 10)
 
-    -- White stroke viền ngoài popup
-    local stroke = Instance.new("UIStroke", main)
-    stroke.Color = Color3.fromRGB(255,255,255)
-    stroke.Thickness = 4
-    stroke.Transparency = 0 -- Đậm hơn
-
-    local shadow = Instance.new("ImageLabel", main)
-    shadow.Name = "Shadow"
-    shadow.BackgroundTransparency = 1
-    shadow.Image = "rbxassetid://1316045217"
-    shadow.ImageTransparency = 0.82
-    shadow.Size = UDim2.new(1, 32, 1, 32)
-    shadow.Position = UDim2.new(0, -16, 0, -16)
-    shadow.ZIndex = 0
-
-    local cor = Instance.new("UICorner", main)
-    cor.CornerRadius = UDim.new(0.19, 0)
-
-    -- Icon cảnh báo Roblox (dấu chấm than vàng)
-    local icon = Instance.new("ImageLabel", main)
-    icon.BackgroundTransparency = 1
-    icon.Size = UDim2.new(0, 56, 0, 56)
-    icon.Position = UDim2.new(0, 25, 0, 17)
-    icon.Image = "rbxassetid://7733960981"
-    icon.ZIndex = 2
-
-    -- Dòng Welcome (có stroke trắng rõ ràng)
-    local label1 = Instance.new("TextLabel", main)
-    label1.BackgroundTransparency = 1
-    label1.Size = UDim2.new(1, -110, 0, 48)
-    label1.Position = UDim2.new(0, 94, 0, 18)
-    label1.Font = Enum.Font.GothamBlack
-    label1.TextSize = 32
-    label1.TextColor3 = Color3.fromRGB(64, 44, 0)
-    label1.TextStrokeTransparency = 0.12
-    label1.TextStrokeColor3 = Color3.fromRGB(255,255,255)
-    label1.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
-    label1.TextWrapped = true
-    label1.TextXAlignment = Enum.TextXAlignment.Left
-    label1.TextYAlignment = Enum.TextYAlignment.Center
-
-    -- UIStroke trắng bao quanh chữ (rất rõ)
-    local label1Stroke = Instance.new("UIStroke", label1)
-    label1Stroke.Color = Color3.fromRGB(255,255,255)
-    label1Stroke.Thickness = 2
-    label1Stroke.Transparency = 0
-    label1Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
-
-    -- Dòng cảm ơn
-    local label2 = Instance.new("TextLabel", main)
-    label2.BackgroundTransparency = 1
-    label2.Size = UDim2.new(1, -60, 0, 38)
-    label2.Position = UDim2.new(0, 60, 0, 78)
-    label2.Font = Enum.Font.Gotham
-    label2.TextSize = 22
-    label2.TextColor3 = Color3.fromRGB(100, 70, 0)
-    label2.TextStrokeTransparency = 0.55
-    label2.TextStrokeColor3 = Color3.fromRGB(255,255,255)
-    label2.Text = "Cảm ơn vì bạn đã tin tưởng và sử dụng"
-    label2.TextWrapped = true
-    label2.TextXAlignment = Enum.TextXAlignment.Left
-    label2.TextYAlignment = Enum.TextYAlignment.Top
-
-    local label2Stroke = Instance.new("UIStroke", label2)
-    label2Stroke.Color = Color3.fromRGB(255,255,255)
-    label2Stroke.Thickness = 1.2
-    label2Stroke.Transparency = 0.1
-    label2Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
-
-    -- Fade in
-    main.BackgroundTransparency = 1
-    icon.ImageTransparency = 1
-    label1.TextTransparency = 1
-    label2.TextTransparency = 1
-    label1Stroke.Transparency = 1
-    label2Stroke.Transparency = 1
-
-    for i = 0, 1, 0.08 do
-        main.BackgroundTransparency = 1 - i
-        icon.ImageTransparency = 1 - i
-        label1.TextTransparency = 1 - i
-        label2.TextTransparency = 1 - i
-        label1Stroke.Transparency = 1 - i
-        label2Stroke.Transparency = 1 - i
-        task.wait(0.02)
-    end
-
-    wait(2.5) -- Hiển thị popup
-
-    -- Fade out
-    for i = 0, 1, 0.1 do
-        main.BackgroundTransparency = i
-        icon.ImageTransparency = i
-        label1.TextTransparency = i
-        label2.TextTransparency = i
-        label1Stroke.Transparency = i
-        label2Stroke.Transparency = i
-        task.wait(0.016)
-    end
-    preGui:Destroy()
+local btns = {}
+local btnNames = {
+    "k00pgui v12", "Anti Kick", "Anti Ban",
+    "TuananhIOS", "1*1*1*1 gui", "Dead Rail"
+}
+for i=1,6 do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.93, 0, 0, 44)
+    btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+    btn.Text = btnNames[i]
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 20
+    btn.Name = btnNames[i]
+    btn.Parent = scroll
+    local bcor = Instance.new("UICorner", btn)
+    bcor.CornerRadius = UDim.new(0.3, 0)
+    btns[i] = btn
 end
+
+-- Auto cập nhật CanvasSize theo số nút
+listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scroll.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 18)
+end)
+
+-- Notification label for hack tab
+notificationLabel = Instance.new("TextLabel")
+notificationLabel.Size = UDim2.new(1, -36, 0, 30)
+notificationLabel.Position = UDim2.new(0, 18, 0, 8)
+notificationLabel.BackgroundTransparency = 0.4
+notificationLabel.BackgroundColor3 = Color3.fromRGB(45, 130, 45)
+notificationLabel.Text = ""
+notificationLabel.TextColor3 = Color3.fromRGB(255,255,255)
+notificationLabel.Font = Enum.Font.GothamBold
+notificationLabel.TextSize = 20
+notificationLabel.TextXAlignment = Enum.TextXAlignment.Center
+notificationLabel.TextYAlignment = Enum.TextYAlignment.Center
+notificationLabel.Visible = false
+notificationLabel.Parent = scroll
+local notifCorner = Instance.new("UICorner", notificationLabel)
+notifCorner.CornerRadius = UDim.new(0.5, 0)
+
 local function showHackNotification(txt)
     notificationLabel.Text = txt
     notificationLabel.Visible = true
