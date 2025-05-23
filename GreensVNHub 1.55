@@ -1,0 +1,911 @@
+-- GreensVN Hub V1 - All-in-One Script Hub (No Stealth, Full Feature, More Scripts, Scrollable!)
+-- By Oxbl149 & GreensVN, Nâng cấp bởi GreensVN
+
+-- Home tab: Welcome, Roblox avatar, Username, UserId, Place, Location, IP Address, Account Age
+-- Hack tab: Button 1 = k00pgui v12, Button 2 = Strongest Anti Kick, Button 3 = Strongest Anti Ban (+ Status Notification)
+-- Button 4 = TuanAnhIOS, Button 5 = 1*1*1*1 gui, Button 6 = Dead Rail
+-- Settings tab: GUI scale + GUI color picker
+-- Credit tab: "Made by Oxbl149"
+-- Minimize, draggable, resize, mobile/PC support, Hack tab scrollable
+
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local player = Players.LocalPlayer
+local ThumbnailType = Enum.ThumbnailType.HeadShot
+local ThumbnailSize = Enum.ThumbnailSize.Size420x420
+
+local MIN_SIZE = Vector2.new(350, 250)
+local MAX_SIZE = Vector2.new(750, 650)
+local TAB_WIDTH = 132
+local AVATAR_ID = "rbxassetid://86684458914012"
+local DEFAULT_SCALE = 1
+local SCALE_STEP = 0.1
+local MIN_SCALE = 0.7
+local MAX_SCALE = 1.6
+local DEFAULT_COLOR = Color3.fromRGB(30, 32, 40)
+local currentScale = DEFAULT_SCALE
+local currentColor = DEFAULT_COLOR
+
+local function applyGuiScale(mainFrame, scale)
+    mainFrame.Size = UDim2.new(0, 540 * scale, 0, 590 * scale)
+    mainFrame.Position = UDim2.new(0.5, -270 * scale, 0.5, -295 * scale)
+end
+
+local function applyGuiColor(mainFrame, newColor)
+    mainFrame.BackgroundColor3 = newColor
+end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "GreensVNHubV1"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.ResetOnSpawn = false
+
+-- MainFrame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 540, 0, 590)
+mainFrame.Position = UDim2.new(0.5, -270, 0.5, -295)
+mainFrame.BackgroundColor3 = DEFAULT_COLOR
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+mainFrame.ClipsDescendants = true
+
+local mainStroke = Instance.new("UIStroke", mainFrame)
+mainStroke.Color = Color3.fromRGB(90, 180, 90)
+mainStroke.Thickness = 2
+
+local mainCorner = Instance.new("UICorner", mainFrame)
+mainCorner.CornerRadius = UDim.new(0, 16)
+
+local shadow = Instance.new("ImageLabel")
+shadow.Name = "Shadow"
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.7
+shadow.Size = UDim2.new(1, 40, 1, 40)
+shadow.Position = UDim2.new(0, -20, 0, -20)
+shadow.ZIndex = 0
+shadow.Parent = mainFrame
+
+-- TopBar
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 64)
+topBar.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+topBar.BorderSizePixel = 0
+topBar.Parent = mainFrame
+local topBarCorner = Instance.new("UICorner", topBar)
+topBarCorner.CornerRadius = UDim.new(0, 16)
+
+local avatar = Instance.new("ImageLabel")
+avatar.Name = "Avatar"
+avatar.Size = UDim2.new(0, 54, 0, 54)
+avatar.Position = UDim2.new(0, 9, 0, 5)
+avatar.BackgroundTransparency = 1
+avatar.Image = AVATAR_ID
+avatar.Parent = topBar
+local avatarCorner = Instance.new("UICorner", avatar)
+avatarCorner.CornerRadius = UDim.new(1, 0)
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -180, 1, 0)
+titleLabel.Position = UDim2.new(0, 75, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "GreensVN Hub V1"
+titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 30
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = topBar
+
+local minBtn = Instance.new("TextButton")
+minBtn.Size = UDim2.new(0, 34, 0, 34)
+minBtn.Position = UDim2.new(1, -84, 0, 15)
+minBtn.BackgroundColor3 = Color3.fromRGB(60,80,60)
+minBtn.Text = "-"
+minBtn.Font = Enum.Font.GothamBold
+minBtn.TextSize = 26
+minBtn.TextColor3 = Color3.fromRGB(255,255,255)
+minBtn.Parent = topBar
+local minCorner = Instance.new("UICorner", minBtn)
+minCorner.CornerRadius = UDim.new(0.5, 0)
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 34, 0, 34)
+closeBtn.Position = UDim2.new(1, -40, 0, 15)
+closeBtn.BackgroundColor3 = Color3.fromRGB(120,60,60)
+closeBtn.Text = "x"
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+closeBtn.Parent = topBar
+local closeCorner = Instance.new("UICorner", closeBtn)
+closeCorner.CornerRadius = UDim.new(0.5, 0)
+closeBtn.AutoButtonColor = true
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Tab holder
+local tabNames = {"Home", "Hack", "Blank", "Settings", "Credit"}
+local tabHolder = Instance.new("Frame")
+tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -64)
+tabHolder.Position = UDim2.new(0, 0, 0, 64)
+tabHolder.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tabHolder.BorderSizePixel = 0
+tabHolder.Parent = mainFrame
+local tabHolderCorner = Instance.new("UICorner", tabHolder)
+tabHolderCorner.CornerRadius = UDim.new(0, 16)
+
+local tabBtns = {}
+for i, name in ipairs(tabNames) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -16, 0, 46)
+    btn.Position = UDim2.new(0, 8, 0, (i-1)*56 + 12)
+    btn.BackgroundColor3 = (i==1) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+    btn.Text = name
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 22
+    btn.Parent = tabHolder
+    local btnCorner = Instance.new("UICorner", btn)
+    btnCorner.CornerRadius = UDim.new(0.4, 0)
+    tabBtns[i] = btn
+end
+
+local tabFrames = {}
+local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
+local tabFramePos = UDim2.new(0, TAB_WIDTH, 0, 64)
+
+-- 1. Home Tab (giữ nguyên như cũ)
+local homeFrame = Instance.new("Frame")
+homeFrame.Size = tabFrameSpace
+homeFrame.Position = tabFramePos
+homeFrame.BackgroundColor3 = Color3.fromRGB(35, 38, 48)
+homeFrame.BorderSizePixel = 0
+homeFrame.Parent = mainFrame
+homeFrame.Visible = true
+tabFrames[1] = homeFrame
+local homeCorner = Instance.new("UICorner", homeFrame)
+homeCorner.CornerRadius = UDim.new(0, 16)
+local homePadding = Instance.new("UIPadding", homeFrame)
+homePadding.PaddingTop = UDim.new(0, 10)
+homePadding.PaddingLeft = UDim.new(0, 40)
+
+local welcomeLabel = Instance.new("TextLabel")
+welcomeLabel.Size = UDim2.new(1, -40, 0, 36)
+welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
+welcomeLabel.BackgroundTransparency = 1
+welcomeLabel.Font = Enum.Font.GothamBold
+welcomeLabel.TextSize = 30
+welcomeLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
+welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
+welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
+welcomeLabel.Parent = homeFrame
+
+local bigAvatar = Instance.new("ImageLabel")
+bigAvatar.Size = UDim2.new(0,130,0,130)
+bigAvatar.Position = UDim2.new(0, 0, 0, 40)
+bigAvatar.BackgroundTransparency = 1
+bigAvatar.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+bigAvatar.Parent = homeFrame
+local bigAvatarCorner = Instance.new("UICorner", bigAvatar)
+bigAvatarCorner.CornerRadius = UDim.new(1, 0)
+spawn(function()
+    local thumbContent, isReady = Players:GetUserThumbnailAsync(player.UserId, ThumbnailType, ThumbnailSize)
+    if isReady then
+        bigAvatar.Image = thumbContent
+    end
+end)
+
+local nameLabel = Instance.new("TextLabel")
+nameLabel.Size = UDim2.new(0, 330, 0, 32)
+nameLabel.Position = UDim2.new(0, 145, 0, 54)
+nameLabel.BackgroundTransparency = 1
+nameLabel.Font = Enum.Font.GothamBold
+nameLabel.TextSize = 25
+nameLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
+nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+nameLabel.Text = "Name: Loading..."
+nameLabel.Parent = homeFrame
+
+local userLabel = Instance.new("TextLabel")
+userLabel.Size = UDim2.new(0, 330, 0, 26)
+userLabel.Position = UDim2.new(0, 145, 0, 86)
+userLabel.BackgroundTransparency = 1
+userLabel.Font = Enum.Font.Gotham
+userLabel.TextSize = 21
+userLabel.TextColor3 = Color3.fromRGB(200, 255, 200)
+userLabel.TextXAlignment = Enum.TextXAlignment.Left
+userLabel.Text = "Username: Loading..."
+userLabel.Parent = homeFrame
+
+local userIdLabel = Instance.new("TextLabel")
+userIdLabel.Size = UDim2.new(0, 330, 0, 24)
+userIdLabel.Position = UDim2.new(0, 145, 0, 116)
+userIdLabel.BackgroundTransparency = 1
+userIdLabel.Font = Enum.Font.Gotham
+userIdLabel.TextSize = 20
+userIdLabel.TextColor3 = Color3.fromRGB(200, 255, 255)
+userIdLabel.TextXAlignment = Enum.TextXAlignment.Left
+userIdLabel.Text = "UserId: Loading..."
+userIdLabel.Parent = homeFrame
+
+local placeLabel = Instance.new("TextLabel")
+placeLabel.Size = UDim2.new(1, -40, 0, 32)
+placeLabel.Position = UDim2.new(0, 0, 0, 172)
+placeLabel.BackgroundTransparency = 1
+placeLabel.TextColor3 = Color3.fromRGB(255,255,220)
+placeLabel.Font = Enum.Font.GothamBold
+placeLabel.TextSize = 20
+placeLabel.TextXAlignment = Enum.TextXAlignment.Left
+placeLabel.Text = "Place: Loading..."
+placeLabel.Parent = homeFrame
+
+local ipLabel = Instance.new("TextLabel")
+ipLabel.Size = UDim2.new(1, -40, 0, 26)
+ipLabel.Position = UDim2.new(0, 0, 0, 208)
+ipLabel.BackgroundTransparency = 1
+ipLabel.TextColor3 = Color3.fromRGB(255,255,180)
+ipLabel.Font = Enum.Font.Gotham
+ipLabel.TextSize = 19
+ipLabel.TextXAlignment = Enum.TextXAlignment.Left
+ipLabel.Text = "IP Address: Loading..."
+ipLabel.Parent = homeFrame
+
+local ageLabel = Instance.new("TextLabel")
+ageLabel.Size = UDim2.new(1, -40, 0, 26)
+ageLabel.Position = UDim2.new(0, 0, 0, 234)
+ageLabel.BackgroundTransparency = 1
+ageLabel.TextColor3 = Color3.fromRGB(255,255,180)
+ageLabel.Font = Enum.Font.Gotham
+ageLabel.TextSize = 19
+ageLabel.TextXAlignment = Enum.TextXAlignment.Left
+ageLabel.Text = "Account Age: Loading..."
+ageLabel.Parent = homeFrame
+
+local geoLabel = Instance.new("TextLabel")
+geoLabel.Size = UDim2.new(1, -40, 0, 70)
+geoLabel.Position = UDim2.new(0, 0, 0, 260)
+geoLabel.BackgroundTransparency = 1
+geoLabel.TextColor3 = Color3.fromRGB(255,255,180)
+geoLabel.Font = Enum.Font.Gotham
+geoLabel.TextSize = 19
+geoLabel.TextXAlignment = Enum.TextXAlignment.Left
+geoLabel.TextYAlignment = Enum.TextYAlignment.Top
+geoLabel.Text = "Vị trí của bạn: Đang tải..."
+geoLabel.Parent = homeFrame
+
+local displayName = player.DisplayName or "Unknown"
+local username = player.Name or "Unknown"
+local userId = player.UserId or "Unknown"
+local accountAge = player.AccountAge or "Unknown"
+nameLabel.Text = "Name: "..displayName
+userLabel.Text = "Username: "..username
+userIdLabel.Text = "UserId: "..userId
+ageLabel.Text = "Account Age: "..tostring(accountAge).." days"
+
+placeLabel.Text = "Place: Đang tải..."
+spawn(function()
+    local placeId = game.PlaceId
+    local placeName = "Unknown"
+    local ok, info = pcall(function()
+        return MarketplaceService:GetProductInfo(placeId, Enum.InfoType.Asset)
+    end)
+    if ok and info and info.Name then
+        placeName = info.Name
+    end
+    placeLabel.Text = ("Place: %s [ID: %s]"):format(placeName, tostring(placeId))
+end)
+
+spawn(function()
+    local locationText = "Vị trí của bạn: Không xác định"
+    local ipAddr = "Không xác định"
+    local success, result = pcall(function()
+        local url = "https://ipinfo.io/json"
+        return HttpService:JSONDecode(game:HttpGet(url))
+    end)
+    if success and result then
+        local city = result.city or ""
+        local region = result.region or ""
+        local country = result.country or ""
+        local ip = result.ip or ""
+        if ip ~= "" then
+            ipAddr = ip
+        end
+
+        local locStr = ""
+        if region ~= "" and country ~= "" then
+            locStr = string.format("%s, %s", region, country)
+        elseif city ~= "" and country ~= "" then
+            locStr = string.format("%s, %s", city, country)
+        elseif country ~= "" then
+            locStr = string.format("%s", country)
+        end
+
+        local capital = ""
+        local continent = ""
+        if country ~= "" then
+            local ok2, res2 = pcall(function()
+                local url2 = "https://restcountries.com/v3.1/alpha/"..country
+                return HttpService:JSONDecode(game:HttpGet(url2))
+            end)
+            if ok2 and typeof(res2)=="table" and #res2 >= 1 then
+                local c = res2[1]
+                if c.capital and typeof(c.capital)=="table" and #c.capital>0 then
+                    capital = tostring(c.capital[1])
+                end
+                if c.continents and typeof(c.continents)=="table" and #c.continents>0 then
+                    continent = tostring(c.continents[1])
+                end
+            end
+        end
+
+        locationText = "Vị trí của bạn: "..locStr
+        if capital ~= "" then
+            locationText = locationText.."\nThủ đô: "..capital
+        end
+        if continent ~= "" then
+            locationText = locationText.."\nChâu lục: "..continent
+        end
+    end
+    ipLabel.Text = "IP Address: "..ipAddr
+    geoLabel.Text = locationText
+end)
+
+-- 2. Hack Tab (nâng cấp: Scrollable + thêm script mới)
+-- GreensVN Hub V1 - Hack Tab 6 nút, không dùng bảng function, có scroll, mỗi nút gán riêng biệt.
+-- Copy phần này thay cho Hack Tab trong GUI của bạn!
+
+-- GreensVN Hub V1 - Hack Tab 6 nút, không dùng bảng function, có scroll, mỗi nút gán riêng biệt (chỉ phần Hack Tab)
+-- Copy phần này thay cho Hack Tab trong GUI của bạn!
+
+-- Tạo vùng scroll hack tab
+local tab2Frame = Instance.new("Frame")
+tab2Frame.Size = tabFrameSpace
+tab2Frame.Position = tabFramePos
+tab2Frame.BackgroundColor3 = Color3.fromRGB(38, 40, 52)
+tab2Frame.BorderSizePixel = 0
+tab2Frame.Parent = mainFrame
+tab2Frame.Visible = false
+tabFrames[2] = tab2Frame
+local hackCorner = Instance.new("UICorner", tab2Frame)
+hackCorner.CornerRadius = UDim.new(0, 16)
+
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1, -24, 1, -16)
+scroll.Position = UDim2.new(0, 12, 0, 8)
+scroll.BackgroundTransparency = 1
+scroll.ScrollBarThickness = 8
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.Parent = tab2Frame
+scroll.BorderSizePixel = 0
+scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.FillDirection = Enum.FillDirection.Vertical
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Parent = scroll
+
+local notificationLabel = Instance.new("TextLabel")
+notificationLabel.Size = UDim2.new(1, -36, 0, 30)
+notificationLabel.Position = UDim2.new(0, 18, 0, 8)
+notificationLabel.BackgroundTransparency = 0.4
+notificationLabel.BackgroundColor3 = Color3.fromRGB(45, 130, 45)
+notificationLabel.Text = ""
+notificationLabel.TextColor3 = Color3.fromRGB(255,255,255)
+notificationLabel.Font = Enum.Font.GothamBold
+notificationLabel.TextSize = 20
+notificationLabel.TextXAlignment = Enum.TextXAlignment.Center
+notificationLabel.TextYAlignment = Enum.TextYAlignment.Center
+notificationLabel.Visible = false
+notificationLabel.Parent = tab2Frame
+local notifCorner = Instance.new("UICorner", notificationLabel)
+notifCorner.CornerRadius = UDim.new(0.5, 0)
+
+local function showHackNotification(txt)
+    notificationLabel.Text = txt
+    notificationLabel.Visible = true
+    spawn(function()
+        wait(2.5)
+        notificationLabel.Visible = false
+    end)
+end
+
+-- Nút 1: k00pgui v12
+local btn1 = Instance.new("TextButton")
+btn1.Size = UDim2.new(0.93, 0, 0, 44)
+btn1.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn1.Text = "k00pgui v12"
+btn1.TextColor3 = Color3.new(1,1,1)
+btn1.Font = Enum.Font.Gotham
+btn1.TextSize = 20
+btn1.Parent = scroll
+local bcor1 = Instance.new("UICorner", btn1)
+bcor1.CornerRadius = UDim.new(0.3, 0)
+btn1.MouseButton1Click:Connect(function()
+    local s = loadstring(game:HttpGet('https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12'))
+    if s then s() end
+end)
+
+-- Nút 2: Anti Kick
+local btn2 = Instance.new("TextButton")
+btn2.Size = UDim2.new(0.93, 0, 0, 44)
+btn2.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn2.Text = "Anti Kick"
+btn2.TextColor3 = Color3.new(1,1,1)
+btn2.Font = Enum.Font.Gotham
+btn2.TextSize = 20
+btn2.Parent = scroll
+local bcor2 = Instance.new("UICorner", btn2)
+bcor2.CornerRadius = UDim.new(0.3, 0)
+btn2.MouseButton1Click:Connect(function()
+    -- Remove all kick connections
+    pcall(function()
+        for _,v in ipairs(getconnections(player.Kick)) do
+            v:Disable()
+        end
+    end)
+    -- Hook Kick method (all variants, full patch)
+    pcall(function()
+        hookfunction(player.Kick, function() return end)
+    end)
+    -- Hook namecall for Kick
+    pcall(function()
+        local mt = getrawmetatable(game)
+        setreadonly(mt, false)
+        local oldNamecall = mt.__namecall
+        mt.__namecall = newcclosure(function(self, ...)
+            local method = getnamecallmethod and getnamecallmethod() or ""
+            if (method == "Kick" or method:lower() == "kick") and (self == player or tostring(self)=="Players") then
+                return
+            end
+            return oldNamecall(self, ...)
+        end)
+        setreadonly(mt, true)
+    end)
+    -- Block Instance:Kick by __index
+    pcall(function()
+        local mt = getrawmetatable(player)
+        setreadonly(mt, false)
+        local oldIndex = mt.__index
+        mt.__index = newcclosure(function(self, key)
+            if key == "Kick" then
+                return function() return end
+            end
+            return oldIndex(self, key)
+        end)
+        setreadonly(mt, true)
+    end)
+    -- Remove all remote kick events
+    pcall(function()
+        for _,desc in ipairs(game:GetDescendants()) do
+            if desc:IsA("RemoteEvent") or desc:IsA("RemoteFunction") then
+                if desc.Name:lower():find("kick") then
+                    desc:Destroy()
+                end
+            end
+        end
+    end)
+    showHackNotification("Anti Kick is active now")
+end)
+
+-- Nút 3: Anti Ban
+local btn3 = Instance.new("TextButton")
+btn3.Size = UDim2.new(0.93, 0, 0, 44)
+btn3.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn3.Text = "Anti Ban"
+btn3.TextColor3 = Color3.new(1,1,1)
+btn3.Font = Enum.Font.Gotham
+btn3.TextSize = 20
+btn3.Parent = scroll
+local bcor3 = Instance.new("UICorner", btn3)
+bcor3.CornerRadius = UDim.new(0.3, 0)
+btn3.MouseButton1Click:Connect(function()
+    -- Disable all ban related remote events and functions
+    pcall(function()
+        for _,v in ipairs(getgc(true)) do
+            if typeof(v) == "table" then
+                for k,f in pairs(v) do
+                    if type(k) == "string" and k:lower():find("ban") then
+                        if type(f) == "function" then
+                            hookfunction(f, function(...) return nil end)
+                        elseif typeof(f) == "Instance" and (f:IsA("RemoteEvent") or f:IsA("RemoteFunction")) then
+                            f:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+    end)
+    -- Hook namecall for Ban
+    pcall(function()
+        local mt = getrawmetatable(game)
+        setreadonly(mt, false)
+        local oldNamecall = mt.__namecall
+        mt.__namecall = newcclosure(function(self, ...)
+            local method = getnamecallmethod and getnamecallmethod() or ""
+            if method:lower():find("ban") or tostring(self):lower():find("ban") then
+                return
+            end
+            return oldNamecall(self, ...)
+        end)
+        setreadonly(mt, true)
+    end)
+    -- Remove connections to ban remote events
+    pcall(function()
+        for _,desc in ipairs(game:GetDescendants()) do
+            if desc:IsA("RemoteEvent") or desc:IsA("RemoteFunction") then
+                if desc.Name:lower():find("ban") then
+                    for _,conn in ipairs(getconnections(desc.OnClientEvent)) do
+                        conn:Disable()
+                    end
+                    for _,conn in ipairs(getconnections(desc.OnClientInvoke)) do
+                        conn:Disable()
+                    end
+                end
+            end
+        end
+    end)
+    showHackNotification("Anti Ban is active now")
+end)
+
+-- Nút 4: TuanAnhIOS
+local btn4 = Instance.new("TextButton")
+btn4.Size = UDim2.new(0.93, 0, 0, 44)
+btn4.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn4.Text = "TuanAnhIOS"
+btn4.TextColor3 = Color3.new(1,1,1)
+btn4.Font = Enum.Font.Gotham
+btn4.TextSize = 20
+btn4.Parent = scroll
+local bcor4 = Instance.new("UICorner", btn4)
+bcor4.CornerRadius = UDim.new(0.3, 0)
+btn4.MouseButton1Click:Connect(function()
+    local s = loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"))
+    if s then s() end
+end)
+
+-- Nút 5: 1*1*1*1 gui
+local btn5 = Instance.new("TextButton")
+btn5.Size = UDim2.new(0.93, 0, 0, 44)
+btn5.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn5.Text = "1*1*1*1 gui"
+btn5.TextColor3 = Color3.new(1,1,1)
+btn5.Font = Enum.Font.Gotham
+btn5.TextSize = 20
+btn5.Parent = scroll
+local bcor5 = Instance.new("UICorner", btn5)
+bcor5.CornerRadius = UDim.new(0.3, 0)
+btn5.MouseButton1Click:Connect(function()
+    local s = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/tutogui"))
+    if s then s() end
+end)
+
+-- Nút 6: Dead Rail
+local btn6 = Instance.new("TextButton")
+btn6.Size = UDim2.new(0.93, 0, 0, 44)
+btn6.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+btn6.Text = "Dead Rail"
+btn6.TextColor3 = Color3.new(1,1,1)
+btn6.Font = Enum.Font.Gotham
+btn6.TextSize = 20
+btn6.Parent = scroll
+local bcor6 = Instance.new("UICorner", btn6)
+bcor6.CornerRadius = UDim.new(0.3, 0)
+btn6.MouseButton1Click:Connect(function()
+    local s = loadstring(game:HttpGet("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"))
+    if s then s() end
+end)
+
+-- 3. Blank Tab
+local tab3Frame = Instance.new("Frame")
+tab3Frame.Size = tabFrameSpace
+tab3Frame.Position = tabFramePos
+tab3Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tab3Frame.BorderSizePixel = 0
+tab3Frame.Parent = mainFrame
+tab3Frame.Visible = false
+tabFrames[3] = tab3Frame
+local blankCorner = Instance.new("UICorner", tab3Frame)
+blankCorner.CornerRadius = UDim.new(0, 16)
+
+-- 4. Settings Tab (GUI scale + color)
+local settingsFrame = Instance.new("Frame")
+settingsFrame.Size = tabFrameSpace
+settingsFrame.Position = tabFramePos
+settingsFrame.BackgroundColor3 = Color3.fromRGB(37, 42, 53)
+settingsFrame.BorderSizePixel = 0
+settingsFrame.Parent = mainFrame
+settingsFrame.Visible = false
+tabFrames[4] = settingsFrame
+local settingsCorner = Instance.new("UICorner", settingsFrame)
+settingsCorner.CornerRadius = UDim.new(0, 16)
+
+local settingsTitle = Instance.new("TextLabel")
+settingsTitle.Text = "Settings"
+settingsTitle.Size = UDim2.new(1, 0, 0, 44)
+settingsTitle.Position = UDim2.new(0, 0, 0, 22)
+settingsTitle.BackgroundTransparency = 1
+settingsTitle.Font = Enum.Font.GothamBold
+settingsTitle.TextSize = 28
+settingsTitle.TextColor3 = Color3.fromRGB(120, 255, 120)
+settingsTitle.Parent = settingsFrame
+
+local scaleLabel = Instance.new("TextLabel")
+scaleLabel.Text = "GUI Scale:"
+scaleLabel.Size = UDim2.new(0, 170, 0, 32)
+scaleLabel.Position = UDim2.new(0, 30, 0, 86)
+scaleLabel.BackgroundTransparency = 1
+scaleLabel.Font = Enum.Font.Gotham
+scaleLabel.TextSize = 22
+scaleLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
+scaleLabel.TextXAlignment = Enum.TextXAlignment.Left
+scaleLabel.Parent = settingsFrame
+
+local scaleValue = Instance.new("TextLabel")
+scaleValue.Text = string.format("%.2f", currentScale)
+scaleValue.Size = UDim2.new(0, 60, 0, 32)
+scaleValue.Position = UDim2.new(0, 200, 0, 86)
+scaleValue.BackgroundTransparency = 1
+scaleValue.Font = Enum.Font.GothamBold
+scaleValue.TextSize = 22
+scaleValue.TextColor3 = Color3.fromRGB(120, 255, 120)
+scaleValue.TextXAlignment = Enum.TextXAlignment.Center
+scaleValue.Parent = settingsFrame
+
+local minusBtn = Instance.new("TextButton")
+minusBtn.Text = "-"
+minusBtn.Size = UDim2.new(0, 40, 0, 32)
+minusBtn.Position = UDim2.new(0, 270, 0, 86)
+minusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
+minusBtn.Font = Enum.Font.GothamBold
+minusBtn.TextSize = 22
+minusBtn.TextColor3 = Color3.fromRGB(255,255,255)
+minusBtn.Parent = settingsFrame
+local minusCorner = Instance.new("UICorner", minusBtn)
+minusCorner.CornerRadius = UDim.new(0.5, 0)
+
+local plusBtn = Instance.new("TextButton")
+plusBtn.Text = "+"
+plusBtn.Size = UDim2.new(0, 40, 0, 32)
+plusBtn.Position = UDim2.new(0, 315, 0, 86)
+plusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
+plusBtn.Font = Enum.Font.GothamBold
+plusBtn.TextSize = 22
+plusBtn.TextColor3 = Color3.fromRGB(255,255,255)
+plusBtn.Parent = settingsFrame
+local plusCorner = Instance.new("UICorner", plusBtn)
+plusCorner.CornerRadius = UDim.new(0.5, 0)
+
+local colorLabel = Instance.new("TextLabel")
+colorLabel.Text = "GUI Color:"
+colorLabel.Size = UDim2.new(0, 170, 0, 32)
+colorLabel.Position = UDim2.new(0, 30, 0, 150)
+colorLabel.BackgroundTransparency = 1
+colorLabel.Font = Enum.Font.Gotham
+colorLabel.TextSize = 22
+colorLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
+colorLabel.TextXAlignment = Enum.TextXAlignment.Left
+colorLabel.Parent = settingsFrame
+
+local colorChoices = {
+    Color3.fromRGB(35, 38, 48), -- Default
+    Color3.fromRGB(32, 44, 60), -- Blue
+    Color3.fromRGB(44, 32, 60), -- Purple
+    Color3.fromRGB(44, 60, 32), -- Green
+    Color3.fromRGB(60, 44, 32), -- Brown
+}
+local colorPickBtns = {}
+for i, col in ipairs(colorChoices) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 32, 0, 32)
+    btn.Position = UDim2.new(0, 200 + (i-1)*38, 0, 150)
+    btn.BackgroundColor3 = col
+    btn.Text = ""
+    btn.Parent = settingsFrame
+    local cor = Instance.new("UICorner", btn)
+    cor.CornerRadius = UDim.new(0.5, 0)
+    colorPickBtns[i] = btn
+    btn.MouseButton1Click:Connect(function()
+        currentColor = col
+        applyGuiColor(mainFrame, col)
+    end)
+end
+
+local function setScale(newScale)
+    currentScale = math.clamp(newScale, MIN_SCALE, MAX_SCALE)
+    scaleValue.Text = string.format("%.2f", currentScale)
+    applyGuiScale(mainFrame, currentScale)
+end
+plusBtn.MouseButton1Click:Connect(function()
+    setScale(currentScale + SCALE_STEP)
+end)
+minusBtn.MouseButton1Click:Connect(function()
+    setScale(currentScale - SCALE_STEP)
+end)
+
+-- 5. Credit Tab
+local creditFrame = Instance.new("Frame")
+creditFrame.Size = tabFrameSpace
+creditFrame.Position = tabFramePos
+creditFrame.BackgroundColor3 = Color3.fromRGB(40, 44, 50)
+creditFrame.BorderSizePixel = 0
+creditFrame.Parent = mainFrame
+creditFrame.Visible = false
+tabFrames[5] = creditFrame
+local creditCorner = Instance.new("UICorner", creditFrame)
+creditCorner.CornerRadius = UDim.new(0, 16)
+local creditLabel = Instance.new("TextLabel")
+creditLabel.Text = "Made by Oxbl149"
+creditLabel.Size = UDim2.new(1, 0, 1, 0)
+creditLabel.Position = UDim2.new(0, 0, 0, 0)
+creditLabel.BackgroundTransparency = 1
+creditLabel.Font = Enum.Font.GothamBold
+creditLabel.TextSize = 34
+creditLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
+creditLabel.TextXAlignment = Enum.TextXAlignment.Center
+creditLabel.TextYAlignment = Enum.TextYAlignment.Center
+creditLabel.Parent = creditFrame
+
+for i, btn in ipairs(tabBtns) do
+    btn.MouseButton1Click:Connect(function()
+        for j, f in ipairs(tabFrames) do
+            f.Visible = (j == i)
+            tabBtns[j].BackgroundColor3 = (j == i) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+        end
+    end)
+end
+
+-- Drag logic (mouse & touch)
+local UIS = game:GetService("UserInputService")
+local dragging, dragInput, dragStart, startPos
+local function beginDrag(input)
+    dragging = true
+    dragStart = input.Position
+    startPos = mainFrame.Position
+    input.Changed:Connect(function()
+        if input.UserInputState == Enum.UserInputState.End then dragging = false end
+    end)
+end
+topBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        beginDrag(input)
+        dragInput = input
+    end
+end)
+topBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+UIS.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- Resize logic
+local resizing, resizeInput, resizeStart, startSize
+local resizeGrip = Instance.new("Frame")
+resizeGrip.Size = UDim2.new(0, 20, 0, 20)
+resizeGrip.Position = UDim2.new(1, -20, 1, -20)
+resizeGrip.BackgroundColor3 = Color3.fromRGB(100,100,120)
+resizeGrip.BorderSizePixel = 0
+resizeGrip.Parent = mainFrame
+resizeGrip.Active = true
+local gripCorner = Instance.new("UICorner", resizeGrip)
+gripCorner.CornerRadius = UDim.new(1, 0)
+local function beginResize(input)
+    resizing = true
+    resizeStart = input.Position
+    startSize = mainFrame.Size
+    input.Changed:Connect(function()
+        if input.UserInputState == Enum.UserInputState.End then resizing = false end
+    end)
+end
+resizeGrip.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        beginResize(input)
+        resizeInput = input
+    end
+end)
+resizeGrip.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        resizeInput = input
+    end)
+end)
+UIS.InputChanged:Connect(function(input)
+    if input == resizeInput and resizing then
+        local delta = input.Position - resizeStart
+        local newX = math.clamp(startSize.X.Offset + delta.X, MIN_SIZE.X*currentScale, MAX_SIZE.X*currentScale)
+        local newY = math.clamp(startSize.Y.Offset + delta.Y, MIN_SIZE.Y*currentScale, MAX_SIZE.Y*currentScale)
+        mainFrame.Size = UDim2.new(0, newX, 0, newY)
+    end
+end)
+
+-- Minimize-to-floating-button logic (mobile & PC)
+local minimized = false
+local prevSize, prevPosition
+local baseBtnSize = 44
+local floatBtnSize = baseBtnSize * 1.25
+local floatBtn = Instance.new("TextButton")
+floatBtn.Size = UDim2.new(0, floatBtnSize, 0, floatBtnSize)
+floatBtn.Position = UDim2.new(1, -floatBtnSize - 12, 1, -floatBtnSize - 12)
+floatBtn.BackgroundColor3 = Color3.fromRGB(90, 90, 135)
+floatBtn.Text = ""
+floatBtn.Parent = screenGui
+floatBtn.Visible = false
+floatBtn.Active = true
+floatBtn.ZIndex = 99
+local fbCorner = Instance.new("UICorner", floatBtn)
+fbCorner.CornerRadius = UDim.new(1, 0)
+
+local floatAvatar = Instance.new("ImageLabel")
+floatAvatar.Name = "Avatar"
+floatAvatar.Size = UDim2.new(1, -8, 1, -8)
+floatAvatar.Position = UDim2.new(0, 4, 0, 4)
+floatAvatar.BackgroundTransparency = 1
+floatAvatar.Image = AVATAR_ID
+floatAvatar.Parent = floatBtn
+local floatAvatarCorner = Instance.new("UICorner", floatAvatar)
+floatAvatarCorner.CornerRadius = UDim.new(1, 0)
+
+local floatDragging, floatDragInput, floatDragStart, floatStartPos
+local function beginFloatDrag(input)
+    floatDragging = true
+    floatDragStart = input.Position
+    floatStartPos = floatBtn.Position
+    input.Changed:Connect(function()
+        if input.UserInputState == Enum.UserInputState.End then floatDragging = false end
+    end)
+end
+floatBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        beginFloatDrag(input)
+        floatDragInput = input
+    end
+end)
+floatBtn.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        floatDragInput = input
+    end
+end)
+UIS.InputChanged:Connect(function(input)
+    if input == floatDragInput and floatDragging then
+        local delta = input.Position - floatDragStart
+        local scrW = screenGui.AbsoluteSize.X
+        local scrH = screenGui.AbsoluteSize.Y
+        local newX = math.clamp(floatStartPos.X.Offset + delta.X, 0, scrW - floatBtnSize)
+        local newY = math.clamp(floatStartPos.Y.Offset + delta.Y, 0, scrH - floatBtnSize)
+        floatBtn.Position = UDim2.new(0, newX, 0, newY)
+    end
+end)
+
+minBtn.MouseButton1Click:Connect(function()
+    if not minimized then
+        prevSize = mainFrame.Size
+        prevPosition = mainFrame.Position
+        mainFrame.Visible = false
+        floatBtn.Visible = true
+        minimized = true
+    end
+end)
+floatBtn.MouseButton1Click:Connect(function()
+    if minimized and not floatDragging then
+        mainFrame.Visible = true
+        floatBtn.Visible = false
+        minimized = false
+        if prevSize then
+            mainFrame.Size = prevSize
+        end
+        if prevPosition then
+            mainFrame.Position = prevPosition
+        end
+    end
+end)
+
+applyGuiScale(mainFrame, currentScale)
+applyGuiColor(mainFrame, currentColor)
