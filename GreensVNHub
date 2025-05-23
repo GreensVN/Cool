@@ -1,7 +1,7 @@
--- GreensVN Hub V1 - All-in-One Script Hub (No Stealth, No Admin Detect, With Admin-Style Pre-GUI Welcome)
+-- GreensVN Hub V1.25 - All-in-One Script Hub (No Stealth, No Admin Detect, Welcome Popup, Hack Tab Scrollable)
 -- By Oxbl149 & GreensVN
 
--- ADMIN-STYLE WELCOME POPUP with extra white stroke for both popup & name (GreensVN Hub V1)
+-- ==== ADMIN-STYLE WELCOME POPUP (viền trắng nổi bật cho popup + tên) ====
 do
     local player = game:GetService("Players").LocalPlayer
 
@@ -27,7 +27,7 @@ do
     local stroke = Instance.new("UIStroke", main)
     stroke.Color = Color3.fromRGB(255,255,255)
     stroke.Thickness = 4
-    stroke.Transparency = 0 -- Đậm hơn
+    stroke.Transparency = 0
 
     local shadow = Instance.new("ImageLabel", main)
     shadow.Name = "Shadow"
@@ -110,7 +110,7 @@ do
         task.wait(0.02)
     end
 
-    wait(2.5) -- Hiển thị popup
+    wait(2.5)
 
     -- Fade out
     for i = 0, 1, 0.1 do
@@ -125,6 +125,7 @@ do
     preGui:Destroy()
 end
 
+-- ==== GUI CHÍNH VỚI HACK TAB SCROLLABLE ====
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -154,7 +155,7 @@ local function applyGuiColor(mainFrame, newColor)
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "GreensVNHubV1"
+screenGui.Name = "greensvn hub v1.25"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -208,7 +209,7 @@ local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub V1"
+titleLabel.Text = "greensvn hub v1.25"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -274,7 +275,7 @@ local tabFrames = {}
 local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
 local tabFramePos = UDim2.new(0, TAB_WIDTH, 0, 64)
 
--- 1. Home Tab
+-- 1. Home Tab (thêm viền trắng cho Welcome)
 local homeFrame = Instance.new("Frame")
 homeFrame.Size = tabFrameSpace
 homeFrame.Position = tabFramePos
@@ -289,17 +290,21 @@ local homePadding = Instance.new("UIPadding", homeFrame)
 homePadding.PaddingTop = UDim.new(0, 10)
 homePadding.PaddingLeft = UDim.new(0, 40)
 
--- Welcome line
+-- Welcome line (có UIStroke viền trắng)
 local welcomeLabel = Instance.new("TextLabel")
 welcomeLabel.Size = UDim2.new(1, -40, 0, 36)
 welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
 welcomeLabel.BackgroundTransparency = 1
-welcomeLabel.Font = Enum.Font.GothamBold
+welcomeLabel.Font = Enum.Font.GothamBlack
 welcomeLabel.TextSize = 30
 welcomeLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name or "User")
 welcomeLabel.Parent = homeFrame
+local welcomeStroke = Instance.new("UIStroke", welcomeLabel)
+welcomeStroke.Color = Color3.fromRGB(255,255,255)
+welcomeStroke.Thickness = 1.5
+welcomeStroke.Transparency = 0
 
 -- Roblox Avatar (UserThumbnail)
 local bigAvatar = Instance.new("ImageLabel")
@@ -479,8 +484,7 @@ spawn(function()
     geoLabel.Text = locationText
 end)
 
--- 2. Hack Tab (Scrollable)
--- Hack Tab (scrollable, vuốt được cả mobile lẫn PC)
+-- 2. Hack Tab (SCROLLABLE)
 local tab2Frame = Instance.new("Frame")
 tab2Frame.Size = tabFrameSpace
 tab2Frame.Position = tabFramePos
@@ -492,7 +496,7 @@ tabFrames[2] = tab2Frame
 local hackCorner = Instance.new("UICorner", tab2Frame)
 hackCorner.CornerRadius = UDim.new(0, 16)
 
--- Tạo ScrollingFrame
+-- ScrollingFrame cho hack tab
 local scroll = Instance.new("ScrollingFrame")
 scroll.Size = UDim2.new(1, -12, 1, -12)
 scroll.Position = UDim2.new(0, 6, 0, 6)
@@ -500,10 +504,9 @@ scroll.BackgroundTransparency = 1
 scroll.BorderSizePixel = 0
 scroll.ScrollBarThickness = 10
 scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-scroll.CanvasSize = UDim2.new(0, 0, 0, 420) -- Sẽ auto update bên dưới
+scroll.CanvasSize = UDim2.new(0, 0, 0, 420)
 scroll.Parent = tab2Frame
 
--- ListLayout cho các nút tự động xếp dọc
 local listLayout = Instance.new("UIListLayout", scroll)
 listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 listLayout.Padding = UDim.new(0, 10)
@@ -527,14 +530,12 @@ for i=1,6 do
     bcor.CornerRadius = UDim.new(0.3, 0)
     btns[i] = btn
 end
-
--- Auto cập nhật CanvasSize theo số nút
 listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scroll.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 18)
 end)
 
 -- Notification label for hack tab
-notificationLabel = Instance.new("TextLabel")
+local notificationLabel = Instance.new("TextLabel")
 notificationLabel.Size = UDim2.new(1, -36, 0, 30)
 notificationLabel.Position = UDim2.new(0, 18, 0, 8)
 notificationLabel.BackgroundTransparency = 0.4
@@ -563,7 +564,6 @@ btns[1].MouseButton1Click:Connect(function()
     local s = loadstring(game:HttpGet('https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12'))
     if s then s() end
 end)
-
 btns[2].MouseButton1Click:Connect(function()
     pcall(function()
         for _,v in ipairs(getconnections(player.Kick)) do
@@ -609,7 +609,6 @@ btns[2].MouseButton1Click:Connect(function()
     end)
     showHackNotification("Anti Kick is active now")
 end)
-
 btns[3].MouseButton1Click:Connect(function()
     pcall(function()
         for _,v in ipairs(getgc(true)) do
@@ -655,7 +654,6 @@ btns[3].MouseButton1Click:Connect(function()
     end)
     showHackNotification("Anti Ban is active now")
 end)
-
 btns[4].MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"))()
 end)
