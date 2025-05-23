@@ -665,16 +665,114 @@ btns[6].MouseButton1Click:Connect(function()
 end)
 
 -- 3. Blank Tab
-local tab3Frame = Instance.new("Frame")
-tab3Frame.Size = tabFrameSpace
-tab3Frame.Position = tabFramePos
-tab3Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
-tab3Frame.BorderSizePixel = 0
-tab3Frame.Parent = mainFrame
-tab3Frame.Visible = false
-tabFrames[3] = tab3Frame
-local blankCorner = Instance.new("UICorner", tab3Frame)
-blankCorner.CornerRadius = UDim.new(0, 16)
+-- PHẦN BLANK TAB ĐƯỢC NÂNG CẤP THÀNH "Library" (Thư viện Script) KIỂU GHOSTHUB
+-- Thay thế toàn bộ phần tạo tab blank trước đây bằng đoạn này:
+local libraryFrame = Instance.new("Frame")
+libraryFrame.Size = tabFrameSpace
+libraryFrame.Position = tabFramePos
+libraryFrame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+libraryFrame.BorderSizePixel = 0
+libraryFrame.Parent = mainFrame
+libraryFrame.Visible = false
+tabFrames[3] = libraryFrame
+local libraryCorner = Instance.new("UICorner", libraryFrame)
+libraryCorner.CornerRadius = UDim.new(0, 16)
+
+-- Tiêu đề Library
+local libTitle = Instance.new("TextLabel")
+libTitle.Text = "Script Library"
+libTitle.Size = UDim2.new(1, 0, 0, 54)
+libTitle.Position = UDim2.new(0, 0, 0, 0)
+libTitle.BackgroundTransparency = 1
+libTitle.Font = Enum.Font.GothamBold
+libTitle.TextSize = 28
+libTitle.TextColor3 = Color3.fromRGB(120, 255, 200)
+libTitle.TextXAlignment = Enum.TextXAlignment.Center
+libTitle.Parent = libraryFrame
+
+-- ScrollingFrame chứa thư viện script
+local libScroll = Instance.new("ScrollingFrame")
+libScroll.Size = UDim2.new(1, -20, 1, -68)
+libScroll.Position = UDim2.new(0, 10, 0, 58)
+libScroll.BackgroundTransparency = 1
+libScroll.BorderSizePixel = 0
+libScroll.ScrollBarThickness = 10
+libScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+libScroll.CanvasSize = UDim2.new(0, 0, 0, 600)
+libScroll.Parent = libraryFrame
+
+local libLayout = Instance.new("UIListLayout", libScroll)
+libLayout.SortOrder = Enum.SortOrder.LayoutOrder
+libLayout.Padding = UDim.new(0, 10)
+
+-- Danh sách script (tùy ý thêm)
+local scriptLib = {
+    {
+        name = "K00pGUI v12",
+        desc = "UI đa năng của GreensVN",
+        url = "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12"
+    },
+    {
+        name = "TuanAnhIOS",
+        desc = "IOS tổng hợp",
+        url = "https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"
+    },
+    {
+        name = "1*1*1*1 GUI",
+        desc = "Menu 1*1*1*1",
+        url = "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/tutogui"
+    },
+    {
+        name = "Dead Rail",
+        desc = "Dead Rail Loader",
+        url = "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"
+    },
+    {
+        name = "Inf Yield",
+        desc = "Admin command phổ biến",
+        url = "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"
+    },
+    -- Thêm script khác tại đây nếu thích
+}
+
+for i, data in ipairs(scriptLib) do
+    local libBtn = Instance.new("TextButton")
+    libBtn.Size = UDim2.new(1, -10, 0, 52)
+    libBtn.BackgroundColor3 = Color3.fromRGB(46, 60, 70)
+    libBtn.Font = Enum.Font.GothamBold
+    libBtn.TextSize = 20
+    libBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    libBtn.Text = data.name
+    libBtn.Parent = libScroll
+    libBtn.Name = "LibBtn"..i
+    local libBtnCorner = Instance.new("UICorner", libBtn)
+    libBtnCorner.CornerRadius = UDim.new(0.35,0)
+
+    local desc = Instance.new("TextLabel")
+    desc.Parent = libBtn
+    desc.Size = UDim2.new(1, -20, 0, 18)
+    desc.Position = UDim2.new(0, 10, 0, 26)
+    desc.BackgroundTransparency = 1
+    desc.Font = Enum.Font.Gotham
+    desc.TextSize = 16
+    desc.TextColor3 = Color3.fromRGB(180, 255, 200)
+    desc.TextXAlignment = Enum.TextXAlignment.Left
+    desc.Text = data.desc or ""
+    desc.Name = "Desc"
+
+    libBtn.MouseButton1Click:Connect(function()
+        pcall(function()
+            setclipboard and setclipboard(data.url)
+        end)
+        local s = loadstring(game:HttpGet(data.url))
+        if s then s() end
+    end)
+end
+
+-- Auto cập nhật CanvasSize
+libLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    libScroll.CanvasSize = UDim2.new(0, 0, 0, libLayout.AbsoluteContentSize.Y + 16)
+end)
 
 -- 4. Settings Tab (GUI scale + color)
 local settingsFrame = Instance.new("Frame")
