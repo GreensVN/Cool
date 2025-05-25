@@ -1,0 +1,451 @@
+-- GreensVN Hub V1.25 - All-in-One Script Hub (No Stealth, No Admin Detect, Welcome Popup, Hack Tab Scrollable)
+-- By Oxbl149 & GreensVN
+
+-- ==== ADMIN-STYLE WELCOME POPUP (giữ nguyên như bản gốc) ====
+-- ... [PHẦN WELCOME POPUP GIỮ NGUYÊN] ...
+
+-- ==== GUI CHÍNH VỚI HACK TAB SCROLLABLE, THƯ VIỆN SCRIPT NÂNG CẤP ====
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local player = Players.LocalPlayer
+local ThumbnailType = Enum.ThumbnailType.HeadShot
+local ThumbnailSize = Enum.ThumbnailSize.Size420x420
+
+local MIN_SIZE = Vector2.new(350, 250)
+local MAX_SIZE = Vector2.new(750, 650)
+local TAB_WIDTH = 132
+local AVATAR_ID = "rbxassetid://86684458914012"
+local DEFAULT_SCALE = 1
+local SCALE_STEP = 0.1
+local MIN_SCALE = 0.7
+local MAX_SCALE = 1.6
+local DEFAULT_COLOR = Color3.fromRGB(30, 32, 40)
+local currentScale = DEFAULT_SCALE
+local currentColor = DEFAULT_COLOR
+
+local function applyGuiScale(mainFrame, scale)
+    mainFrame.Size = UDim2.new(0, 540 * scale, 0, 590 * scale)
+    mainFrame.Position = UDim2.new(0.5, -270 * scale, 0.5, -295 * scale)
+end
+
+local function applyGuiColor(mainFrame, newColor)
+    mainFrame.BackgroundColor3 = newColor
+end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "greensvn hub v1.25"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.ResetOnSpawn = false
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 540, 0, 590)
+mainFrame.Position = UDim2.new(0.5, -270, 0.5, -295)
+mainFrame.BackgroundColor3 = DEFAULT_COLOR
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+mainFrame.ClipsDescendants = true
+
+local mainStroke = Instance.new("UIStroke", mainFrame)
+mainStroke.Color = Color3.fromRGB(90, 180, 90)
+mainStroke.Thickness = 2
+
+local mainCorner = Instance.new("UICorner", mainFrame)
+mainCorner.CornerRadius = UDim.new(0, 16)
+
+local shadow = Instance.new("ImageLabel")
+shadow.Name = "Shadow"
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.7
+shadow.Size = UDim2.new(1, 40, 1, 40)
+shadow.Position = UDim2.new(0, -20, 0, -20)
+shadow.ZIndex = 0
+shadow.Parent = mainFrame
+
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 64)
+topBar.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+topBar.BorderSizePixel = 0
+topBar.Parent = mainFrame
+local topBarCorner = Instance.new("UICorner", topBar)
+topBarCorner.CornerRadius = UDim.new(0, 16)
+
+local avatar = Instance.new("ImageLabel")
+avatar.Name = "Avatar"
+avatar.Size = UDim2.new(0, 54, 0, 54)
+avatar.Position = UDim2.new(0, 9, 0, 5)
+avatar.BackgroundTransparency = 1
+avatar.Image = AVATAR_ID
+avatar.Parent = topBar
+local avatarCorner = Instance.new("UICorner", avatar)
+avatarCorner.CornerRadius = UDim.new(1, 0)
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -180, 1, 0)
+titleLabel.Position = UDim2.new(0, 75, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "greensvn hub v1.25"
+titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 30
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = topBar
+
+local minBtn = Instance.new("TextButton")
+minBtn.Size = UDim2.new(0, 34, 0, 34)
+minBtn.Position = UDim2.new(1, -84, 0, 15)
+minBtn.BackgroundColor3 = Color3.fromRGB(60,80,60)
+minBtn.Text = "-"
+minBtn.Font = Enum.Font.GothamBold
+minBtn.TextSize = 26
+minBtn.TextColor3 = Color3.fromRGB(255,255,255)
+minBtn.Parent = topBar
+local minCorner = Instance.new("UICorner", minBtn)
+minCorner.CornerRadius = UDim.new(0.5, 0)
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 34, 0, 34)
+closeBtn.Position = UDim2.new(1, -40, 0, 15)
+closeBtn.BackgroundColor3 = Color3.fromRGB(120,60,60)
+closeBtn.Text = "x"
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+closeBtn.Parent = topBar
+local closeCorner = Instance.new("UICorner", closeBtn)
+closeCorner.CornerRadius = UDim.new(0.5, 0)
+closeBtn.AutoButtonColor = true
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+local tabNames = {"Home", "Hack", "Library", "Settings", "Credit"}
+local tabHolder = Instance.new("Frame")
+tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -64)
+tabHolder.Position = UDim2.new(0, 0, 0, 64)
+tabHolder.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tabHolder.BorderSizePixel = 0
+tabHolder.Parent = mainFrame
+local tabHolderCorner = Instance.new("UICorner", tabHolder)
+tabHolderCorner.CornerRadius = UDim.new(0, 16)
+
+local tabBtns = {}
+for i, name in ipairs(tabNames) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -16, 0, 46)
+    btn.Position = UDim2.new(0, 8, 0, (i-1)*56 + 12)
+    btn.BackgroundColor3 = (i==1) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+    btn.Text = name
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 22
+    btn.Parent = tabHolder
+    local btnCorner = Instance.new("UICorner", btn)
+    btnCorner.CornerRadius = UDim.new(0.4, 0)
+    tabBtns[i] = btn
+end
+
+local tabFrames = {}
+local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
+local tabFramePos = UDim2.new(0, TAB_WIDTH, 0, 64)
+
+-- [Home Tab, Hack Tab, Settings, Credit] ... giữ nguyên như trước!
+
+-- ============ ULTIMATE LIBRARY TAB ==============
+local UserInputService = game:GetService("UserInputService")
+
+local libraryFrame = Instance.new("Frame")
+libraryFrame.Size = tabFrameSpace
+libraryFrame.Position = tabFramePos
+libraryFrame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+libraryFrame.BorderSizePixel = 0
+libraryFrame.Parent = mainFrame
+libraryFrame.Visible = false
+tabFrames[3] = libraryFrame
+local libraryCorner = Instance.new("UICorner", libraryFrame)
+libraryCorner.CornerRadius = UDim.new(0, 16)
+
+local libTitle = Instance.new("TextLabel")
+libTitle.Text = "Script Library"
+libTitle.Size = UDim2.new(1, 0, 0, 54)
+libTitle.Position = UDim2.new(0, 0, 0, 0)
+libTitle.BackgroundTransparency = 1
+libTitle.Font = Enum.Font.GothamBold
+libTitle.TextSize = 28
+libTitle.TextColor3 = Color3.fromRGB(120, 255, 200)
+libTitle.TextXAlignment = Enum.TextXAlignment.Center
+libTitle.Parent = libraryFrame
+
+local searchBox = Instance.new("TextBox")
+searchBox.PlaceholderText = "Tìm script (tên, game, tag, mô tả)..."
+searchBox.Size = UDim2.new(1, -32, 0, 34)
+searchBox.Position = UDim2.new(0, 16, 0, 54)
+searchBox.BackgroundColor3 = Color3.fromRGB(44, 55, 60)
+searchBox.TextColor3 = Color3.fromRGB(255,255,255)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 18
+searchBox.TextXAlignment = Enum.TextXAlignment.Left
+searchBox.Text = ""
+searchBox.ClearTextOnFocus = false
+searchBox.Parent = libraryFrame
+local searchCorner = Instance.new("UICorner", searchBox)
+searchCorner.CornerRadius = UDim.new(0.4, 0)
+
+local filterFrame = Instance.new("Frame", libraryFrame)
+filterFrame.Size = UDim2.new(1, -24, 0, 28)
+filterFrame.Position = UDim2.new(0, 12, 0, 90)
+filterFrame.BackgroundTransparency = 1
+
+local countLabel = Instance.new("TextLabel", filterFrame)
+countLabel.Size = UDim2.new(0.7, -10, 1, 0)
+countLabel.Position = UDim2.new(0,0,0,0)
+countLabel.BackgroundTransparency = 1
+countLabel.Font = Enum.Font.Gotham
+countLabel.TextSize = 15
+countLabel.TextColor3 = Color3.fromRGB(180,255,180)
+countLabel.TextXAlignment = Enum.TextXAlignment.Left
+countLabel.Text = "..."
+
+local favFilterBtn = Instance.new("TextButton", filterFrame)
+favFilterBtn.Size = UDim2.new(0, 90, 1, 0)
+favFilterBtn.Position = UDim2.new(1, -90, 0, 0)
+favFilterBtn.BackgroundTransparency = 0.1
+favFilterBtn.BackgroundColor3 = Color3.fromRGB(50, 70, 65)
+favFilterBtn.Font = Enum.Font.GothamBold
+favFilterBtn.TextSize = 16
+favFilterBtn.TextColor3 = Color3.fromRGB(255,255,90)
+favFilterBtn.Text = "★ Yêu thích"
+favFilterBtn.AutoButtonColor = true
+local favFilterCorner = Instance.new("UICorner", favFilterBtn)
+favFilterCorner.CornerRadius = UDim.new(0.5,0)
+
+local libScroll = Instance.new("ScrollingFrame")
+libScroll.Size = UDim2.new(1, -20, 1, -134)
+libScroll.Position = UDim2.new(0, 10, 0, 122)
+libScroll.BackgroundTransparency = 1
+libScroll.BorderSizePixel = 0
+libScroll.ScrollBarThickness = 10
+libScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+libScroll.CanvasSize = UDim2.new(0, 0, 0, 800)
+libScroll.Parent = libraryFrame
+
+local libLayout = Instance.new("UIListLayout", libScroll)
+libLayout.SortOrder = Enum.SortOrder.LayoutOrder
+libLayout.Padding = UDim.new(0, 10)
+
+local scriptLib = {
+    -- (Đã đề xuất ở trên: 30+ scripts nổi bật, tag, icon, fav v.v...)
+    -- Bạn copy phần data scriptLib nâng cấp ở trên vào đây!
+}
+
+local allLibBtns = {}
+local showFavOnly = false
+local function updateCountLabel()
+    local total = #scriptLib
+    local showing = 0
+    for _,v in ipairs(allLibBtns) do if v.btn.Visible then showing = showing + 1 end end
+    countLabel.Text = "Có "..total.." script | Đang hiển thị: "..showing..(showFavOnly and " (Yêu thích)" or "")
+end
+
+local function scriptToSampleCode(link)
+    return ("loadstring(game:HttpGet('%s'))()"):format(link)
+end
+
+local function makeLibBtn(data)
+    local libBtn = Instance.new("TextButton")
+    libBtn.Size = UDim2.new(1, -10, 0, 64)
+    libBtn.BackgroundColor3 = data.fav and Color3.fromRGB(60, 70, 40) or Color3.fromRGB(46, 60, 70)
+    libBtn.Font = Enum.Font.GothamBold
+    libBtn.TextSize = 17
+    libBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    libBtn.Text = string.format(" %s %s  [%s]", data.icon or "🟢", data.name, data.game or "Unknown")
+    libBtn.Parent = libScroll
+    libBtn.Name = "LibBtn_"..data.name
+    local libBtnCorner = Instance.new("UICorner", libBtn)
+    libBtnCorner.CornerRadius = UDim.new(0.35,0)
+    local tagTxt = Instance.new("TextLabel", libBtn)
+    tagTxt.Size = UDim2.new(0, 130, 0, 18)
+    tagTxt.Position = UDim2.new(0, 10, 0, 40)
+    tagTxt.BackgroundTransparency = 1
+    tagTxt.Font = Enum.Font.Gotham
+    tagTxt.TextSize = 13
+    tagTxt.TextColor3 = Color3.fromRGB(100,255,255)
+    tagTxt.TextXAlignment = Enum.TextXAlignment.Left
+    tagTxt.Text = table.concat(data.tags or {}, "  ")
+    local favBtn = Instance.new("TextButton", libBtn)
+    favBtn.Size = UDim2.new(0, 36, 0, 36)
+    favBtn.Position = UDim2.new(1, -42, 0, 8)
+    favBtn.BackgroundTransparency = 1
+    favBtn.Text = data.fav and "★" or "☆"
+    favBtn.Font = Enum.Font.GothamBold
+    favBtn.TextSize = 26
+    favBtn.TextColor3 = data.fav and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+    favBtn.ZIndex = 2
+    favBtn.MouseButton1Click:Connect(function()
+        data.fav = not data.fav
+        favBtn.Text = data.fav and "★" or "☆"
+        favBtn.TextColor3 = data.fav and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+        libBtn.BackgroundColor3 = data.fav and Color3.fromRGB(60, 70, 40) or Color3.fromRGB(46, 60, 70)
+        updateCountLabel()
+    end)
+    local copyTip = Instance.new("TextLabel", libBtn)
+    copyTip.Size = UDim2.new(0, 170, 0, 16)
+    copyTip.Position = UDim2.new(1, -180, 1, -20)
+    copyTip.BackgroundTransparency = 1
+    copyTip.Font = Enum.Font.Gotham
+    copyTip.TextSize = 12
+    copyTip.TextColor3 = Color3.fromRGB(255,255,120)
+    copyTip.TextXAlignment = Enum.TextXAlignment.Right
+    copyTip.Text = "Click = Run | Hold = Copy link | Double = Copy code"
+    copyTip.Name = "CopyTip"
+    local tooltip = Instance.new("TextLabel", libBtn)
+    tooltip.Size = UDim2.new(0, 320, 0, 78)
+    tooltip.Position = UDim2.new(0, 0, 0, -88)
+    tooltip.BackgroundTransparency = 0.09
+    tooltip.BackgroundColor3 = Color3.fromRGB(42,50,70)
+    tooltip.TextColor3 = Color3.fromRGB(255,255,255)
+    tooltip.TextStrokeTransparency = 0.7
+    tooltip.Font = Enum.Font.Gotham
+    tooltip.TextSize = 15
+    tooltip.TextWrapped = true
+    tooltip.Visible = false
+    tooltip.TextXAlignment = Enum.TextXAlignment.Left
+    tooltip.TextYAlignment = Enum.TextYAlignment.Top
+    tooltip.BorderSizePixel = 0
+    tooltip.ZIndex = 10
+    tooltip.Text = (
+        "%s %s\nGame: %s\nTag: %s\n%s\nLink: %s"
+        ):format(data.icon or "", data.name, data.game or "-", table.concat(data.tags or {}, ","), data.desc or "", data.url or "")
+    local tcor = Instance.new("UICorner", tooltip)
+    tcor.CornerRadius = UDim.new(0.25,0)
+    libBtn.MouseEnter:Connect(function() tooltip.Visible = true end)
+    libBtn.MouseLeave:Connect(function() tooltip.Visible = false end)
+    libBtn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            tooltip.Visible = true
+        end
+    end)
+    libBtn.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            tooltip.Visible = false
+        end
+    end)
+    local holding = false
+    local holdStart = 0
+    libBtn.MouseButton1Down:Connect(function()
+        holding = true
+        holdStart = tick()
+        spawn(function()
+            wait(0.4)
+            if holding then
+                pcall(function()
+                    setclipboard and setclipboard(data.url)
+                end)
+                copyTip.Text = "Đã copy link!"
+                wait(0.8)
+                copyTip.Text = "Click = Run | Hold = Copy link | Double = Copy code"
+            end
+        end)
+    end)
+    libBtn.MouseButton1Up:Connect(function()
+        if holding then
+            holding = false
+            if tick() - holdStart < 0.35 then
+                local success, result = pcall(function()
+                    local scr = loadstring(game:HttpGet(data.url))
+                    if scr then scr() end
+                end)
+                if not success then
+                    copyTip.Text = "Script lỗi/không hỗ trợ!"
+                    wait(1.3)
+                    copyTip.Text = "Click = Run | Hold = Copy link | Double = Copy code"
+                end
+            end
+        end
+    end)
+    libBtn.MouseLeave:Connect(function() holding = false end)
+    libBtn.MouseButton2Click:Connect(function()
+        setclipboard(scriptToSampleCode(data.url))
+        copyTip.Text = "Đã copy đoạn code mẫu!"
+        wait(1)
+        copyTip.Text = "Click = Run | Hold = Copy link | Double = Copy code"
+    end)
+    libBtn.MouseButton1Click:Connect(function()
+        if libBtn._lastClick and tick() - libBtn._lastClick < 0.35 then
+            setclipboard(scriptToSampleCode(data.url))
+            copyTip.Text = "Đã copy đoạn code mẫu!"
+            wait(1)
+            copyTip.Text = "Click = Run | Hold = Copy link | Double = Copy code"
+        end
+        libBtn._lastClick = tick()
+    end)
+    table.insert(allLibBtns, {btn=libBtn, data=data})
+end
+
+local function refreshLibrary()
+    for _,v in ipairs(allLibBtns) do v.btn:Destroy() end
+    table.clear(allLibBtns)
+    local keyword = searchBox.Text:lower()
+    local showFav = showFavOnly
+    local found = 0
+    for _, data in ipairs(scriptLib) do
+        local show = true
+        if showFav and not data.fav then show = false end
+        if keyword ~= "" then
+            local hit = false
+            if (data.name and data.name:lower():find(keyword,1,true))
+            or (data.game and data.game:lower():find(keyword,1,true))
+            or (data.desc and data.desc:lower():find(keyword,1,true))
+            then hit = true end
+            for _,tag in ipairs(data.tags or {}) do
+                if tag:lower():find(keyword,1,true) then hit = true break end
+            end
+            if not hit then show = false end
+        end
+        if show then
+            makeLibBtn(data)
+            found = found + 1
+        end
+    end
+    if found == 0 then
+        local noResult = Instance.new("TextLabel", libScroll)
+        noResult.Size = UDim2.new(1, -20, 0, 36)
+        noResult.BackgroundTransparency = 1
+        noResult.Font = Enum.Font.GothamBold
+        noResult.TextSize = 17
+        noResult.TextColor3 = Color3.fromRGB(255,99,99)
+        noResult.Text = "Không tìm thấy kết quả phù hợp."
+        table.insert(allLibBtns, {btn=noResult, data={}})
+    end
+    updateCountLabel()
+end
+
+refreshLibrary()
+searchBox:GetPropertyChangedSignal("Text"):Connect(refreshLibrary)
+favFilterBtn.MouseButton1Click:Connect(function()
+    showFavOnly = not showFavOnly
+    favFilterBtn.BackgroundColor3 = showFavOnly and Color3.fromRGB(120,100,40) or Color3.fromRGB(50, 70, 65)
+    favFilterBtn.Text = showFavOnly and "★ Yêu thích" or "☆ Yêu thích"
+    refreshLibrary()
+end)
+libLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    libScroll.CanvasSize = UDim2.new(0, 0, 0, libLayout.AbsoluteContentSize.Y + 18)
+end)
+-- =========== END LIBRARY TAB ===========
+
+-- Các tab còn lại (Settings, Credit, Drag, Resize, Minimize...) giữ nguyên như trước
+
+-- Tab logic
+for i, btn in ipairs(tabBtns) do
+    btn.MouseButton1Click:Connect(function()
+        for j, f in ipairs(tabFrames) do
+            f.Visible = (j == i)
+            tabBtns[j].BackgroundColor3 = (j == i) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+        end
+    end)
+end
+
+applyGuiScale(mainFrame, currentScale)
+applyGuiColor(mainFrame, currentColor)
