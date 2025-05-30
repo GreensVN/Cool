@@ -1,0 +1,271 @@
+-- Greensvn Buff May Mắn Giả: Notification Roblox-style, hiệu ứng xuất hiện mượt giống yêu cầu kết bạn, tự ẩn sau 10s
+
+local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "GreensvnBuffMayManUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = playerGui
+
+-- Rainbow border bo tròn phía sau MainFrame (dày hơn MainFrame 10px mỗi cạnh)
+local BorderFrame = Instance.new("Frame")
+BorderFrame.Size = UDim2.new(0, 520, 0, 175)
+BorderFrame.Position = UDim2.new(0.5, -260, 0.07, -10)
+BorderFrame.BackgroundColor3 = Color3.fromRGB(255,0,0)
+BorderFrame.BorderSizePixel = 0
+BorderFrame.Parent = ScreenGui
+
+-- Bo tròn viền rainbow
+local BorderUICorner = Instance.new("UICorner")
+BorderUICorner.CornerRadius = UDim.new(0, 22)
+BorderUICorner.Parent = BorderFrame
+
+-- Main UI - UI chính, bo góc đẹp
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 500, 0, 155)
+MainFrame.Position = UDim2.new(0.5, -250, 0.07, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+-- UICorner bo góc đẹp
+local MainUICorner = Instance.new("UICorner")
+MainUICorner.CornerRadius = UDim.new(0, 18)
+MainUICorner.Parent = MainFrame
+
+-- UIScale tự động co cho đa nền tảng
+local UIScale = Instance.new("UIScale")
+UIScale.Parent = MainFrame
+
+-- Mobile kéo thả
+local UserInputService = game:GetService("UserInputService")
+local dragging, dragInput, dragStart, startPos
+MainFrame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = MainFrame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+MainFrame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		BorderFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X - 10, startPos.Y.Scale, startPos.Y.Offset + delta.Y - 10)
+	end
+end)
+
+-- Dòng chữ lớn: BUFF MAY MẮN
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 46)
+Title.Position = UDim2.new(0, 0, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "BUFF MAY MẮN"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextStrokeTransparency = 0
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBlack
+Title.Parent = MainFrame
+
+-- Khung trạng thái (TextButton để click bật/tắt)
+local StatusFrame = Instance.new("TextButton")
+StatusFrame.Size = UDim2.new(0.8, 0, 0, 44)
+StatusFrame.Position = UDim2.new(0.1, 0, 0, 60)
+StatusFrame.BackgroundColor3 = Color3.fromRGB(220, 40, 40)
+StatusFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+StatusFrame.BorderSizePixel = 4
+StatusFrame.AutoButtonColor = true
+StatusFrame.Text = ""
+StatusFrame.Parent = MainFrame
+
+local StatusUICorner = Instance.new("UICorner")
+StatusUICorner.CornerRadius = UDim.new(0, 12)
+StatusUICorner.Parent = StatusFrame
+
+-- Dòng chữ trạng thái (nằm trên StatusFrame)
+local Status = Instance.new("TextLabel")
+Status.Size = UDim2.new(1, 0, 1, 0)
+Status.BackgroundTransparency = 1
+Status.Text = "BẬT BUFF MAY MẮN"
+Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+Status.TextStrokeTransparency = 0
+Status.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+Status.TextScaled = true
+Status.Font = Enum.Font.GothamBold
+Status.Parent = StatusFrame
+
+-- Phần chú thích nhỏ phía dưới
+local ScriptLabel = Instance.new("TextLabel")
+ScriptLabel.Size = UDim2.new(1, 0, 0, 24)
+ScriptLabel.Position = UDim2.new(0, 0, 1, -24)
+ScriptLabel.BackgroundTransparency = 1
+ScriptLabel.Text = "Greensvn Script | RandomFruitsLucky X5"
+ScriptLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+ScriptLabel.TextScaled = true
+ScriptLabel.Font = Enum.Font.Gotham
+ScriptLabel.Parent = MainFrame
+
+-- Nút X tắt GUI ở góc phải trên
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 36, 0, 36)
+CloseButton.Position = UDim2.new(1, -40, 0, 4)
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255,255,255)
+CloseButton.TextScaled = true
+CloseButton.Font = Enum.Font.GothamBlack
+CloseButton.ZIndex = 2
+CloseButton.Parent = MainFrame
+local CloseUICorner = Instance.new("UICorner")
+CloseUICorner.CornerRadius = UDim.new(0, 12)
+CloseUICorner.Parent = CloseButton
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Thông báo Roblox-style bo tròn, hiệu ứng xuất hiện và biến mất
+local NotifyFrame = Instance.new("Frame")
+NotifyFrame.Size = UDim2.new(0, 370, 0, 72)
+local startPos = UDim2.new(1, 20, 1, -120) -- ngoài màn hình bên phải
+local showPos = UDim2.new(1, -400, 1, -120) -- vị trí trong màn hình
+NotifyFrame.Position = startPos
+NotifyFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+NotifyFrame.BorderSizePixel = 0
+NotifyFrame.Visible = false
+NotifyFrame.BackgroundTransparency = 0.04
+NotifyFrame.Parent = ScreenGui
+local NotifyCorner = Instance.new("UICorner")
+NotifyCorner.CornerRadius = UDim.new(0, 24)
+NotifyCorner.Parent = NotifyFrame
+
+-- Gạch sáng bên trái (giống notification Roblox)
+local Accent = Instance.new("Frame")
+Accent.Size = UDim2.new(0, 8, 1, 0)
+Accent.Position = UDim2.new(0, 0, 0, 0)
+Accent.BackgroundColor3 = Color3.fromRGB(80, 200, 255)
+Accent.BorderSizePixel = 0
+Accent.Parent = NotifyFrame
+local AccentCorner = Instance.new("UICorner")
+AccentCorner.CornerRadius = UDim.new(0, 4)
+AccentCorner.Parent = Accent
+
+-- Icon Roblox notification
+local Icon = Instance.new("ImageLabel")
+Icon.Size = UDim2.new(0, 36, 0, 36)
+Icon.Position = UDim2.new(0, 16, 0, 18)
+Icon.BackgroundTransparency = 1
+Icon.Image = "rbxassetid://7733960981" -- icon bell
+Icon.Parent = NotifyFrame
+
+-- Tiêu đề thông báo
+local NotifyTitle = Instance.new("TextLabel")
+NotifyTitle.Size = UDim2.new(1, -70, 0, 26)
+NotifyTitle.Position = UDim2.new(0, 60, 0, 13)
+NotifyTitle.BackgroundTransparency = 1
+NotifyTitle.Text = "Greensvn Buff"
+NotifyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+NotifyTitle.TextStrokeTransparency = 0.3
+NotifyTitle.TextXAlignment = Enum.TextXAlignment.Left
+NotifyTitle.TextScaled = true
+NotifyTitle.Font = Enum.Font.GothamBold
+NotifyTitle.Parent = NotifyFrame
+
+-- Nội dung thông báo
+local NotifyText = Instance.new("TextLabel")
+NotifyText.Size = UDim2.new(1, -70, 0, 26)
+NotifyText.Position = UDim2.new(0, 60, 0, 38)
+NotifyText.BackgroundTransparency = 1
+NotifyText.Text = "Đang kích hoạt buff may mắn, random ra trái xịn!"
+NotifyText.TextColor3 = Color3.fromRGB(210, 255, 255)
+NotifyText.TextStrokeTransparency = 0.8
+NotifyText.TextXAlignment = Enum.TextXAlignment.Left
+NotifyText.TextScaled = true
+NotifyText.Font = Enum.Font.Gotham
+NotifyText.Parent = NotifyFrame
+
+-- Notification hiệu ứng xuất hiện/mất đi
+local notifyTween, hideTween, notifyHideThread
+local function showNotify()
+    NotifyFrame.Visible = true
+    -- Đặt vị trí ngoài màn hình phải
+    NotifyFrame.Position = startPos
+    NotifyFrame.BackgroundTransparency = 0.12
+    -- Tween vào trong màn hình (giống Roblox notification kết bạn)
+    if notifyTween then notifyTween:Cancel() end
+    notifyTween = TweenService:Create(NotifyFrame, TweenInfo.new(0.38, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Position = showPos,
+        BackgroundTransparency = 0.04
+    })
+    notifyTween:Play()
+    -- Auto ẩn sau 10 giây với hiệu ứng ra ngoài
+    if notifyHideThread then notifyHideThread:Disconnect() end
+    local hideTime = tick() + 10
+    notifyHideThread = RunService.RenderStepped:Connect(function()
+        if tick() >= hideTime then
+            if hideTween then hideTween:Cancel() end
+            hideTween = TweenService:Create(NotifyFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Position = startPos,
+                BackgroundTransparency = 0.12
+            })
+            hideTween:Play()
+            hideTween.Completed:Wait()
+            NotifyFrame.Visible = false
+            notifyHideThread:Disconnect()
+        end
+    end)
+end
+
+-- State
+local isBuffActive = false
+
+local function updateBuff()
+    if isBuffActive then
+        StatusFrame.BackgroundColor3 = Color3.fromRGB(18, 204, 82)
+        Status.Text = "BUFF: ĐANG HOẠT ĐỘNG"
+        Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Status.TextStrokeTransparency = 0
+        NotifyTitle.Text = "Greensvn Buff"
+        NotifyText.Text = "Đang kích hoạt buff may mắn, random ra trái xịn!"
+        showNotify()
+    else
+        StatusFrame.BackgroundColor3 = Color3.fromRGB(220, 40, 40)
+        Status.Text = "BẬT BUFF MAY MẮN"
+        Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Status.TextStrokeTransparency = 0
+        if notifyHideThread then notifyHideThread:Disconnect() end
+        NotifyFrame.Visible = false
+    end
+end
+
+StatusFrame.MouseButton1Click:Connect(function()
+    isBuffActive = not isBuffActive
+    updateBuff()
+end)
+updateBuff()
+
+-- Rainbow border động cho BorderFrame (bo tròn)
+local t = 0
+RunService.RenderStepped:Connect(function(dt)
+    t = t + dt
+    BorderFrame.BackgroundColor3 = Color3.fromHSV((t*0.15)%1, 1, 1)
+end)
+
+-- Khi kéo MainFrame thì kéo cả BorderFrame theo
+MainFrame:GetPropertyChangedSignal("Position"):Connect(function()
+    local pos = MainFrame.Position
+    BorderFrame.Position = UDim2.new(pos.X.Scale, pos.X.Offset - 10, pos.Y.Scale, pos.Y.Offset - 10)
+end)
