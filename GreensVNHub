@@ -514,9 +514,10 @@ listLayout.Padding = UDim.new(0, 10)
 local btns = {}
 local btnNames = {
     "k00pgui v12", "Anti Kick", "Anti Ban",
-    "TuananhIOS", "1*1*1*1 gui", "Dead Rail"
+    "TuananhIOS", "1*1*1*1 gui", "Dead Rail",
+    "Buff UI", "Infinite Yield", "Grow a Garden No Lag"
 }
-for i=1,6 do
+for i=1,9 do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.93, 0, 0, 44)
     btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
@@ -663,6 +664,14 @@ end)
 btns[6].MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"))()
 end)
+btns[7].MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/GreensvnBuffUI"))()
+end)
+btns[8].MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+btns[9].MouseButton1Click:Connect(function()   
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua"))()
 
 -- 3. Blank Tab
 local tab3Frame = Instance.new("Frame")
