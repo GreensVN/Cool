@@ -1,5 +1,3 @@
--- Greensvn Buff May Mắn Giả: Notification Roblox-style, hiệu ứng xuất hiện mượt giống yêu cầu kết bạn, tự ẩn sau 10s
-
 local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
