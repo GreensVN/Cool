@@ -1,0 +1,784 @@
+-- Ultimate Tool Giver with Super Creator Popup
+-- Combines all advanced, creative, and UX ideas for a Roblox tool creator GUI
+-- By GreensVN, based on prior upgrades
+
+-- GUI Main
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local TextButton = Instance.new("TextButton")
+local TextLabel = Instance.new("TextLabel")
+local UpdateButton = Instance.new("TextButton")
+local OpenCreatorButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+
+Frame.Parent = ScreenGui
+Frame.Active = true
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.Position = UDim2.new(0.061, 0, 0.094, 0)
+Frame.Size = UDim2.new(0, 310, 0, 310)
+
+ScrollingFrame.Parent = Frame
+ScrollingFrame.Active = true
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollingFrame.Position = UDim2.new(0.06, 0, 0.142, 0)
+ScrollingFrame.Size = UDim2.new(0, 260, 0, 110)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 35, 0)
+
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+TextButton.Parent = ScrollingFrame
+TextButton.BackgroundColor3 = Color3.fromRGB(117, 117, 117)
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.Size = UDim2.new(0, 220, 0, 39)
+TextButton.Visible = false
+TextButton.Font = Enum.Font.SourceSans
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 20.000
+TextButton.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextStrokeTransparency = 0.000
+TextButton.TextWrapped = true
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.Position = UDim2.new(-0.001, 0, -0.0001, 0)
+TextLabel.Size = UDim2.new(0, 310, 0, 25)
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.Text = "Ultimate Tool Giver"
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextSize = 17
+
+UpdateButton.Parent = Frame
+UpdateButton.BackgroundColor3 = Color3.fromRGB(0, 255, 30)
+UpdateButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+UpdateButton.Position = UDim2.new(0.06, 0, 0.6, 0)
+UpdateButton.Size = UDim2.new(0, 260, 0, 32)
+UpdateButton.Font = Enum.Font.SourceSans
+UpdateButton.Text = "Cập nhật danh sách"
+UpdateButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+UpdateButton.TextSize = 16
+
+OpenCreatorButton.Parent = Frame
+OpenCreatorButton.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
+OpenCreatorButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+OpenCreatorButton.Position = UDim2.new(0.06, 0, 0.74, 0)
+OpenCreatorButton.Size = UDim2.new(0, 260, 0, 32)
+OpenCreatorButton.Font = Enum.Font.SourceSansBold
+OpenCreatorButton.Text = "Tạo Tool siêu cấp"
+OpenCreatorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+OpenCreatorButton.TextSize = 16
+
+-- ==== Helper function: Color parse ====
+local function parseColor(str)
+	if not str or str == "" then return Color3.fromRGB(255,255,255) end
+	str = str:lower()
+	local colorMap = {
+		red = Color3.fromRGB(255,0,0),
+		green = Color3.fromRGB(0,255,0),
+		blue = Color3.fromRGB(0,0,255),
+		yellow = Color3.fromRGB(255,255,0),
+		black = Color3.fromRGB(0,0,0),
+		white = Color3.fromRGB(255,255,255),
+		gray = Color3.fromRGB(128,128,128),
+		orange = Color3.fromRGB(255,128,0),
+		purple = Color3.fromRGB(128,0,255),
+		pink = Color3.fromRGB(255,0,255),
+		cyan = Color3.fromRGB(0,255,255)
+	}
+	if colorMap[str] then return colorMap[str] end
+	if str:sub(1,1) == "#" and (#str == 7 or #str == 9) then
+		local r = tonumber("0x"..str:sub(2,3))
+		local g = tonumber("0x"..str:sub(4,5))
+		local b = tonumber("0x"..str:sub(6,7))
+		if r and g and b then return Color3.fromRGB(r,g,b) end
+	end
+	return Color3.fromRGB(255,255,255)
+end
+
+-- ==== Tool List (support search, sort, filter) ====
+local function updatelist(searchText, sortBy)
+	for _, v in pairs(ScrollingFrame:GetChildren()) do
+		if v:IsA("TextButton") and v ~= TextButton then
+			v:Destroy()
+		end
+	end
+	local tools = {}
+	for _, v in pairs(game:GetDescendants()) do
+		if v:IsA("Tool") and v.Parent.Parent ~= game:GetService("Players").LocalPlayer then
+			table.insert(tools, v)
+		end
+	end
+	-- Filter
+	if searchText and searchText ~= "" then
+		local filtered = {}
+		for _, t in ipairs(tools) do
+			if string.find(string.lower(t.Name), string.lower(searchText)) then
+				table.insert(filtered, t)
+			end
+		end
+		tools = filtered
+	end
+	-- Sort
+	if sortBy == "A-Z" then
+		table.sort(tools, function(a, b) return a.Name < b.Name end)
+	elseif sortBy == "Z-A" then
+		table.sort(tools, function(a, b) return a.Name > b.Name end)
+	elseif sortBy == "Type" then
+		table.sort(tools, function(a, b)
+			return (a:GetAttribute("ToolType") or "") < (b:GetAttribute("ToolType") or "")
+		end)
+	end
+	-- Display
+	for _, t in ipairs(tools) do
+		local btn = TextButton:Clone()
+		btn.Parent = ScrollingFrame
+		btn.Visible = true
+		btn.Text = t.Name
+		btn.MouseButton1Click:Connect(function()
+			local clonedTool = t:Clone()
+			clonedTool.Parent = game:GetService("Players").LocalPlayer:WaitForChild("Backpack")
+		end)
+		-- Tooltip: show attributes on hover
+		btn.MouseEnter:Connect(function()
+			btn.Text = t.Name.."\n["..(t:GetAttribute("ToolType") or "Chưa rõ").."] "..
+				(t:GetAttribute("Description") or "")
+		end)
+		btn.MouseLeave:Connect(function()
+			btn.Text = t.Name
+		end)
+	end
+end
+
+UpdateButton.MouseButton1Click:Connect(function() updatelist() end)
+
+-- ==== TOOL SEARCH BAR & SORT ====
+local SearchBox = Instance.new("TextBox")
+SearchBox.Parent = Frame
+SearchBox.BackgroundColor3 = Color3.fromRGB(245,245,245)
+SearchBox.BorderColor3 = Color3.fromRGB(0,0,0)
+SearchBox.Position = UDim2.new(0.06, 0, 0.92, 0)
+SearchBox.Size = UDim2.new(0, 170, 0, 24)
+SearchBox.Font = Enum.Font.SourceSans
+SearchBox.PlaceholderText = "Tìm kiếm tool..."
+SearchBox.Text = ""
+SearchBox.TextColor3 = Color3.fromRGB(0,0,0)
+SearchBox.TextSize = 14
+
+local SortBox = Instance.new("TextButton")
+SortBox.Parent = Frame
+SortBox.BackgroundColor3 = Color3.fromRGB(200, 220, 255)
+SortBox.BorderColor3 = Color3.fromRGB(0,0,0)
+SortBox.Position = UDim2.new(0.62, 0, 0.92, 0)
+SortBox.Size = UDim2.new(0, 100, 0, 24)
+SortBox.Font = Enum.Font.SourceSans
+SortBox.Text = "Sắp xếp: A-Z"
+SortBox.TextColor3 = Color3.fromRGB(0,0,0)
+SortBox.TextSize = 14
+
+local sortModes = {"A-Z", "Z-A", "Type"}
+local sortIdx = 1
+SortBox.MouseButton1Click:Connect(function()
+	sortIdx = sortIdx % #sortModes + 1
+	SortBox.Text = "Sắp xếp: "..sortModes[sortIdx]
+	updatelist(SearchBox.Text, sortModes[sortIdx])
+end)
+
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+	updatelist(SearchBox.Text, sortModes[sortIdx])
+end)
+
+-- ==== TOOL CREATOR POPUP (Super Creator) ====
+local CreatorGui = Instance.new("Frame")
+CreatorGui.Parent = ScreenGui
+CreatorGui.Active = true
+CreatorGui.BackgroundColor3 = Color3.fromRGB(242, 247, 255)
+CreatorGui.BorderColor3 = Color3.fromRGB(30, 30, 70)
+CreatorGui.Position = UDim2.new(0.35, 0, 0.17, 0)
+CreatorGui.Size = UDim2.new(0, 400, 0, 530)
+CreatorGui.Visible = false
+
+local Title = Instance.new("TextLabel")
+Title.Parent = CreatorGui
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0.05, 0, 0.02, 0)
+Title.Size = UDim2.new(0, 380, 0, 30)
+Title.Text = "Trình tạo Tool siêu cấp"
+Title.Font = Enum.Font.SourceSansBold
+Title.TextColor3 = Color3.fromRGB(0, 70, 180)
+Title.TextSize = 22
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = CreatorGui
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+CloseBtn.BorderColor3 = Color3.fromRGB(0, 0, 0)
+CloseBtn.Position = UDim2.new(0.81, 0, 0.02, 0)
+CloseBtn.Size = UDim2.new(0, 60, 0, 25)
+CloseBtn.Font = Enum.Font.SourceSansBold
+CloseBtn.Text = "Đóng"
+CloseBtn.TextColor3 = Color3.fromRGB(255,255,255)
+CloseBtn.TextSize = 15
+
+CloseBtn.MouseButton1Click:Connect(function()
+	CreatorGui.Visible = false
+end)
+
+-- Tạo UI nâng cấp: tên, mô tả, loại, sát thương, hình dáng, màu, hiệu ứng, group, icon, quyền, cooldown, lượng sử dụng, xóa tự động, script custom, help, preview, mẫu có sẵn, v.v.
+local y0 = 0.095
+local dy = 0.07
+
+-- Tên tool
+local NameLabel = Instance.new("TextLabel", CreatorGui)
+NameLabel.BackgroundTransparency = 1
+NameLabel.Position = UDim2.new(0.07, 0, y0, 0)
+NameLabel.Size = UDim2.new(0, 95, 0, 20)
+NameLabel.Text = "Tên Tool*:"
+NameLabel.Font = Enum.Font.SourceSans
+NameLabel.TextSize = 15
+NameLabel.TextColor3 = Color3.new(0,0,0)
+local NameBox = Instance.new("TextBox", CreatorGui)
+NameBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+NameBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+NameBox.Position = UDim2.new(0.33, 0, y0, 0)
+NameBox.Size = UDim2.new(0, 220, 0, 23)
+NameBox.Font = Enum.Font.SourceSans
+NameBox.PlaceholderText = "Bắt buộc"
+NameBox.Text = ""
+NameBox.TextColor3 = Color3.new(0,0,0)
+NameBox.TextSize = 15
+
+-- Mô tả
+local DescLabel = Instance.new("TextLabel", CreatorGui)
+DescLabel.BackgroundTransparency = 1
+DescLabel.Position = UDim2.new(0.07, 0, y0+dy, 0)
+DescLabel.Size = UDim2.new(0, 95, 0, 20)
+DescLabel.Text = "Mô tả:"
+DescLabel.Font = Enum.Font.SourceSans
+DescLabel.TextSize = 15
+DescLabel.TextColor3 = Color3.new(0,0,0)
+local DescBox = Instance.new("TextBox", CreatorGui)
+DescBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+DescBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+DescBox.Position = UDim2.new(0.33, 0, y0+dy, 0)
+DescBox.Size = UDim2.new(0, 220, 0, 23)
+DescBox.Font = Enum.Font.SourceSans
+DescBox.PlaceholderText = "Mô tả tool (không bắt buộc)"
+DescBox.Text = ""
+DescBox.TextColor3 = Color3.new(0,0,0)
+DescBox.TextSize = 15
+
+-- Loại tool
+local TypeLabel = Instance.new("TextLabel", CreatorGui)
+TypeLabel.BackgroundTransparency = 1
+TypeLabel.Position = UDim2.new(0.07, 0, y0+2*dy, 0)
+TypeLabel.Size = UDim2.new(0, 95, 0, 20)
+TypeLabel.Text = "Loại tool:"
+TypeLabel.Font = Enum.Font.SourceSans
+TypeLabel.TextSize = 15
+TypeLabel.TextColor3 = Color3.new(0,0,0)
+local TypeBox = Instance.new("TextBox", CreatorGui)
+TypeBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+TypeBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TypeBox.Position = UDim2.new(0.33, 0, y0+2*dy, 0)
+TypeBox.Size = UDim2.new(0, 220, 0, 23)
+TypeBox.Font = Enum.Font.SourceSans
+TypeBox.PlaceholderText = "Kiếm, Súng, Gậy, ... "
+TypeBox.Text = ""
+TypeBox.TextColor3 = Color3.new(0,0,0)
+TypeBox.TextSize = 15
+
+-- Nhóm tool (group)
+local GroupLabel = Instance.new("TextLabel", CreatorGui)
+GroupLabel.BackgroundTransparency = 1
+GroupLabel.Position = UDim2.new(0.07, 0, y0+3*dy, 0)
+GroupLabel.Size = UDim2.new(0, 95, 0, 20)
+GroupLabel.Text = "Nhóm tool:"
+GroupLabel.Font = Enum.Font.SourceSans
+GroupLabel.TextSize = 15
+GroupLabel.TextColor3 = Color3.new(0,0,0)
+local GroupBox = Instance.new("TextBox", CreatorGui)
+GroupBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+GroupBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+GroupBox.Position = UDim2.new(0.33, 0, y0+3*dy, 0)
+GroupBox.Size = UDim2.new(0, 220, 0, 23)
+GroupBox.Font = Enum.Font.SourceSans
+GroupBox.PlaceholderText = "VD: Vũ khí, Phép thuật..."
+GroupBox.Text = ""
+GroupBox.TextColor3 = Color3.new(0,0,0)
+GroupBox.TextSize = 15
+
+-- Sát thương
+local DamageLabel = Instance.new("TextLabel", CreatorGui)
+DamageLabel.BackgroundTransparency = 1
+DamageLabel.Position = UDim2.new(0.07, 0, y0+4*dy, 0)
+DamageLabel.Size = UDim2.new(0, 95, 0, 20)
+DamageLabel.Text = "Sát thương:"
+DamageLabel.Font = Enum.Font.SourceSans
+DamageLabel.TextSize = 15
+DamageLabel.TextColor3 = Color3.new(0,0,0)
+local DamageBox = Instance.new("TextBox", CreatorGui)
+DamageBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+DamageBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+DamageBox.Position = UDim2.new(0.33, 0, y0+4*dy, 0)
+DamageBox.Size = UDim2.new(0, 100, 0, 23)
+DamageBox.Font = Enum.Font.SourceSans
+DamageBox.PlaceholderText = "VD: 10"
+DamageBox.Text = ""
+DamageBox.TextColor3 = Color3.new(0,0,0)
+DamageBox.TextSize = 15
+
+-- Cooldown
+local CooldownLabel = Instance.new("TextLabel", CreatorGui)
+CooldownLabel.BackgroundTransparency = 1
+CooldownLabel.Position = UDim2.new(0.56, 0, y0+4*dy, 0)
+CooldownLabel.Size = UDim2.new(0, 70, 0, 20)
+CooldownLabel.Text = "Cooldown:"
+CooldownLabel.Font = Enum.Font.SourceSans
+CooldownLabel.TextSize = 15
+CooldownLabel.TextColor3 = Color3.new(0,0,0)
+local CooldownBox = Instance.new("TextBox", CreatorGui)
+CooldownBox.Parent = CreatorGui
+CooldownBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+CooldownBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+CooldownBox.Position = UDim2.new(0.75, 0, y0+4*dy, 0)
+CooldownBox.Size = UDim2.new(0, 60, 0, 23)
+CooldownBox.Font = Enum.Font.SourceSans
+CooldownBox.PlaceholderText = "giây"
+CooldownBox.Text = ""
+CooldownBox.TextColor3 = Color3.new(0,0,0)
+CooldownBox.TextSize = 15
+
+-- Số lần sử dụng
+local UsageLabel = Instance.new("TextLabel", CreatorGui)
+UsageLabel.BackgroundTransparency = 1
+UsageLabel.Position = UDim2.new(0.07, 0, y0+5*dy, 0)
+UsageLabel.Size = UDim2.new(0, 95, 0, 20)
+UsageLabel.Text = "Số lần dùng:"
+UsageLabel.Font = Enum.Font.SourceSans
+UsageLabel.TextSize = 15
+UsageLabel.TextColor3 = Color3.new(0,0,0)
+local UsageBox = Instance.new("TextBox", CreatorGui)
+UsageBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+UsageBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+UsageBox.Position = UDim2.new(0.33, 0, y0+5*dy, 0)
+UsageBox.Size = UDim2.new(0, 100, 0, 23)
+UsageBox.Font = Enum.Font.SourceSans
+UsageBox.PlaceholderText = "VD: 5"
+UsageBox.Text = ""
+UsageBox.TextColor3 = Color3.new(0,0,0)
+UsageBox.TextSize = 15
+
+-- Xóa tool tự động
+local AutoRemoveLabel = Instance.new("TextLabel", CreatorGui)
+AutoRemoveLabel.BackgroundTransparency = 1
+AutoRemoveLabel.Position = UDim2.new(0.56, 0, y0+5*dy, 0)
+AutoRemoveLabel.Size = UDim2.new(0, 100, 0, 20)
+AutoRemoveLabel.Text = "Tự xóa:"
+AutoRemoveLabel.Font = Enum.Font.SourceSans
+AutoRemoveLabel.TextSize = 15
+AutoRemoveLabel.TextColor3 = Color3.new(0,0,0)
+local AutoRemoveBtn = Instance.new("TextButton", CreatorGui)
+AutoRemoveBtn.BackgroundColor3 = Color3.fromRGB(200,200,200)
+AutoRemoveBtn.BorderColor3 = Color3.fromRGB(0,0,0)
+AutoRemoveBtn.Position = UDim2.new(0.75, 0, y0+5*dy, 0)
+AutoRemoveBtn.Size = UDim2.new(0, 60, 0, 23)
+AutoRemoveBtn.Font = Enum.Font.SourceSans
+AutoRemoveBtn.Text = "Không"
+AutoRemoveBtn.TextColor3 = Color3.fromRGB(200,0,0)
+AutoRemoveBtn.TextSize = 15
+local autoRemove = false
+AutoRemoveBtn.MouseButton1Click:Connect(function()
+	autoRemove = not autoRemove
+	AutoRemoveBtn.Text = autoRemove and "Có" or "Không"
+	AutoRemoveBtn.TextColor3 = autoRemove and Color3.fromRGB(0,85,0) or Color3.fromRGB(200,0,0)
+end)
+
+-- Quyền user (permission)
+local PermLabel = Instance.new("TextLabel", CreatorGui)
+PermLabel.BackgroundTransparency = 1
+PermLabel.Position = UDim2.new(0.07, 0, y0+6*dy, 0)
+PermLabel.Size = UDim2.new(0, 95, 0, 20)
+PermLabel.Text = "Chỉ cho user:"
+PermLabel.Font = Enum.Font.SourceSans
+PermLabel.TextSize = 15
+PermLabel.TextColor3 = Color3.new(0,0,0)
+local PermBox = Instance.new("TextBox", CreatorGui)
+PermBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+PermBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+PermBox.Position = UDim2.new(0.33, 0, y0+6*dy, 0)
+PermBox.Size = UDim2.new(0, 220, 0, 23)
+PermBox.Font = Enum.Font.SourceSans
+PermBox.PlaceholderText = "Tên user, phân cách dấu phẩy"
+PermBox.Text = ""
+PermBox.TextColor3 = Color3.new(0,0,0)
+PermBox.TextSize = 15
+
+-- Hình dáng handle (shape)
+local ShapeLabel = Instance.new("TextLabel", CreatorGui)
+ShapeLabel.BackgroundTransparency = 1
+ShapeLabel.Position = UDim2.new(0.07, 0, y0+7*dy, 0)
+ShapeLabel.Size = UDim2.new(0, 95, 0, 20)
+ShapeLabel.Text = "Hình dáng:"
+ShapeLabel.Font = Enum.Font.SourceSans
+ShapeLabel.TextSize = 15
+ShapeLabel.TextColor3 = Color3.new(0,0,0)
+local ShapeBox = Instance.new("TextBox", CreatorGui)
+ShapeBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+ShapeBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ShapeBox.Position = UDim2.new(0.33, 0, y0+7*dy, 0)
+ShapeBox.Size = UDim2.new(0, 100, 0, 23)
+ShapeBox.Font = Enum.Font.SourceSans
+ShapeBox.PlaceholderText = "Part/Ball/Block"
+ShapeBox.Text = ""
+ShapeBox.TextColor3 = Color3.new(0,0,0)
+ShapeBox.TextSize = 15
+
+-- Màu handle
+local ColorLabel = Instance.new("TextLabel", CreatorGui)
+ColorLabel.BackgroundTransparency = 1
+ColorLabel.Position = UDim2.new(0.56, 0, y0+7*dy, 0)
+ColorLabel.Size = UDim2.new(0, 70, 0, 20)
+ColorLabel.Text = "Màu handle:"
+ColorLabel.Font = Enum.Font.SourceSans
+ColorLabel.TextSize = 15
+ColorLabel.TextColor3 = Color3.new(0,0,0)
+local ColorBox = Instance.new("TextBox", CreatorGui)
+ColorBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+ColorBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ColorBox.Position = UDim2.new(0.75, 0, y0+7*dy, 0)
+ColorBox.Size = UDim2.new(0, 60, 0, 23)
+ColorBox.Font = Enum.Font.SourceSans
+ColorBox.PlaceholderText = "red/#ff0000"
+ColorBox.Text = ""
+ColorBox.TextColor3 = Color3.new(0,0,0)
+ColorBox.TextSize = 15
+
+-- Icon tool
+local IconLabel = Instance.new("TextLabel", CreatorGui)
+IconLabel.BackgroundTransparency = 1
+IconLabel.Position = UDim2.new(0.07, 0, y0+8*dy, 0)
+IconLabel.Size = UDim2.new(0, 95, 0, 20)
+IconLabel.Text = "Icon tool:"
+IconLabel.Font = Enum.Font.SourceSans
+IconLabel.TextSize = 15
+IconLabel.TextColor3 = Color3.new(0,0,0)
+local IconBox = Instance.new("TextBox", CreatorGui)
+IconBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+IconBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IconBox.Position = UDim2.new(0.33, 0, y0+8*dy, 0)
+IconBox.Size = UDim2.new(0, 220, 0, 23)
+IconBox.Font = Enum.Font.SourceSans
+IconBox.PlaceholderText = "AssetId hoặc URL"
+IconBox.Text = ""
+IconBox.TextColor3 = Color3.new(0,0,0)
+IconBox.TextSize = 15
+
+-- Hiệu ứng (effect)
+local EffectLabel = Instance.new("TextLabel", CreatorGui)
+EffectLabel.BackgroundTransparency = 1
+EffectLabel.Position = UDim2.new(0.07, 0, y0+9*dy, 0)
+EffectLabel.Size = UDim2.new(0, 95, 0, 20)
+EffectLabel.Text = "Hiệu ứng:"
+EffectLabel.Font = Enum.Font.SourceSans
+EffectLabel.TextSize = 15
+EffectLabel.TextColor3 = Color3.new(0,0,0)
+local EffectBox = Instance.new("TextBox", CreatorGui)
+EffectBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+EffectBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+EffectBox.Position = UDim2.new(0.33, 0, y0+9*dy, 0)
+EffectBox.Size = UDim2.new(0, 220, 0, 23)
+EffectBox.Font = Enum.Font.SourceSans
+EffectBox.PlaceholderText = "Sparkles/Fire/Particle..."
+EffectBox.Text = ""
+EffectBox.TextColor3 = Color3.new(0,0,0)
+EffectBox.TextSize = 15
+
+-- Script custom (script)
+local ScriptLabel = Instance.new("TextLabel", CreatorGui)
+ScriptLabel.BackgroundTransparency = 1
+ScriptLabel.Position = UDim2.new(0.07, 0, y0+10*dy, 0)
+ScriptLabel.Size = UDim2.new(0, 95, 0, 20)
+ScriptLabel.Text = "Script custom:"
+ScriptLabel.Font = Enum.Font.SourceSans
+ScriptLabel.TextSize = 15
+ScriptLabel.TextColor3 = Color3.new(0,0,0)
+local ScriptBox = Instance.new("TextBox", CreatorGui)
+ScriptBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+ScriptBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScriptBox.Position = UDim2.new(0.33, 0, y0+10*dy, 0)
+ScriptBox.Size = UDim2.new(0, 220, 0, 40)
+ScriptBox.Font = Enum.Font.Code
+ScriptBox.PlaceholderText = "Lua code, VD: Activated event..."
+ScriptBox.TextWrapped = true
+ScriptBox.TextYAlignment = Enum.TextYAlignment.Top
+ScriptBox.Text = ""
+ScriptBox.TextColor3 = Color3.fromRGB(0,0,0)
+ScriptBox.TextSize = 14
+
+-- Mẫu có sẵn
+local TemplateLabel = Instance.new("TextLabel", CreatorGui)
+TemplateLabel.BackgroundTransparency = 1
+TemplateLabel.Position = UDim2.new(0.07, 0, y0+11*dy, 0)
+TemplateLabel.Size = UDim2.new(0, 95, 0, 20)
+TemplateLabel.Text = "Mẫu có sẵn:"
+TemplateLabel.Font = Enum.Font.SourceSans
+TemplateLabel.TextSize = 15
+TemplateLabel.TextColor3 = Color3.new(0,0,0)
+local TemplateBox = Instance.new("TextBox", CreatorGui)
+TemplateBox.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+TemplateBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TemplateBox.Position = UDim2.new(0.33, 0, y0+11*dy, 0)
+TemplateBox.Size = UDim2.new(0, 220, 0, 23)
+TemplateBox.Font = Enum.Font.SourceSans
+TemplateBox.PlaceholderText = "Sword, Gun, Heal, ... "
+TemplateBox.Text = ""
+TemplateBox.TextColor3 = Color3.fromRGB(0,0,0)
+TemplateBox.TextSize = 15
+
+-- Help/Preview
+local HelpLabel = Instance.new("TextLabel", CreatorGui)
+HelpLabel.BackgroundTransparency = 1
+HelpLabel.Position = UDim2.new(0.07, 0, y0+12*dy, 0)
+HelpLabel.Size = UDim2.new(0, 350, 0, 32)
+HelpLabel.Text = "Hướng dẫn: Bạn có thể nhập tên mẫu để tự động điền thuộc tính, hoặc tự nhập tay từng phần. Mọi trường đều có thể sửa lại."
+HelpLabel.Font = Enum.Font.SourceSansItalic
+HelpLabel.TextSize = 13
+HelpLabel.TextColor3 = Color3.fromRGB(60,60,60)
+HelpLabel.TextWrapped = true
+
+-- Nút tạo tool
+local CreateBtn = Instance.new("TextButton", CreatorGui)
+CreateBtn.BackgroundColor3 = Color3.fromRGB(0, 160, 80)
+CreateBtn.BorderColor3 = Color3.fromRGB(0, 0, 0)
+CreateBtn.Position = UDim2.new(0.18, 0, y0+13*dy, 0)
+CreateBtn.Size = UDim2.new(0, 220, 0, 36)
+CreateBtn.Font = Enum.Font.SourceSansBold
+CreateBtn.Text = "Tạo Tool"
+CreateBtn.TextColor3 = Color3.fromRGB(255,255,255)
+CreateBtn.TextSize = 19
+
+-- Status
+local StatusLabel = Instance.new("TextLabel", CreatorGui)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Position = UDim2.new(0.09, 0, y0+14*dy, 0)
+StatusLabel.Size = UDim2.new(0, 310, 0, 28)
+StatusLabel.Font = Enum.Font.SourceSans
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+StatusLabel.TextSize = 14
+StatusLabel.TextWrapped = true
+
+-- Hiện popup
+OpenCreatorButton.MouseButton1Click:Connect(function()
+	CreatorGui.Visible = true
+	StatusLabel.Text = ""
+end)
+
+-- Tự động điền mẫu nếu chọn
+TemplateBox.FocusLost:Connect(function(enter)
+	local t = string.lower(TemplateBox.Text)
+	if t == "sword" or t == "kiếm" then
+		TypeBox.Text = "Kiếm"
+		GroupBox.Text = "Vũ khí"
+		ShapeBox.Text = "Part"
+		DamageBox.Text = "15"
+		CooldownBox.Text = "0.5"
+		UsageBox.Text = ""
+		ColorBox.Text = "gray"
+		EffectBox.Text = ""
+		ScriptBox.Text = [[script.Parent.Activated:Connect(function()
+	local char = script.Parent.Parent
+	if char and char:IsA("Model") and char:FindFirstChild("Humanoid") then
+		local root = char:FindFirstChild("HumanoidRootPart")
+		if not root then return end
+		for _,v in pairs(workspace:GetChildren()) do
+			if v:IsA("Model") and v ~= char and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") then
+				if (v.HumanoidRootPart.Position-root.Position).Magnitude < 5 then
+					v.Humanoid:TakeDamage(script.Parent:GetAttribute("Damage") or 5)
+				end
+			end
+		end
+	end
+end)]]
+	elseif t == "gun" or t == "súng" then
+		TypeBox.Text = "Súng"
+		GroupBox.Text = "Vũ khí"
+		ShapeBox.Text = "Part"
+		DamageBox.Text = "30"
+		CooldownBox.Text = "1"
+		UsageBox.Text = "10"
+		ColorBox.Text = "black"
+		EffectBox.Text = "Smoke"
+		ScriptBox.Text = "-- Bạn hãy tự thêm code bắn cho súng"
+	elseif t == "heal" or t == "hồi máu" then
+		TypeBox.Text = "Hồi máu"
+		GroupBox.Text = "Hỗ trợ"
+		ShapeBox.Text = "Ball"
+		DamageBox.Text = ""
+		CooldownBox.Text = "3"
+		UsageBox.Text = "3"
+		ColorBox.Text = "green"
+		EffectBox.Text = "Sparkles"
+		ScriptBox.Text = [[script.Parent.Activated:Connect(function()
+	local char = script.Parent.Parent
+	if char and char:IsA("Model") and char:FindFirstChild("Humanoid") then
+		local h = char.Humanoid
+		h.Health = math.min(h.MaxHealth, h.Health + 25)
+	end
+end)]]
+	end
+end)
+
+-- Nút tạo tool
+CreateBtn.MouseButton1Click:Connect(function()
+	local newToolName = NameBox.Text
+	if newToolName == nil or newToolName == "" then
+		StatusLabel.Text = "Tên tool không được để trống!"
+		StatusLabel.TextColor3 = Color3.fromRGB(255,0,0)
+		return
+	end
+	for _, v in pairs(workspace:GetDescendants()) do
+		if v:IsA("Tool") and v.Name == newToolName then
+			StatusLabel.Text = "Đã có tool tên này trong Workspace!"
+			StatusLabel.TextColor3 = Color3.fromRGB(255,0,0)
+			return
+		end
+	end
+	local tool = Instance.new("Tool")
+	tool.Name = newToolName
+	tool.RequiresHandle = true
+	tool.Parent = workspace
+
+	-- Các thuộc tính
+	if DescBox.Text ~= "" then tool:SetAttribute("Description", DescBox.Text) end
+	if TypeBox.Text ~= "" then tool:SetAttribute("ToolType", TypeBox.Text) end
+	if GroupBox.Text ~= "" then tool:SetAttribute("Group", GroupBox.Text) end
+	local dmg = tonumber(DamageBox.Text)
+	if dmg then tool:SetAttribute("Damage", dmg) end
+	local cooldown = tonumber(CooldownBox.Text)
+	if cooldown then tool:SetAttribute("Cooldown", cooldown) end
+	local usage = tonumber(UsageBox.Text)
+	if usage then tool:SetAttribute("Usage", usage) end
+	if autoRemove then tool:SetAttribute("AutoRemove", true) end
+	if PermBox.Text ~= "" then tool:SetAttribute("Perm", PermBox.Text) end
+	if IconBox.Text ~= "" then tool:SetAttribute("Icon", IconBox.Text) end
+
+	-- Handle
+	local handle = Instance.new("Part")
+	handle.Name = "Handle"
+	handle.Size = Vector3.new(1,1,3)
+	handle.Parent = tool
+	handle.Anchored = false
+	handle.CanCollide = false
+	handle.Massless = true
+	if ShapeBox.Text ~= "" then
+		if ShapeBox.Text:lower() == "ball" then
+			local mesh = Instance.new("SpecialMesh", handle)
+			mesh.MeshType = Enum.MeshType.Sphere
+		elseif ShapeBox.Text:lower() == "block" then
+			handle.Shape = Enum.PartType.Block
+		else
+			-- Keep as Part
+		end
+	end
+	handle.Color = parseColor(ColorBox.Text)
+
+	-- Hiệu ứng
+	local effect = EffectBox.Text:lower()
+	if effect == "sparkles" then
+		local e = Instance.new("Sparkles", handle)
+	elseif effect == "fire" then
+		local e = Instance.new("Fire", handle)
+	elseif effect == "smoke" then
+		local e = Instance.new("Smoke", handle)
+	elseif effect == "particle" then
+		local e = Instance.new("ParticleEmitter", handle)
+	end
+
+	-- Icon
+	if IconBox.Text ~= "" then
+		local iconDecal = Instance.new("Decal", handle)
+		iconDecal.Texture = IconBox.Text
+	end
+
+	-- Script custom
+	if ScriptBox.Text ~= "" then
+		local scriptAttack = Instance.new("Script")
+		scriptAttack.Name = "CustomScript"
+		scriptAttack.Source = ScriptBox.Text
+		scriptAttack.Parent = tool
+	end
+
+	-- Quyền user
+	if PermBox.Text ~= "" then
+		tool:SetAttribute("UserPerm", PermBox.Text)
+	end
+
+	-- Tự động xóa
+	if autoRemove then
+		local autoDel = Instance.new("Script")
+		autoDel.Name = "AutoRemoveScript"
+		autoDel.Source = [[
+			local tool = script.Parent
+			tool.AncestryChanged:Connect(function(child, parent)
+				if parent == game.Players.LocalPlayer.Backpack then
+					wait(3)
+					tool:Destroy()
+				end
+			end)
+		]]
+		autoDel.Parent = tool
+	end
+
+	StatusLabel.Text = ("Đã tạo tool '%s' thành công!"):format(newToolName)
+	StatusLabel.TextColor3 = Color3.fromRGB(0,160,0)
+	updatelist()
+end)
+
+-- Kéo Frame chính và Creator
+local function DragScript(uiFrame)
+	local UIS = game:GetService('UserInputService')
+	local frame = uiFrame
+	local dragToggle, dragSpeed, dragStart, startPos = nil, 0, nil, nil
+
+	local function updateInput(input)
+		local delta = input.Position - dragStart
+		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {
+			Position = position
+		}):Play()
+	end
+
+	frame.InputBegan:Connect(function(input)
+		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+			dragToggle = true
+			dragStart = input.Position
+			startPos = frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragToggle = false
+				end
+			end)
+		end
+	end)
+	UIS.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			if dragToggle then
+				updateInput(input)
+			end
+		end
+	end)
+end
+DragScript(Frame)
+DragScript(CreatorGui)
+
+-- Khởi tạo danh sách tool khi mở GUI
+updatelist()
