@@ -672,6 +672,7 @@ btns[8].MouseButton1Click:Connect(function()
 end)
 btns[9].MouseButton1Click:Connect(function()   
     loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua"))()
+end)
 
 -- 3. Blank Tab
 local tab3Frame = Instance.new("Frame")
