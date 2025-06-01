@@ -1,0 +1,570 @@
+local gui = Instance.new("ScreenGui")
+gui.Name = "project"
+gui.Parent = game.CoreGui
+
+local project = Instance.new("Frame")
+project.Size = UDim2.new(0.5, 0, 0.9, 0)
+project.Position = UDim2.new(0.3, 0, 0.0, 0)
+project.BackgroundColor3 = Color3.new(1, 1, 1)
+project.BorderColor3 = Color3.new(0, 0, 0)
+project.BorderSizePixel = 0
+project.Active = true
+project.BackgroundTransparency = 0 
+project.Draggable = true
+project.Parent = gui
+
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = project
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(0.3, 0, 0.0, 25)
+TextLabel.Position = UDim2.new(0.0, 0, 0.0, 0)
+TextLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Text = "Ligma"
+TextLabel.BackgroundTransparency = 4
+TextLabel.TextColor3 = Color3.new(0, 0, 0)
+TextLabel.Font = Enum.Font.Code
+TextLabel.Parent = project
+TextLabel.TextSize = 15
+
+local Tab = Instance.new("Frame")
+Tab.Size = UDim2.new(0.9, 37, 0.9, 4)
+Tab.Position = UDim2.new(0.0, 0, 0.0, 25)
+Tab.BackgroundColor3 = Color3.new(1, 1, 1)
+Tab.BorderColor3 = Color3.new(0, 0, 0)
+Tab.BorderSizePixel = 0
+Tab.Active = failed
+Tab.BackgroundTransparency = 0 
+Tab.Draggable = true
+Tab.Parent = project
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = Tab
+
+local ScrollingFrame = Instance.new("ScrollingFrame")
+ScrollingFrame.Size = UDim2.new(0.8, 5, 0.8, 0)
+ScrollingFrame.Position = UDim2.new(0.0, 1, 0.0, 0)
+ScrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+ScrollingFrame.BorderColor3 = Color3.new(0, 0, 0)
+ScrollingFrame.BorderSizePixel = 0
+ScrollingFrame.Parent = Tab
+
+
+ScrollingFrame.BackgroundTransparency = 4
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = ScrollingFrame
+
+local loafui = Instance.new("Frame")
+loafui.Size = UDim2.new(0.9, 90, 0.9, 50)
+loafui.Position = UDim2.new(0.0, 1, 0.0, 0)
+loafui.BackgroundColor3 = Color3.new(0, 0, 0)
+loafui.BorderColor3 = Color3.new(0, 0, 0)
+loafui.BorderSizePixel = 0
+loafui.Active = failed
+loafui.BackgroundTransparency = 0 
+loafui.Draggable = true
+loafui.Parent = ScrollingFrame
+
+local loaf = Instance.new("TextBox")
+loaf.Size = UDim2.new(0.9, 26, 0.9, 17)
+loaf.Position = UDim2.new(0.0, 2, 0.0, 2)
+loaf.BackgroundColor3 = Color3.new(0, 0, 0)
+loaf.BorderColor3 = Color3.new(0, 0, 0)
+loaf.BorderSizePixel = 0
+loaf.Text = "Project Ligma + cheat engine!"
+loaf.TextColor3 = Color3.new(1, 1, 1)
+loaf.BackgroundTransparency = 0
+loaf.Font = Enum.Font.Code
+loaf.TextSize = 15
+loaf.Parent = loafui
+loaf.TextWrapped = true
+loaf.TextYAlignment = Enum.TextYAlignment.Top
+loaf.TextXAlignment = Enum.TextXAlignment.Left
+loaf.ClearTextOnFocus = failed
+loaf.MultiLine = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = loaf
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 4)
+UICorner.Parent = loafui
+
+local ImageButton = Instance.new("ImageButton")
+ImageButton.Size = UDim2.new(0.2, 5, 0.9, 0)
+ImageButton.Position = UDim2.new(0.0, 5, 0.1, 0)
+ImageButton.BackgroundColor3 = Color3.new(0, 0, 0)
+ImageButton.ImageColor3 = Color3.new(1, 1, 1)
+ImageButton.Image = "rbxassetid://7256706293"
+ImageButton.ImageTransparency = 0
+ImageButton.Parent = TextLabel
+
+
+ImageButton.BackgroundTransparency = 4
+
+
+local exeui = Instance.new("Frame")
+exeui.Size = UDim2.new(0.1, 25, 0.3, 5)
+exeui.Position = UDim2.new(0.8, 9, 0.0, 0)
+exeui.BackgroundColor3 = Color3.new(0, 0, 0)
+exeui.BorderColor3 = Color3.new(0, 0, 0)
+exeui.BorderSizePixel = 0
+exeui.Active = failed
+exeui.BackgroundTransparency = 0 
+exeui.Draggable = true
+exeui.Parent = Tab
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = exeui
+
+local exe = Instance.new("TextButton")
+exe.Size = UDim2.new(0.9, 3, 0.9, 4)
+exe.Position = UDim2.new(0.0, 2, 0.0, 2)
+exe.BackgroundColor3 = Color3.new(1, 1, 1)
+exe.BorderColor3 = Color3.new(0, 0, 0)
+exe.BorderSizePixel = 0
+exe.Text = "EXE"
+exe.BackgroundTransparency = 0 
+exe.TextColor3 = Color3.new(0, 0, 0)
+exe.Font = Enum.Font.Code
+exe.Parent = exeui
+exe.TextSize = 16
+exe.MouseButton1Click:Connect (function()
+assert(loadstring(loaf.Text))()
+end)
+
+local noine = Instance.new("TextButton")
+noine.Size = UDim2.new(0.9, 3, 0.9, 4)
+noine.Position = UDim2.new(0.0, 2, 0.0, 2)
+noine.BackgroundColor3 = Color3.new(0, 0, 0)
+noine.BorderColor3 = Color3.new(0, 0, 0)
+noine.BorderSizePixel = 0
+noine.Text = ""
+noine.BackgroundTransparency = 4
+noine.TextColor3 = Color3.new(255, 255, 255)
+noine.Font = Enum.Font.Code
+noine.Parent = exeui
+noine.MouseButton1Click:Connect (function()
+wait(2)
+local gui = Instance.new("ScreenGui")
+gui.Name = "text message"
+gui.Parent = game.CoreGui
+
+local textbox = Instance.new("Frame")
+textbox.Size = UDim2.new(0.4, 0, 0.5, 0)
+textbox.Position = UDim2.new(0.3, 0, 0.2, 0)
+textbox.BackgroundColor3 = Color3.new(1, 1, 1)
+textbox.BorderColor3 = Color3.new(0, 0, 0)
+textbox.BorderSizePixel = 1
+textbox.Active = failed
+textbox.BackgroundTransparency = 0 
+textbox.Draggable = true
+textbox.Parent = gui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = textbox
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(0.9, 30, 0.1, 5)
+TextLabel.Position = UDim2.new(0.0, 0, 0.0, 0)
+TextLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Text = "Box message"
+TextLabel.BackgroundTransparency = 0 
+TextLabel.TextColor3 = Color3.new(1, 1, 1)
+TextLabel.Font = Enum.Font.Code
+TextLabel.Parent = textbox
+TextLabel.TextSize = 15
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 3)
+UICorner.Parent = TextLabel
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(0.3, 0, 0.2, 0)
+TextLabel.Position = UDim2.new(0.3, 0, 0.1, 9)
+TextLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderColor3 = Color3.new(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Text = "[Ligma]: pls click Inject for Exe"
+TextLabel.BackgroundTransparency = 4
+TextLabel.TextColor3 = Color3.new(0, 0, 0)
+TextLabel.Font = Enum.Font.Code
+TextLabel.Parent = textbox
+TextLabel.TextSize = 15
+
+local TextButton = Instance.new("TextButton")
+TextButton.Size = UDim2.new(0.4, 0, 0.3, 0)
+TextButton.Position = UDim2.new(0.3, 0, 0.5, 0)
+TextButton.BackgroundColor3 = Color3.new(0, 0, 0)
+TextButton.BorderColor3 = Color3.new(0, 0, 0)
+TextButton.BorderSizePixel = 1
+TextButton.Text = "OK"
+TextButton.BackgroundTransparency = 0 
+TextButton.TextColor3 = Color3.new(255, 255, 255)
+TextButton.Font = Enum.Font.Code
+TextButton.Parent = textbox
+TextButton.TextSize = 15
+TextButton.MouseButton1Click:Connect (function()
+textbox:remove()
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = TextButton
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = exe
+
+local noin = Instance.new("TextLabel")
+noin.Size = UDim2.new(0.3, 0, 0.1, 0)
+noin.Position = UDim2.new(0.0, 0, 0.8, 9)
+noin.BackgroundColor3 = Color3.new(0, 0, 0)
+noin.BorderColor3 = Color3.new(0, 0, 0)
+noin.BorderSizePixel = 0
+noin.Text = "No INJECT..."
+noin.BackgroundTransparency = 4
+noin.TextColor3 = Color3.new(0, 0, 0)
+noin.Font = Enum.Font.Code
+noin.Parent = project 
+noin.TextSize = 15
+
+local injeui = Instance.new("Frame")
+injeui.Size = UDim2.new(0.1, 25, 0.3, 5)
+injeui.Position = UDim2.new(0.8, 9, 0.3, 7)
+injeui.BackgroundColor3 = Color3.new(0, 0, 0)
+injeui.BorderColor3 = Color3.new(0, 0, 0)
+injeui.BorderSizePixel = 0
+injeui.Active = failed
+injeui.BackgroundTransparency = 0 
+injeui.Draggable = true
+injeui.Parent = Tab
+
+local inje = Instance.new("TextButton")
+inje.Size = UDim2.new(0.9, 3, 0.9, 4)
+inje.Position = UDim2.new(0.0, 2, 0.0, 2)
+inje.BackgroundColor3 = Color3.new(1, 1, 1)
+inje.BorderColor3 = Color3.new(0, 0, 0)
+inje.BorderSizePixel = 0
+inje.Text = "INJECT"
+inje.BackgroundTransparency = 0 
+inje.TextColor3 = Color3.new(0, 0, 0)
+inje.Font = Enum.Font.Code
+inje.Parent = injeui
+inje.TextSize = 16
+inje.MouseButton1Click:Connect (function()
+wait(1)
+msg = Instance.new("Message")
+msg.Parent = game.Workspace
+msg.Text = "Loading..."
+wait(1)
+game.StarterGui:SetCore("DevConsoleVisible", true)
+wait(1)
+print("cheat engine process run inject")
+wait(2)
+print("It support 32 bit / 64 bit")
+wait(1)
+print("project Ligma inject in games...")
+wait(3)
+hi = function() end
+print(hi)
+wait(1)
+print("spam bypassed")
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(1)
+hi = function() end
+print(hi)
+wait(2)
+print("check bypassed..")
+wait(6)
+print("some assets have not been downloaded")
+wait(1)
+print("download [#]")
+wait(1)
+print("download [##]")
+wait(1)
+print("download [###]")
+wait(1)
+print("download [####]")
+wait(1)
+print("download [#####]")
+wait(1)
+print("download [######]")
+wait(1)
+print("download [#######]")
+wait(1)
+print("download [########]")
+wait(1)
+print("download [#########]")
+wait(1)
+print("download [##########]")
+wait(3)
+print("check all..")
+wait(6)
+print("assets done next id place")
+wait(1)
+print(game.PlaceId)
+wait(1)
+print("done Enjoy")
+wait(6)
+msg:remove()
+msg = Instance.new("Message")
+msg.Parent = game.Workspace
+msg.Text = "Done Enjoy for Exploit"
+wait(3)
+msg:remove()
+noin:remove()
+noine:remove()
+inje:remove()
+
+local noin = Instance.new("TextLabel")
+noin.Size = UDim2.new(0.3, 0, 0.1, 0)
+noin.Position = UDim2.new(0.0, 0, 0.8, 9)
+noin.BackgroundColor3 = Color3.new(0, 0, 0)
+noin.BorderColor3 = Color3.new(0, 0, 0)
+noin.BorderSizePixel = 0
+noin.Text = "Success INJECT"
+noin.BackgroundTransparency = 4
+noin.TextColor3 = Color3.new(0, 0, 0)
+noin.Font = Enum.Font.Code
+noin.Parent = project 
+noin.TextSize = 15
+
+local inje = Instance.new("TextButton")
+inje.Size = UDim2.new(0.9, 3, 0.9, 4)
+inje.Position = UDim2.new(0.0, 2, 0.0, 2)
+inje.BackgroundColor3 = Color3.new(1, 1, 1)
+inje.BorderColor3 = Color3.new(0, 0, 0)
+inje.BorderSizePixel = 0
+inje.Text = "INJECT"
+inje.BackgroundTransparency = 0 
+inje.TextColor3 = Color3.new(0, 0, 0)
+inje.Font = Enum.Font.Code
+inje.Parent = injeui
+inje.TextSize = 16
+inje.MouseButton1Click:Connect (function()
+msg = Instance.new("Message")
+msg.Parent = game.Workspace
+msg.Text = "you Done press Inject"
+wait(3)
+msg:remove()
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 3)
+UICorner.Parent = inje
+
+local Plmain = Instance.new("ScreenGui")
+local ImageButton = Instance.new("ImageButton")
+local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
+local TextLabel_2 = Instance.new("TextLabel")
+local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
+local TextLabel_3 = Instance.new("TextLabel")
+local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
+local TextLabel_4 = Instance.new("TextLabel")
+local UIAspectRatioConstraint_5 = Instance.new("UIAspectRatioConstraint")
+local TextLabel_5 = Instance.new("TextLabel")
+local UIAspectRatioConstraint_6 = Instance.new("UIAspectRatioConstraint")
+local UIAspectRatioConstraint_7 = Instance.new("UIAspectRatioConstraint")
+local UIAspectRatioConstraint_8 = Instance.new("UIAspectRatioConstraint")
+
+--Properties:
+
+Plmain.Name = "Pl main"
+Plmain.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Plmain.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+ImageButton.Parent = Plmain
+ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageButton.BackgroundTransparency = 1.000
+ImageButton.Position = UDim2.new(0.0130187264, 0, 0.737244964, 0)
+ImageButton.Size = UDim2.new(0.127627626, 0, 0.227272734, 0)
+ImageButton.Image = "rbxassetid://7256706293"
+
+UIAspectRatioConstraint.Parent = ImageButton
+
+Frame.Parent = Plmain
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.Position = UDim2.new(0.145399943, 0, 0.718303144, 0)
+Frame.Size = UDim2.new(0.384384394, 0, 0.243315503, 0)
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(0.00638854504, 0, 0.0276033171, 0)
+TextLabel.Size = UDim2.new(0.98046875, 0, 0.219780222, 0)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = "Project Ligma by backdoor'KingExploit and Alif"
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextWrapped = true
+
+UIAspectRatioConstraint_2.Parent = TextLabel
+UIAspectRatioConstraint_2.AspectRatio = 12.550
+
+TextLabel_2.Parent = Frame
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.BorderSizePixel = 0
+TextLabel_2.Position = UDim2.new(0.0353302956, 0, 0.238558933, 0)
+TextLabel_2.Size = UDim2.new(0.9453125, 0, 0.252747267, 0)
+TextLabel_2.Font = Enum.Font.SourceSans
+TextLabel_2.Text = "Run script fake backdoored in all games"
+TextLabel_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel_2.TextScaled = true
+TextLabel_2.TextSize = 14.000
+TextLabel_2.TextWrapped = true
+
+UIAspectRatioConstraint_3.Parent = TextLabel_2
+UIAspectRatioConstraint_3.AspectRatio = 10.522
+
+TextLabel_3.Parent = Frame
+TextLabel_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_3.BorderSizePixel = 0
+TextLabel_3.Position = UDim2.new(0.0345135927, 0, 0.456087232, 0)
+TextLabel_3.Size = UDim2.new(0.9609375, 0, 0.16483517, 0)
+TextLabel_3.Font = Enum.Font.SourceSans
+TextLabel_3.Text = "Project Ligma!"
+TextLabel_3.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel_3.TextScaled = true
+TextLabel_3.TextSize = 14.000
+TextLabel_3.TextWrapped = true
+
+UIAspectRatioConstraint_4.Parent = TextLabel_3
+UIAspectRatioConstraint_4.AspectRatio = 16.400
+
+TextLabel_4.Parent = Frame
+TextLabel_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_4.BorderSizePixel = 0
+TextLabel_4.Position = UDim2.new(0.00638854504, 0, 0.614073336, 0)
+TextLabel_4.Size = UDim2.new(0.98046875, 0, 0.197802201, 0)
+TextLabel_4.Font = Enum.Font.SourceSans
+TextLabel_4.Text = "Use the external program to execute scripts."
+TextLabel_4.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel_4.TextScaled = true
+TextLabel_4.TextSize = 14.000
+TextLabel_4.TextWrapped = true
+
+UIAspectRatioConstraint_5.Parent = TextLabel_4
+UIAspectRatioConstraint_5.AspectRatio = 13.944
+
+TextLabel_5.Parent = Frame
+TextLabel_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_5.BorderSizePixel = 0
+TextLabel_5.Position = UDim2.new(0.0132777691, 0, 0.800886571, 0)
+TextLabel_5.Size = UDim2.new(0.96875, 0, 0.186813191, 0)
+TextLabel_5.Font = Enum.Font.SourceSans
+TextLabel_5.Text = "Status: Injected"
+TextLabel_5.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel_5.TextScaled = true
+TextLabel_5.TextSize = 14.000
+TextLabel_5.TextWrapped = true
+
+UIAspectRatioConstraint_6.Parent = TextLabel_5
+UIAspectRatioConstraint_6.AspectRatio = 14.588
+
+UIAspectRatioConstraint_7.Parent = Frame
+UIAspectRatioConstraint_7.AspectRatio = 2.813
+
+UIAspectRatioConstraint_8.Parent = Plmain
+UIAspectRatioConstraint_8.AspectRatio = 1.781
+
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = inje
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = injeui
+
+local cleaui = Instance.new("Frame")
+cleaui.Size = UDim2.new(0.1, 25, 0.3, 5)
+cleaui.Position = UDim2.new(0.8, 9, 0.5, 40)
+cleaui.BackgroundColor3 = Color3.new(0, 0, 0)
+cleaui.BorderColor3 = Color3.new(0, 0, 0)
+cleaui.BorderSizePixel = 0
+cleaui.Active = failed
+cleaui.BackgroundTransparency = 0 
+cleaui.Draggable = true
+cleaui.Parent = Tab
+
+local clea = Instance.new("TextButton")
+clea.Size = UDim2.new(0.9, 3, 0.9, 4)
+clea.Position = UDim2.new(0.0, 2, 0.0, 2)
+clea.BackgroundColor3 = Color3.new(1, 1, 1)
+clea.BorderColor3 = Color3.new(0, 0, 0)
+clea.BorderSizePixel = 0
+clea.Text = "CLEAR"
+clea.BackgroundTransparency = 0 
+clea.TextColor3 = Color3.new(0, 0, 0)
+clea.Font = Enum.Font.Code
+clea.Parent = cleaui
+clea.TextSize = 15
+clea.MouseButton1Click:Connect (function()
+loaf.Text = "Clear!"
+wait(2)
+loaf.Text = ""
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = clea
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = cleaui
+
+local X = Instance.new("TextButton")
+X.Size = UDim2.new(0.3, 0, 0.8, 0)
+X.Position = UDim2.new(0.9, 230, 0.1, 0)
+X.BackgroundColor3 = Color3.new(1, 1, 1)
+X.BorderColor3 = Color3.new(0, 0, 0)
+X.BorderSizePixel = 0
+X.Text = "X"
+X.BackgroundTransparency = 0 
+X.TextColor3 = Color3.new(0, 0, 0)
+X.Font = Enum.Font.Code
+X.Parent = TextLabel
+X.TextSize = 15
+X.MouseButton1Click:Connect (function()
+project.Visible = failed
+end)
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 5)
+UICorner.Parent = X
