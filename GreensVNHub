@@ -767,17 +767,270 @@ execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     execScroll.CanvasSize = UDim2.new(0, 0, 0, execLayout.AbsoluteContentSize.Y + 18)
 end)
 
--- 3. Blank Tab
-local tab4Frame = Instance.new("Frame")
-tab4Frame.Size = tabFrameSpace
-tab4Frame.Position = tabFramePos
-tab4Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
-tab4Frame.BorderSizePixel = 0
-tab4Frame.Parent = mainFrame
-tab4Frame.Visible = false
-tabFrames[4] = tab4Frame
-local blankCorner = Instance.new("UICorner", tab4Frame)
-blankCorner.CornerRadius = UDim.new(0, 16)
+-- 3. Library Tab
+local scriptLibrary = {
+    {name="Blox Fruits Autofarm",desc="Farm tự động, Raid, hỗ trợ map mới.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BloxFruitsAutoFarm.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="King Legacy Hub",desc="Full hack cho King Legacy (auto farm, boss, esp).",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/KingLegacyGUI.lua",category="King Legacy",icon="rbxassetid://12285139334"},
+    {name="Pet Simulator X Dup",desc="Dup pet, auto farm, open egg.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/PetSimX.lua",category="Pet Simulator X",icon="rbxassetid://12285139428"},
+    {name="Anime Adventures GUI",desc="Auto farm, auto replay, hack gem.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AnimeAdventures.lua",category="Anime Adventures",icon="rbxassetid://12285139563"},
+    {name="Doors Script",desc="Auto win, esp quái, no jumpscare.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Doors.lua",category="Doors",icon="rbxassetid://12285139601"},
+    {name="Brookhaven GUI",desc="ESP, troll, fly, vehicle mods.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Brookhaven.lua",category="Brookhaven 🏡RP",icon="rbxassetid://12285139711"},
+    {name="Build A Boat GUI",desc="Auto farm, auto build, unlock block.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BuildABoat.lua",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Arsenal Hack",desc="Silent aim, wallbang, esp, anti vote kick.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Arsenal.lua",category="Arsenal",icon="rbxassetid://12285139941"},
+    {name="Murder Mystery 2",desc="ESP, auto win, troll, v.v.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/MM2.lua",category="Murder Mystery 2",icon="rbxassetid://12285140055"},
+    {name="Shindo Life GUI",desc="Auto farm, auto spin, boss, v.v.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ShindoLife.lua",category="Shindo Life",icon="rbxassetid://12285140112"},
+    {name="Adopt Me Hack",desc="Auto farm, pet dupe, esp, open egg.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AdoptMe.lua",category="Adopt Me!",icon="rbxassetid://12285140455"},
+    {name="Survive The Killer",desc="ESP, auto coin, auto farm killer.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SurviveTheKiller.lua",category="Survive the Killer!",icon="rbxassetid://12285140580"},
+    {name="Project Slayers GUI",desc="Auto farm, boss, teleport, anti-ban.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ProjectSlayers.lua",category="Project Slayers",icon="rbxassetid://12285140641"},
+    {name="BedWars Script",desc="Kill aura, auto win, esp, fly.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Bedwars.lua",category="BedWars",icon="rbxassetid://12285140846"},
+    {name="Evade Hack",desc="Auto farm, esp, speed, teleport.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Evade.lua",category="Evade",icon="rbxassetid://12285140912"},
+    {name="Elemental Battlegrounds",desc="Auto kill, unlock all, esp.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ElementalBattlegrounds.lua",category="Elemental Battlegrounds",icon="rbxassetid://12285140998"},
+    {name="Anime Fighters",desc="Auto farm, teleport, boss farm.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AnimeFighters.lua",category="Anime Fighters",icon="rbxassetid://12285141066"},
+    {name="Bee Swarm Simulator",desc="Auto farm, auto quest, honey hack.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BeeSwarm.lua",category="Bee Swarm Simulator",icon="rbxassetid://12285141130"},
+    {name="Da Hood Script",desc="Silent aim, godmode, fly, cash aura.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/DaHood.lua",category="Da Hood",icon="rbxassetid://12285141227"},
+    {name="Tower of Hell GUI",desc="Auto win, anti cheat, troll.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/TowerOfHell.lua",category="Tower of Hell",icon="rbxassetid://12285141308"},
+    {name="Jailbreak Script",desc="Auto rob, esp, teleport, cash hack.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Jailbreak.lua",category="Jailbreak",icon="rbxassetid://12285141399"},
+    {name="Natural Disaster Survival",desc="Auto win, esp, godmode.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/NaturalDisaster.lua",category="Natural Disaster",icon="rbxassetid://12285141484"},
+    {name="Funky Friday Script",desc="Auto play, unlock all, troll.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/FunkyFriday.lua",category="Funky Friday",icon="rbxassetid://12285141566"},
+    {name="Dragon Blox GUI",desc="Auto farm, boss farm, stat hack.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/DragonBlox.lua",category="Dragon Blox",icon="rbxassetid://12285141654"},
+    {name="My Restaurant Hack",desc="Auto earn, speed, unlock.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/MyRestaurant.lua",category="My Restaurant",icon="rbxassetid://12285141742"},
+    {name="Slap Battles",desc="Auto slap, anti ban, esp.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SlapBattles.lua",category="Slap Battles",icon="rbxassetid://12285141839"},
+    {name="The Mimic",desc="ESP, auto win, ghost mode.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/TheMimic.lua",category="The Mimic",icon="rbxassetid://12285141928"},
+    {name="Car Dealership Tycoon",desc="Auto money, unlock all car.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/CarTycoon.lua",category="Car Dealership Tycoon",icon="rbxassetid://12285142016"},
+    {name="Clicker Simulator",desc="Auto click, auto rebirth, unlock pet.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ClickerSimulator.lua",category="Clicker Simulator",icon="rbxassetid://12285142105"},
+    {name="All Star Tower Defense",desc="Auto farm, infinite gems.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AllStarTD.lua",category="All Star Tower Defense",icon="rbxassetid://12285142196"},
+    {name="Pls Donate GUI",desc="Auto claim booth, auto send, esp rich.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/PlsDonate.lua",category="Pls Donate",icon="rbxassetid://12285142287"},
+    {name="Mining Simulator 2",desc="Auto mine, auto sell, unlock pet.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/MiningSimulator2.lua",category="Mining Simulator 2",icon="rbxassetid://12285142378"},
+    -- Bạn có thể bổ sung thêm script cho các game khác theo cấu trúc tương tự
+}
+
+-- ==== GIAO DIỆN TAB LIBRARY (GhostHub style) ====
+local libraryFrame = Instance.new("Frame")
+libraryFrame.Size = tabFrameSpace
+libraryFrame.Position = tabFramePos
+libraryFrame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+libraryFrame.BorderSizePixel = 0
+libraryFrame.Parent = mainFrame
+libraryFrame.Visible = false
+tabFrames[4] = libraryFrame
+local libraryCorner = Instance.new("UICorner", libraryFrame)
+libraryCorner.CornerRadius = UDim.new(0, 16)
+
+-- Thanh tìm kiếm và lọc category
+local searchBox = Instance.new("TextBox")
+searchBox.PlaceholderText = "Tìm kiếm script nhanh..."
+searchBox.Size = UDim2.new(1, -190, 0, 38)
+searchBox.Position = UDim2.new(0, 20, 0, 14)
+searchBox.BackgroundColor3 = Color3.fromRGB(40,44,60)
+searchBox.TextColor3 = Color3.new(1,1,1)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 19
+searchBox.TextXAlignment = Enum.TextXAlignment.Left
+searchBox.Parent = libraryFrame
+local searchCorner = Instance.new("UICorner", searchBox)
+searchCorner.CornerRadius = UDim.new(0.4, 0)
+
+-- Dropdown category
+local categories = {"Tất cả"}
+local hasCat = {}
+for _,v in ipairs(scriptLibrary) do
+    if v.category and not hasCat[v.category] then
+        table.insert(categories, v.category)
+        hasCat[v.category] = true
+    end
+end
+
+local dropCat = Instance.new("TextButton")
+dropCat.Text = "Tất cả ▼"
+dropCat.Size = UDim2.new(0, 140, 0, 38)
+dropCat.Position = UDim2.new(1, -160, 0, 14)
+dropCat.BackgroundColor3 = Color3.fromRGB(40,44,60)
+dropCat.TextColor3 = Color3.fromRGB(255,255,180)
+dropCat.Font = Enum.Font.GothamBold
+dropCat.TextSize = 19
+dropCat.Parent = libraryFrame
+local dropCorner = Instance.new("UICorner", dropCat)
+dropCorner.CornerRadius = UDim.new(0.45, 0)
+
+-- Dropdown list (ẩn/hiện)
+local dropList = Instance.new("Frame")
+dropList.Visible = false
+dropList.Size = UDim2.new(0, 140, 0, 38*(#categories))
+dropList.Position = UDim2.new(1, -160, 0, 52)
+dropList.BackgroundColor3 = Color3.fromRGB(40,44,60)
+dropList.Parent = libraryFrame
+dropList.ZIndex = 10
+local dCorner = Instance.new("UICorner", dropList)
+dCorner.CornerRadius = UDim.new(0.45, 0)
+for i,cat in ipairs(categories) do
+    local btn = Instance.new("TextButton")
+    btn.Text = cat
+    btn.Size = UDim2.new(1, 0, 0, 38)
+    btn.Position = UDim2.new(0, 0, 0, (i-1)*38)
+    btn.BackgroundColor3 = Color3.fromRGB(40,44,60)
+    btn.TextColor3 = Color3.fromRGB(255,255,180)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 18
+    btn.ZIndex = 11
+    btn.Parent = dropList
+    local bcor = Instance.new("UICorner", btn)
+    bcor.CornerRadius = UDim.new(0.45, 0)
+    btn.MouseButton1Click:Connect(function()
+        dropCat.Text = cat.." ▼"
+        dropList.Visible = false
+        updateLibraryList()
+    end)
+    btn.MouseEnter:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(50,60,90) end)
+    btn.MouseLeave:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(40,44,60) end)
+end
+dropCat.MouseButton1Click:Connect(function()
+    dropList.Visible = not dropList.Visible
+end)
+
+-- ScrollingFrame chứa script
+local libScroll = Instance.new("ScrollingFrame")
+libScroll.Size = UDim2.new(1, -40, 1, -72)
+libScroll.Position = UDim2.new(0, 20, 0, 62)
+libScroll.BackgroundTransparency = 1
+libScroll.BorderSizePixel = 0
+libScroll.ScrollBarThickness = 10
+libScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+libScroll.CanvasSize = UDim2.new(0, 0, 0, 600)
+libScroll.Parent = libraryFrame
+
+local libLayout = Instance.new("UIListLayout", libScroll)
+libLayout.SortOrder = Enum.SortOrder.LayoutOrder
+libLayout.Padding = UDim.new(0, 12)
+
+-- Hàm tạo card script GhostHub style
+local function createScriptCard(data)
+    local card = Instance.new("Frame")
+    card.Size = UDim2.new(1, -8, 0, 80)
+    card.BackgroundColor3 = Color3.fromRGB(44, 52, 68)
+    card.BorderSizePixel = 0
+    local cardCorner = Instance.new("UICorner", card)
+    cardCorner.CornerRadius = UDim.new(0.36, 0)
+
+    -- icon (nếu có)
+    if data.icon then
+        local icon = Instance.new("ImageLabel")
+        icon.Image = data.icon
+        icon.Size = UDim2.new(0, 60, 0, 60)
+        icon.Position = UDim2.new(0, 10, 0, 10)
+        icon.BackgroundTransparency = 1
+        icon.ZIndex = 2
+        icon.Parent = card
+        local icCor = Instance.new("UICorner", icon)
+        icCor.CornerRadius = UDim.new(0.5,0)
+    end
+
+    -- Tên script
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Text = data.name
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 20
+    nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Size = UDim2.new(1, -180, 0, 26)
+    nameLabel.Position = UDim2.new(0, 80, 0, 8)
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.Parent = card
+
+    -- Mô tả script
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Text = data.desc
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 16
+    descLabel.TextColor3 = Color3.fromRGB(200,230,255)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Size = UDim2.new(1, -180, 0, 30)
+    descLabel.Position = UDim2.new(0, 80, 0, 36)
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.TextWrapped = true
+    descLabel.Parent = card
+
+    -- Category
+    local catLabel = Instance.new("TextLabel")
+    catLabel.Text = data.category or "Khác"
+    catLabel.Font = Enum.Font.Gotham
+    catLabel.TextSize = 14
+    catLabel.TextColor3 = Color3.fromRGB(255,225,120)
+    catLabel.BackgroundTransparency = 1
+    catLabel.Position = UDim2.new(1, -110, 0, 10)
+    catLabel.Size = UDim2.new(0, 90, 0, 22)
+    catLabel.TextXAlignment = Enum.TextXAlignment.Right
+    catLabel.Parent = card
+
+    -- Nút Copy
+    local copyBtn = Instance.new("TextButton")
+    copyBtn.Text = "Copy"
+    copyBtn.Size = UDim2.new(0, 60, 0, 32)
+    copyBtn.Position = UDim2.new(1, -70, 1, -42)
+    copyBtn.BackgroundColor3 = Color3.fromRGB(88, 130, 255)
+    copyBtn.TextColor3 = Color3.new(1,1,1)
+    copyBtn.Font = Enum.Font.GothamBold
+    copyBtn.TextSize = 17
+    copyBtn.Parent = card
+    local cbCorner = Instance.new("UICorner", copyBtn)
+    cbCorner.CornerRadius = UDim.new(0.45, 0)
+    copyBtn.MouseButton1Click:Connect(function()
+        setclipboard(data.url)
+        copyBtn.Text = "Đã copy!"
+        wait(1)
+        copyBtn.Text = "Copy"
+    end)
+
+    -- Nút Chạy
+    local execBtn = Instance.new("TextButton")
+    execBtn.Text = "Chạy"
+    execBtn.Size = UDim2.new(0, 60, 0, 32)
+    execBtn.Position = UDim2.new(1, -140, 1, -42)
+    execBtn.BackgroundColor3 = Color3.fromRGB(90, 200, 120)
+    execBtn.TextColor3 = Color3.new(1,1,1)
+    execBtn.Font = Enum.Font.GothamBold
+    execBtn.TextSize = 17
+    execBtn.Parent = card
+    local ebCorner = Instance.new("UICorner", execBtn)
+    ebCorner.CornerRadius = UDim.new(0.45, 0)
+    execBtn.MouseButton1Click:Connect(function()
+        local suc, err = pcall(function()
+            loadstring(game:HttpGet(data.url))()
+        end)
+        execBtn.Text = suc and "OK!" or "Lỗi!"
+        wait(0.9)
+        execBtn.Text = "Chạy"
+    end)
+
+    -- Hiệu ứng hover
+    card.MouseEnter:Connect(function()
+        card.BackgroundColor3 = Color3.fromRGB(54, 62, 90)
+    end)
+    card.MouseLeave:Connect(function()
+        card.BackgroundColor3 = Color3.fromRGB(44, 52, 68)
+    end)
+
+    return card
+end
+
+-- Hàm hiển thị + lọc script
+function updateLibraryList()
+    for _, v in pairs(libScroll:GetChildren()) do
+        if v:IsA("Frame") then v:Destroy() end
+    end
+    local query = searchBox.Text:lower()
+    local selCat = dropCat.Text:match("^(.-) ▼$") or "Tất cả"
+    for _, data in ipairs(scriptLibrary) do
+        local matchCat = (selCat == "Tất cả") or (data.category == selCat)
+        local matchSearch = (data.name:lower():find(query) or (data.desc and data.desc:lower():find(query)) or (data.category and data.category:lower():find(query)))
+        if matchCat and matchSearch then
+            createScriptCard(data).Parent = libScroll
+        end
+    end
+    libScroll.CanvasSize = UDim2.new(0,0,0,libLayout.AbsoluteContentSize.Y+18)
+end
+searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
+updateLibraryList()
 
 -- 4. Settings Tab (GUI scale + color)
 local settingsFrame = Instance.new("Frame")
