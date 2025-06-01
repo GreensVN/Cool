@@ -245,7 +245,7 @@ closeBtn.MouseButton1Click:Connect(function()
 end)
 
 -- Tab holder
-local tabNames = {"Home", "Hack", "Blank", "Settings", "Credit"}
+local tabNames = {"Home", "Hack", "Executor", "Library", "Settings", "Credit"}
 local tabHolder = Instance.new("Frame")
 tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -64)
 tabHolder.Position = UDim2.new(0, 0, 0, 64)
@@ -674,15 +674,94 @@ btns[9].MouseButton1Click:Connect(function()
     loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua"))()
 end)
 
+-- Executor tab
+local executorFrame = Instance.new("Frame")
+executorFrame.Size = tabFrameSpace
+executorFrame.Position = tabFramePos
+executorFrame.BackgroundColor3 = Color3.fromRGB(42, 44, 53)
+executorFrame.BorderSizePixel = 0
+executorFrame.Parent = mainFrame
+executorFrame.Visible = false
+tabFrames[3] = executorFrame -- CHÚ Ý: đổi chỉ số các tab sau cho đúng! (Executor là tab số 3)
+
+local executorCorner = Instance.new("UICorner", executorFrame)
+executorCorner.CornerRadius = UDim.new(0, 16)
+
+local executorTitle = Instance.new("TextLabel", executorFrame)
+executorTitle.Text = "Executor Scripts"
+executorTitle.Size = UDim2.new(1, 0, 0, 44)
+executorTitle.Position = UDim2.new(0, 0, 0, 20)
+executorTitle.BackgroundTransparency = 1
+executorTitle.Font = Enum.Font.GothamBold
+executorTitle.TextSize = 27
+executorTitle.TextColor3 = Color3.fromRGB(120, 200, 255)
+executorTitle.TextXAlignment = Enum.TextXAlignment.Center
+
+-- ScrollingFrame cho executor
+local execScroll = Instance.new("ScrollingFrame")
+execScroll.Size = UDim2.new(1, -24, 1, -82)
+execScroll.Position = UDim2.new(0, 12, 0, 64)
+execScroll.BackgroundTransparency = 1
+execScroll.BorderSizePixel = 0
+execScroll.ScrollBarThickness = 10
+execScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+execScroll.CanvasSize = UDim2.new(0, 0, 0, 400)
+execScroll.Parent = executorFrame
+
+local execLayout = Instance.new("UIListLayout", execScroll)
+execLayout.SortOrder = Enum.SortOrder.LayoutOrder
+execLayout.Padding = UDim.new(0, 10)
+
+-- Danh sách script executor
+local executorScripts = {
+    {name="AppleWare", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AppleWare"},
+    {name="Arceus X V3", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ArceusXV3"},
+    {name="Delta X", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/DeltaX"},
+    {name="KRNL", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/krnl"},
+    {name="Codex", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Codex"},
+    {name="Synapse X Remake", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SynapseXRemake"},
+    {name="RC7", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Rc7"},
+    {name="Stigma", url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Stigma"},
+}
+local execBtns = {}
+for i, data in ipairs(executorScripts) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.95, 0, 0, 44)
+    btn.Position = UDim2.new(0, 0, 0, (i-1)*54)
+    btn.BackgroundColor3 = Color3.fromRGB(70, 110, 120)
+    btn.Text = data.name
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 20
+    btn.Parent = execScroll
+    local bcor = Instance.new("UICorner", btn)
+    bcor.CornerRadius = UDim.new(0.3, 0)
+    btn.MouseButton1Click:Connect(function()
+        local suc, err = pcall(function()
+            local scr = loadstring(game:HttpGet(data.url))
+            if scr then scr() end
+        end)
+        if not suc then
+            btn.Text = "Script lỗi/Không hỗ trợ!"
+            wait(1.2)
+            btn.Text = data.name
+        end
+    end)
+    execBtns[i] = btn
+end
+execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    execScroll.CanvasSize = UDim2.new(0, 0, 0, execLayout.AbsoluteContentSize.Y + 18)
+end)
+
 -- 3. Blank Tab
-local tab3Frame = Instance.new("Frame")
-tab3Frame.Size = tabFrameSpace
-tab3Frame.Position = tabFramePos
-tab3Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
-tab3Frame.BorderSizePixel = 0
-tab3Frame.Parent = mainFrame
-tab3Frame.Visible = false
-tabFrames[3] = tab3Frame
+local tab4Frame = Instance.new("Frame")
+tab4Frame.Size = tabFrameSpace
+tab4Frame.Position = tabFramePos
+tab4Frame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tab4Frame.BorderSizePixel = 0
+tab4Frame.Parent = mainFrame
+tab4Frame.Visible = false
+tabFrames[4] = tab4Frame
 local blankCorner = Instance.new("UICorner", tab3Frame)
 blankCorner.CornerRadius = UDim.new(0, 16)
 
@@ -694,7 +773,7 @@ settingsFrame.BackgroundColor3 = Color3.fromRGB(37, 42, 53)
 settingsFrame.BorderSizePixel = 0
 settingsFrame.Parent = mainFrame
 settingsFrame.Visible = false
-tabFrames[4] = settingsFrame
+tabFramTex[5] = settingsFrame
 local settingsCorner = Instance.new("UICorner", settingsFrame)
 settingsCorner.CornerRadius = UDim.new(0, 16)
 
@@ -811,7 +890,7 @@ creditFrame.BackgroundColor3 = Color3.fromRGB(40, 44, 50)
 creditFrame.BorderSizePixel = 0
 creditFrame.Parent = mainFrame
 creditFrame.Visible = false
-tabFrames[5] = creditFrame
+tabFrames[6] = creditFrame
 local creditCorner = Instance.new("UICorner", creditFrame)
 creditCorner.CornerRadius = UDim.new(0, 16)
 local creditLabel = Instance.new("TextLabel")
