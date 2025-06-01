@@ -515,7 +515,7 @@ local btns = {}
 local btnNames = {
     "k00pgui v12", "Anti Kick", "Anti Ban",
     "TuananhIOS", "1*1*1*1 gui", "Dead Rail",
-    "Buff UI", "Infinite Yield", "Grow a Garden No Lag"
+    "Buff UI", "Infinite Yield", "Grow a Garden No Lag",
     "Sky hub", "tiger hub"
 }
 }
@@ -774,7 +774,7 @@ tab4Frame.BorderSizePixel = 0
 tab4Frame.Parent = mainFrame
 tab4Frame.Visible = false
 tabFrames[4] = tab4Frame
-local blankCorner = Instance.new("UICorner", tab3Frame)
+local blankCorner = Instance.new("UICorner", tab4Frame)
 blankCorner.CornerRadius = UDim.new(0, 16)
 
 -- 4. Settings Tab (GUI scale + color)
