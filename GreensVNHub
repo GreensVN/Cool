@@ -155,7 +155,7 @@ local function applyGuiColor(mainFrame, newColor)
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "greensvn hub v1.25"
+screenGui.Name = "greensvn hub v1.5"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -516,8 +516,10 @@ local btnNames = {
     "k00pgui v12", "Anti Kick", "Anti Ban",
     "TuananhIOS", "1*1*1*1 gui", "Dead Rail",
     "Buff UI", "Infinite Yield", "Grow a Garden No Lag"
+    "Sky hub", "tiger hub"
 }
-for i=1,9 do
+}
+for i=1,11 do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.93, 0, 0, 44)
     btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
@@ -672,6 +674,12 @@ btns[8].MouseButton1Click:Connect(function()
 end)
 btns[9].MouseButton1Click:Connect(function()   
     loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua"))()
+end)
+btns[10].MouseButton1Click:Connect(function()   
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/balintTheDevX/Tiger-X-V3/main/Tiger%20X%20V3.5%20Fixed"))()
+end)
+btns[11].MouseButton1Click:Connect(function()   
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
 end)
 
 -- Executor tab
@@ -898,7 +906,7 @@ tabFrames[6] = creditFrame
 local creditCorner = Instance.new("UICorner", creditFrame)
 creditCorner.CornerRadius = UDim.new(0, 16)
 local creditLabel = Instance.new("TextLabel")
-creditLabel.Text = "Made by Oxbl149"
+creditLabel.Text = "Made by GreensVN"
 creditLabel.Size = UDim2.new(1, 0, 1, 0)
 creditLabel.Position = UDim2.new(0, 0, 0, 0)
 creditLabel.BackgroundTransparency = 1
