@@ -516,10 +516,9 @@ local btnNames = {
     "k00pgui v12", "Anti Kick", "Anti Ban",
     "TuananhIOS", "1*1*1*1 gui", "Dead Rail",
     "Buff UI", "Infinite Yield", "Grow a Garden No Lag",
-    "Sky hub", "tiger hub"
+    "Sky Hub", "Tiger Hub", "Tool Giver Remake",
 }
-}
-for i=1,11 do
+for i=1,12 do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.93, 0, 0, 44)
     btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
@@ -680,6 +679,9 @@ btns[10].MouseButton1Click:Connect(function()
 end)
 btns[11].MouseButton1Click:Connect(function()   
     loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
+end)
+btns[12].MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ToolGiver"))()
 end)
 
 -- Executor tab
