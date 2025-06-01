@@ -682,7 +682,7 @@ executorFrame.BackgroundColor3 = Color3.fromRGB(42, 44, 53)
 executorFrame.BorderSizePixel = 0
 executorFrame.Parent = mainFrame
 executorFrame.Visible = false
-tabFrames[3] = executorFrame -- CHÚ Ý: đổi chỉ số các tab sau cho đúng! (Executor là tab số 3)
+tabFrames[3] = executorFrame
 
 local executorCorner = Instance.new("UICorner", executorFrame)
 executorCorner.CornerRadius = UDim.new(0, 16)
@@ -773,7 +773,7 @@ settingsFrame.BackgroundColor3 = Color3.fromRGB(37, 42, 53)
 settingsFrame.BorderSizePixel = 0
 settingsFrame.Parent = mainFrame
 settingsFrame.Visible = false
-tabFramTex[5] = settingsFrame
+tabFrames[5] = settingsFrame
 local settingsCorner = Instance.new("UICorner", settingsFrame)
 settingsCorner.CornerRadius = UDim.new(0, 16)
 
@@ -908,8 +908,8 @@ creditLabel.Parent = creditFrame
 -- Tab logic
 for i, btn in ipairs(tabBtns) do
     btn.MouseButton1Click:Connect(function()
-        for j, f in ipairs(tabFrames) do
-            f.Visible = (j == i)
+        for j, frame in ipairs(tabFrames) do
+            frame.Visible = (j == i)
             tabBtns[j].BackgroundColor3 = (j == i) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
         end
     end)
