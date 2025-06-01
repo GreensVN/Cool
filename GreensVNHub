@@ -768,6 +768,7 @@ execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 end)
 
 -- 3. Library Tab
+-- ==== DATA THƯ VIỆN SCRIPT (50+ game, nâng cấp tối đa, GhostHub style) ====
 local scriptLibrary = {
     {name="Blox Fruits Autofarm",desc="Farm tự động, Raid, hỗ trợ map mới.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BloxFruitsAutoFarm.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     {name="King Legacy Hub",desc="Full hack cho King Legacy (auto farm, boss, esp).",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/KingLegacyGUI.lua",category="King Legacy",icon="rbxassetid://12285139334"},
@@ -801,10 +802,31 @@ local scriptLibrary = {
     {name="All Star Tower Defense",desc="Auto farm, infinite gems.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AllStarTD.lua",category="All Star Tower Defense",icon="rbxassetid://12285142196"},
     {name="Pls Donate GUI",desc="Auto claim booth, auto send, esp rich.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/PlsDonate.lua",category="Pls Donate",icon="rbxassetid://12285142287"},
     {name="Mining Simulator 2",desc="Auto mine, auto sell, unlock pet.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/MiningSimulator2.lua",category="Mining Simulator 2",icon="rbxassetid://12285142378"},
-    -- Bạn có thể bổ sung thêm script cho các game khác theo cấu trúc tương tự
+    {name="Tower Defense Simulator",desc="Auto place, auto farm, unlock tower.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/TowerDefenseSimulator.lua",category="Tower Defense Simulator",icon="rbxassetid://12285142469"},
+    {name="Anime Dimensions",desc="Auto farm, unlock code, esp, gems.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AnimeDimensions.lua",category="Anime Dimensions",icon="rbxassetid://12285142560"},
+    {name="Ninja Legends",desc="Auto swing, auto sell, auto buy.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/NinjaLegends.lua",category="Ninja Legends",icon="rbxassetid://12285142649"},
+    {name="BIG Paintball",desc="Silent aim, esp, auto win.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BigPaintball.lua",category="BIG Paintball",icon="rbxassetid://12285142736"},
+    {name="Mad City GUI",desc="Auto rob, esp, teleport.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/MadCity.lua",category="Mad City",icon="rbxassetid://12285142825"},
+    {name="Speed Run 4",desc="Auto complete, anti cheat, troll.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SpeedRun4.lua",category="Speed Run 4",icon="rbxassetid://12285142914"},
+    {name="Theme Park Tycoon 2",desc="Auto build, unlock, money hack.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ThemeParkTycoon.lua",category="Theme Park Tycoon 2",icon="rbxassetid://12285143003"},
+    {name="Ninja Tycoon",desc="Auto farm, unlock, esp.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/NinjaTycoon.lua",category="Ninja Tycoon",icon="rbxassetid://12285143094"},
+    {name="Bee Swarm Simulator 2",desc="Auto collect, quest, honey.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BeeSwarm2.lua",category="Bee Swarm Simulator",icon="rbxassetid://12285143183"},
+    {name="Weight Lifting Simulator",desc="Auto lift, auto rebirth, unlock.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/WeightLifting.lua",category="Weight Lifting Simulator",icon="rbxassetid://12285143276"},
+    {name="Bubble Gum Simulator",desc="Auto blow, auto sell, unlock pet.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BubbleGumSimulator.lua",category="Bubble Gum Simulator",icon="rbxassetid://12285143366"},
+    {name="Rogue Lineage",desc="ESP, anti ban, troll.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/RogueLineage.lua",category="Rogue Lineage",icon="rbxassetid://12285143457"},
+    {name="Islands Hack",desc="Auto farm, auto build, unlock.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Islands.lua",category="Islands",icon="rbxassetid://12285143548"},
+    {name="Lumber Tycoon 2",desc="Auto dupe, auto sell, unlock saw.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/LumberTycoon2.lua",category="Lumber Tycoon 2",icon="rbxassetid://12285143641"},
+    {name="Counter Blox",desc="Silent aim, esp, anti ban.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/CounterBlox.lua",category="Counter Blox",icon="rbxassetid://12285143734"},
+    {name="Arsenal V2",desc="Upgrade full, silent aim, wallhack.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ArsenalV2.lua",category="Arsenal",icon="rbxassetid://12285143820"},
+    {name="Tower Blitz",desc="Auto farm, unlock tower, anti cheat.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/TowerBlitz.lua",category="Tower Blitz",icon="rbxassetid://12285143913"},
+    {name="Super Power Training Sim",desc="Auto train, auto quest, unlock.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SuperPowerTraining.lua",category="Super Power Training Sim",icon="rbxassetid://12285144004"},
+    {name="Breaking Point",desc="ESP, auto win, troll.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/BreakingPoint.lua",category="Breaking Point",icon="rbxassetid://12285144097"},
+    {name="Ragdoll Engine",desc="Troll, fly, push, ragdoll mods.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/RagdollEngine.lua",category="Ragdoll Engine",icon="rbxassetid://12285144190"},
+    {name="Prison Life",desc="Auto farm, esp, teleport.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/PrisonLife.lua",category="Prison Life",icon="rbxassetid://12285144284"},
+    {name="Treasure Quest",desc="Auto farm, unlock item, esp.",url="https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/TreasureQuest.lua",category="Treasure Quest",icon="rbxassetid://12285144376"},
 }
 
--- ==== GIAO DIỆN TAB LIBRARY (GhostHub style) ====
+-- ==== GIAO DIỆN TAB LIBRARY (GhostHub style nâng cấp) ====
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
@@ -895,17 +917,29 @@ libScroll.BackgroundTransparency = 1
 libScroll.BorderSizePixel = 0
 libScroll.ScrollBarThickness = 10
 libScroll.ScrollingDirection = Enum.ScrollingDirection.Y
-libScroll.CanvasSize = UDim2.new(0, 0, 0, 600)
+libScroll.CanvasSize = UDim2.new(0, 0, 0, 2000)
 libScroll.Parent = libraryFrame
 
 local libLayout = Instance.new("UIListLayout", libScroll)
 libLayout.SortOrder = Enum.SortOrder.LayoutOrder
 libLayout.Padding = UDim.new(0, 12)
 
+-- Hiển thị tổng số scripts
+local scriptCountLabel = Instance.new("TextLabel")
+scriptCountLabel.Size = UDim2.new(0, 240, 0, 24)
+scriptCountLabel.Position = UDim2.new(0, 22, 1, -30)
+scriptCountLabel.BackgroundTransparency = 1
+scriptCountLabel.TextColor3 = Color3.fromRGB(200,255,120)
+scriptCountLabel.Font = Enum.Font.GothamBold
+scriptCountLabel.TextSize = 18
+scriptCountLabel.TextXAlignment = Enum.TextXAlignment.Left
+scriptCountLabel.Text = ""
+scriptCountLabel.Parent = libraryFrame
+
 -- Hàm tạo card script GhostHub style
 local function createScriptCard(data)
     local card = Instance.new("Frame")
-    card.Size = UDim2.new(1, -8, 0, 80)
+    card.Size = UDim2.new(1, -8, 0, 86)
     card.BackgroundColor3 = Color3.fromRGB(44, 52, 68)
     card.BorderSizePixel = 0
     local cardCorner = Instance.new("UICorner", card)
@@ -916,7 +950,7 @@ local function createScriptCard(data)
         local icon = Instance.new("ImageLabel")
         icon.Image = data.icon
         icon.Size = UDim2.new(0, 60, 0, 60)
-        icon.Position = UDim2.new(0, 10, 0, 10)
+        icon.Position = UDim2.new(0, 10, 0, 13)
         icon.BackgroundTransparency = 1
         icon.ZIndex = 2
         icon.Parent = card
@@ -928,11 +962,11 @@ local function createScriptCard(data)
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Text = data.name
     nameLabel.Font = Enum.Font.GothamBold
-    nameLabel.TextSize = 20
+    nameLabel.TextSize = 21
     nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Size = UDim2.new(1, -180, 0, 26)
-    nameLabel.Position = UDim2.new(0, 80, 0, 8)
+    nameLabel.Position = UDim2.new(0, 80, 0, 9)
     nameLabel.TextXAlignment = Enum.TextXAlignment.Left
     nameLabel.Parent = card
 
@@ -943,7 +977,7 @@ local function createScriptCard(data)
     descLabel.TextSize = 16
     descLabel.TextColor3 = Color3.fromRGB(200,230,255)
     descLabel.BackgroundTransparency = 1
-    descLabel.Size = UDim2.new(1, -180, 0, 30)
+    descLabel.Size = UDim2.new(1, -180, 0, 32)
     descLabel.Position = UDim2.new(0, 80, 0, 36)
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     descLabel.TextYAlignment = Enum.TextYAlignment.Top
@@ -957,7 +991,7 @@ local function createScriptCard(data)
     catLabel.TextSize = 14
     catLabel.TextColor3 = Color3.fromRGB(255,225,120)
     catLabel.BackgroundTransparency = 1
-    catLabel.Position = UDim2.new(1, -110, 0, 10)
+    catLabel.Position = UDim2.new(1, -110, 0, 12)
     catLabel.Size = UDim2.new(0, 90, 0, 22)
     catLabel.TextXAlignment = Enum.TextXAlignment.Right
     catLabel.Parent = card
@@ -1020,13 +1054,16 @@ function updateLibraryList()
     end
     local query = searchBox.Text:lower()
     local selCat = dropCat.Text:match("^(.-) ▼$") or "Tất cả"
+    local count = 0
     for _, data in ipairs(scriptLibrary) do
         local matchCat = (selCat == "Tất cả") or (data.category == selCat)
         local matchSearch = (data.name:lower():find(query) or (data.desc and data.desc:lower():find(query)) or (data.category and data.category:lower():find(query)))
         if matchCat and matchSearch then
             createScriptCard(data).Parent = libScroll
+            count = count + 1
         end
     end
+    scriptCountLabel.Text = "Số lượng script: " .. count .. "/" .. #scriptLibrary
     libScroll.CanvasSize = UDim2.new(0,0,0,libLayout.AbsoluteContentSize.Y+18)
 end
 searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
