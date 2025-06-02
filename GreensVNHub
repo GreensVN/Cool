@@ -768,7 +768,6 @@ execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 end)
 
 -- 3. Library Tab
--- ==== DATA THƯ VIỆN SCRIPT (75+ game nổi tiếng, nguồn ScriptBlox, nâng cấp tối đa GhostHub style) ====
 local scriptLibrary = {
     -- Blox Fruits
     {name="Blox Fruits | Thunder Z Hub",desc="Autofarm, Raid, Fruit, ESP, v.v.",url="https://raw.githubusercontent.com/ThunderZ-HUB/script/main/BloxFruit.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
@@ -911,31 +910,51 @@ local scriptLibrary = {
     {name="Jailbreak | JB X Hub",desc="Auto Rob, ESP, Teleport.",url="https://raw.githubusercontent.com/JBXHub/Jailbreak/main/JBXHub.lua",category="Jailbreak",icon="rbxassetid://12285141399"},
     {name="Anime Fighting Simulator | AFS Hub",desc="Auto Farm, Boss, Teleport.",url="https://raw.githubusercontent.com/AFSHub/AnimeFighting/main/AFSHub.lua",category="Anime Fighting Simulator",icon="rbxassetid://12285145057"},
     {name="Dragon Ball Rage | DBR Hub",desc="Farm, Boss, Unlock, Auto Stats.",url="https://raw.githubusercontent.com/DBRHub/DragonBallRage/main/DBRHub.lua",category="Dragon Ball Rage",icon="rbxassetid://12285141654"},
-    -- ... Đủ 75+ scripts từ các hub nổi tiếng và game hot nhất Roblox
+
+-- Helper: Badge "HOT" cho script nổi bật
+local hotList = {
+    ["Blox Fruits"] = true, ["King Legacy"] = true, ["Pet Simulator X"] = true, ["Anime Adventures"] = true, ["Doors"] = true,
+    ["BedWars"] = true, ["Da Hood"] = true, ["Jailbreak"] = true, ["Brookhaven 🏡RP"] = true, ["Project Slayers"] = true,
 }
--- ==== GIAO DIỆN TAB LIBRARY (GhostHub style nâng cấp) ====
+
 local libraryFrame = Instance.new("Frame")
 libraryFrame.Size = tabFrameSpace
 libraryFrame.Position = tabFramePos
-libraryFrame.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+libraryFrame.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
 libraryFrame.BorderSizePixel = 0
 libraryFrame.Parent = mainFrame
 libraryFrame.Visible = false
 tabFrames[4] = libraryFrame
 local libraryCorner = Instance.new("UICorner", libraryFrame)
-libraryCorner.CornerRadius = UDim.new(0, 16)
+libraryCorner.CornerRadius = UDim.new(0, 18)
+
+-- Shadow cho Library panel
+local libShadow = Instance.new("ImageLabel")
+libShadow.Name = "LibShadow"
+libShadow.BackgroundTransparency = 1
+libShadow.Image = "rbxassetid://1316045217"
+libShadow.ImageTransparency = 0.82
+libShadow.Size = UDim2.new(1, 54, 1, 54)
+libShadow.Position = UDim2.new(0, -27, 0, -27)
+libShadow.ZIndex = 0
+libShadow.Parent = libraryFrame
+
+-- Thanh tìm kiếm & lọc
 local searchBox = Instance.new("TextBox")
-searchBox.PlaceholderText = "Tìm kiếm script nhanh..."
-searchBox.Size = UDim2.new(1, -190, 0, 38)
-searchBox.Position = UDim2.new(0, 20, 0, 14)
-searchBox.BackgroundColor3 = Color3.fromRGB(40,44,60)
+searchBox.PlaceholderText = "🔍 Tìm kiếm script/game..."
+searchBox.Size = UDim2.new(1, -220, 0, 40)
+searchBox.Position = UDim2.new(0, 24, 0, 18)
+searchBox.BackgroundColor3 = Color3.fromRGB(42, 44, 56)
 searchBox.TextColor3 = Color3.new(1,1,1)
 searchBox.Font = Enum.Font.Gotham
 searchBox.TextSize = 19
 searchBox.TextXAlignment = Enum.TextXAlignment.Left
+searchBox.ClearTextOnFocus = false
 searchBox.Parent = libraryFrame
 local searchCorner = Instance.new("UICorner", searchBox)
-searchCorner.CornerRadius = UDim.new(0.4, 0)
+searchCorner.CornerRadius = UDim.new(0.5, 0)
+
+-- Dropdown lọc category với icon
 local categories = {"Tất cả"}
 local hasCat = {}
 for _,v in ipairs(scriptLibrary) do
@@ -945,171 +964,327 @@ for _,v in ipairs(scriptLibrary) do
     end
 end
 local dropCat = Instance.new("TextButton")
-dropCat.Text = "Tất cả ▼"
-dropCat.Size = UDim2.new(0, 140, 0, 38)
-dropCat.Position = UDim2.new(1, -160, 0, 14)
-dropCat.BackgroundColor3 = Color3.fromRGB(40,44,60)
+dropCat.Text = "🗂  Tất cả ▼"
+dropCat.Size = UDim2.new(0, 170, 0, 40)
+dropCat.Position = UDim2.new(1, -190, 0, 18)
+dropCat.BackgroundColor3 = Color3.fromRGB(42,44,56)
 dropCat.TextColor3 = Color3.fromRGB(255,255,180)
 dropCat.Font = Enum.Font.GothamBold
 dropCat.TextSize = 19
 dropCat.Parent = libraryFrame
 local dropCorner = Instance.new("UICorner", dropCat)
-dropCorner.CornerRadius = UDim.new(0.45, 0)
+dropCorner.CornerRadius = UDim.new(0.5, 0)
 local dropList = Instance.new("Frame")
 dropList.Visible = false
-dropList.Size = UDim2.new(0, 140, 0, 38*(#categories))
-dropList.Position = UDim2.new(1, -160, 0, 52)
-dropList.BackgroundColor3 = Color3.fromRGB(40,44,60)
+dropList.Size = UDim2.new(0, 170, 0, 40*(#categories))
+dropList.Position = UDim2.new(1, -190, 0, 60)
+dropList.BackgroundColor3 = Color3.fromRGB(42,44,56)
 dropList.Parent = libraryFrame
-dropList.ZIndex = 10
+dropList.ZIndex = 20
 local dCorner = Instance.new("UICorner", dropList)
-dCorner.CornerRadius = UDim.new(0.45, 0)
+dCorner.CornerRadius = UDim.new(0.5, 0)
 for i,cat in ipairs(categories) do
     local btn = Instance.new("TextButton")
-    btn.Text = cat
-    btn.Size = UDim2.new(1, 0, 0, 38)
-    btn.Position = UDim2.new(0, 0, 0, (i-1)*38)
-    btn.BackgroundColor3 = Color3.fromRGB(40,44,60)
+    btn.Text = (cat == "Tất cả" and "🗂  " or "🎮  ") .. cat
+    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Position = UDim2.new(0, 0, 0, (i-1)*40)
+    btn.BackgroundColor3 = Color3.fromRGB(42,44,56)
     btn.TextColor3 = Color3.fromRGB(255,255,180)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 18
-    btn.ZIndex = 11
+    btn.ZIndex = 21
     btn.Parent = dropList
     local bcor = Instance.new("UICorner", btn)
-    bcor.CornerRadius = UDim.new(0.45, 0)
+    bcor.CornerRadius = UDim.new(0.5, 0)
     btn.MouseButton1Click:Connect(function()
-        dropCat.Text = cat.." ▼"
+        dropCat.Text = (cat == "Tất cả" and "🗂  " or "🎮  ")..cat.." ▼"
         dropList.Visible = false
         updateLibraryList()
     end)
-    btn.MouseEnter:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(50,60,90) end)
-    btn.MouseLeave:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(40,44,60) end)
+    btn.MouseEnter:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(55,60,90) end)
+    btn.MouseLeave:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(42,44,56) end)
 end
 dropCat.MouseButton1Click:Connect(function()
     dropList.Visible = not dropList.Visible
 end)
+
+-- ScrollFrame scripts: custom scrollbar, padding, 2 cột nếu rộng
 local libScroll = Instance.new("ScrollingFrame")
-libScroll.Size = UDim2.new(1, -40, 1, -72)
-libScroll.Position = UDim2.new(0, 20, 0, 62)
+libScroll.Size = UDim2.new(1, -40, 1, -100)
+libScroll.Position = UDim2.new(0, 20, 0, 72)
 libScroll.BackgroundTransparency = 1
 libScroll.BorderSizePixel = 0
-libScroll.ScrollBarThickness = 10
+libScroll.ScrollBarThickness = 12
 libScroll.ScrollingDirection = Enum.ScrollingDirection.Y
-libScroll.CanvasSize = UDim2.new(0, 0, 0, 4000)
+libScroll.CanvasSize = UDim2.new(0, 0, 0, 800)
 libScroll.Parent = libraryFrame
-local libLayout = Instance.new("UIListLayout", libScroll)
+libScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+libScroll.ScrollBarImageColor3 = Color3.fromRGB(120,170,120)
+libScroll.ScrollBarImageTransparency = 0.1
+local libLayout = Instance.new("UIGridLayout", libScroll)
+libLayout.CellPadding = UDim2.new(0,18,0,18)
+libLayout.CellSize = UDim2.new(0.48, -12, 0, 116)
 libLayout.SortOrder = Enum.SortOrder.LayoutOrder
-libLayout.Padding = UDim.new(0, 12)
+libScroll.ChildAdded:Connect(function()
+    libScroll.CanvasSize = UDim2.new(0,0,0,libLayout.AbsoluteContentSize.Y+18)
+end)
+
+-- Responsive: 2 cột nếu đủ rộng, 1 cột trên mobile
+libScroll:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+    local w = libScroll.AbsoluteSize.X
+    if w < 440 then
+        libLayout.CellSize = UDim2.new(1,-8,0,116)
+    else
+        libLayout.CellSize = UDim2.new(0.48, -12, 0, 116)
+    end
+end)
+
+-- Hiển thị tổng số scripts
 local scriptCountLabel = Instance.new("TextLabel")
-scriptCountLabel.Size = UDim2.new(0, 240, 0, 24)
-scriptCountLabel.Position = UDim2.new(0, 22, 1, -30)
+scriptCountLabel.Size = UDim2.new(0, 340, 0, 24)
+scriptCountLabel.Position = UDim2.new(0, 24, 1, -36)
 scriptCountLabel.BackgroundTransparency = 1
-scriptCountLabel.TextColor3 = Color3.fromRGB(200,255,120)
+scriptCountLabel.TextColor3 = Color3.fromRGB(120,255,120)
 scriptCountLabel.Font = Enum.Font.GothamBold
 scriptCountLabel.TextSize = 18
 scriptCountLabel.TextXAlignment = Enum.TextXAlignment.Left
 scriptCountLabel.Text = ""
 scriptCountLabel.Parent = libraryFrame
+
+-- Card style: shadow, nổi, hiệu ứng hover, badge HOT, icon lớn, nút động, popup preview
 local function createScriptCard(data)
     local card = Instance.new("Frame")
-    card.Size = UDim2.new(1, -8, 0, 86)
-    card.BackgroundColor3 = Color3.fromRGB(44, 52, 68)
+    card.Size = UDim2.new(1,0,0,116)
+    card.BackgroundColor3 = Color3.fromRGB(38, 45, 60)
     card.BorderSizePixel = 0
+    card.ZIndex = 2
     local cardCorner = Instance.new("UICorner", card)
-    cardCorner.CornerRadius = UDim.new(0.36, 0)
+    cardCorner.CornerRadius = UDim.new(0.33, 0)
+    -- shadow
+    local shadow = Instance.new("ImageLabel", card)
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.Size = UDim2.new(1,16,1,16)
+    shadow.Position = UDim2.new(0,-8,0,-8)
+    shadow.BackgroundTransparency = 1
+    shadow.ImageTransparency = 0.85
+    shadow.ZIndex = 1
+
+    -- Icon game lớn
     if data.icon then
-        local icon = Instance.new("ImageLabel")
+        local icon = Instance.new("ImageLabel", card)
         icon.Image = data.icon
-        icon.Size = UDim2.new(0, 60, 0, 60)
-        icon.Position = UDim2.new(0, 10, 0, 13)
+        icon.Size = UDim2.new(0, 70, 0, 70)
+        icon.Position = UDim2.new(0, 14, 0, 19)
         icon.BackgroundTransparency = 1
         icon.ZIndex = 2
-        icon.Parent = card
         local icCor = Instance.new("UICorner", icon)
         icCor.CornerRadius = UDim.new(0.5,0)
     end
-    local nameLabel = Instance.new("TextLabel")
+
+    -- HOT badge
+    if hotList[data.category or ""] then
+        local badge = Instance.new("TextLabel", card)
+        badge.Text = "🔥 HOT"
+        badge.Size = UDim2.new(0, 54, 0, 24)
+        badge.Position = UDim2.new(0, 20, 0, 4)
+        badge.BackgroundColor3 = Color3.fromRGB(255, 110, 100)
+        badge.Font = Enum.Font.GothamBold
+        badge.TextSize = 15
+        badge.TextColor3 = Color3.fromRGB(255,255,255)
+        badge.BackgroundTransparency = 0.06
+        badge.ZIndex = 10
+        local badgeCorner = Instance.new("UICorner", badge)
+        badgeCorner.CornerRadius = UDim.new(0.5,0)
+    end
+
+    -- Tên script (popup preview on click)
+    local nameLabel = Instance.new("TextButton", card)
     nameLabel.Text = data.name
     nameLabel.Font = Enum.Font.GothamBold
-    nameLabel.TextSize = 21
+    nameLabel.TextSize = 20
     nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
     nameLabel.BackgroundTransparency = 1
-    nameLabel.Size = UDim2.new(1, -180, 0, 26)
-    nameLabel.Position = UDim2.new(0, 80, 0, 9)
+    nameLabel.Size = UDim2.new(1, -170, 0, 30)
+    nameLabel.Position = UDim2.new(0, 96, 0, 13)
     nameLabel.TextXAlignment = Enum.TextXAlignment.Left
-    nameLabel.Parent = card
-    local descLabel = Instance.new("TextLabel")
+    nameLabel.ZIndex = 3
+
+    -- Popup preview code
+    nameLabel.MouseButton2Click:Connect(function()
+        local popup = Instance.new("Frame")
+        popup.Size = UDim2.new(0, 435, 0, 320)
+        popup.Position = UDim2.new(0.5, -217, 0.5, -160)
+        popup.BackgroundColor3 = Color3.fromRGB(22, 24, 32)
+        popup.BorderSizePixel = 0
+        popup.Parent = libraryFrame
+        popup.ZIndex = 100
+        local popCorner = Instance.new("UICorner", popup)
+        popCorner.CornerRadius = UDim.new(0.1,0)
+        local close = Instance.new("TextButton", popup)
+        close.Text = "✖"
+        close.Size = UDim2.new(0,34,0,34)
+        close.Position = UDim2.new(1,-42,0,8)
+        close.BackgroundColor3 = Color3.fromRGB(60,60,70)
+        close.TextColor3 = Color3.fromRGB(255,120,120)
+        close.Font = Enum.Font.GothamBold
+        close.TextSize = 22
+        close.ZIndex = 105
+        local closeCor = Instance.new("UICorner", close)
+        closeCor.CornerRadius = UDim.new(0.5,0)
+        close.MouseButton1Click:Connect(function() popup:Destroy() end)
+        local scroll = Instance.new("ScrollingFrame", popup)
+        scroll.Size = UDim2.new(1,-32,1,-54)
+        scroll.Position = UDim2.new(0,16,0,44)
+        scroll.BackgroundColor3 = Color3.fromRGB(32,36,48)
+        scroll.BorderSizePixel = 0
+        scroll.ScrollBarThickness = 10
+        scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+        scroll.CanvasSize = UDim2.new(0,0,2,0)
+        scroll.ZIndex = 101
+        local code = Instance.new("TextLabel", scroll)
+        code.Size = UDim2.new(1,0,0,1000)
+        code.Position = UDim2.new(0,0,0,0)
+        code.Text = "Đang tải mã nguồn..."
+        code.Font = Enum.Font.Code
+        code.TextSize = 15
+        code.TextColor3 = Color3.fromRGB(180,255,180)
+        code.BackgroundTransparency = 1
+        code.TextXAlignment = Enum.TextXAlignment.Left
+        code.TextYAlignment = Enum.TextYAlignment.Top
+        code.TextWrapped = true
+        code.TextTruncate = Enum.TextTruncate.AtEnd
+        code.ZIndex = 102
+        spawn(function()
+            local src = game:HttpGet(data.url)
+            code.Text = src:sub(1,6000)
+        end)
+    end)
+
+    -- Mô tả script
+    local descLabel = Instance.new("TextLabel", card)
     descLabel.Text = data.desc
     descLabel.Font = Enum.Font.Gotham
     descLabel.TextSize = 16
     descLabel.TextColor3 = Color3.fromRGB(200,230,255)
     descLabel.BackgroundTransparency = 1
-    descLabel.Size = UDim2.new(1, -180, 0, 32)
-    descLabel.Position = UDim2.new(0, 80, 0, 36)
+    descLabel.Size = UDim2.new(1, -170, 0, 36)
+    descLabel.Position = UDim2.new(0, 96, 0, 44)
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     descLabel.TextYAlignment = Enum.TextYAlignment.Top
     descLabel.TextWrapped = true
-    descLabel.Parent = card
-    local catLabel = Instance.new("TextLabel")
+    descLabel.ZIndex = 2
+
+    -- Category
+    local catLabel = Instance.new("TextLabel", card)
     catLabel.Text = data.category or "Khác"
     catLabel.Font = Enum.Font.Gotham
     catLabel.TextSize = 14
     catLabel.TextColor3 = Color3.fromRGB(255,225,120)
     catLabel.BackgroundTransparency = 1
-    catLabel.Position = UDim2.new(1, -110, 0, 12)
+    catLabel.Position = UDim2.new(1, -110, 0, 16)
     catLabel.Size = UDim2.new(0, 90, 0, 22)
     catLabel.TextXAlignment = Enum.TextXAlignment.Right
-    catLabel.Parent = card
-    local copyBtn = Instance.new("TextButton")
-    copyBtn.Text = "Copy"
-    copyBtn.Size = UDim2.new(0, 60, 0, 32)
-    copyBtn.Position = UDim2.new(1, -70, 1, -42)
-    copyBtn.BackgroundColor3 = Color3.fromRGB(88, 130, 255)
+    catLabel.ZIndex = 2
+    -- Nút Copy (hiệu ứng)
+    local copyBtn = Instance.new("TextButton", card)
+    copyBtn.Text = "📋 Copy"
+    copyBtn.Size = UDim2.new(0, 72, 0, 34)
+    copyBtn.Position = UDim2.new(1, -82, 1, -44)
+    copyBtn.BackgroundColor3 = Color3.fromRGB(98, 132, 255)
     copyBtn.TextColor3 = Color3.new(1,1,1)
     copyBtn.Font = Enum.Font.GothamBold
-    copyBtn.TextSize = 17
-    copyBtn.Parent = card
+    copyBtn.TextSize = 16
+    copyBtn.ZIndex = 3
     local cbCorner = Instance.new("UICorner", copyBtn)
-    cbCorner.CornerRadius = UDim.new(0.45, 0)
+    cbCorner.CornerRadius = UDim.new(0.5, 0)
+    copyBtn.MouseButton1Down:Connect(function()
+        copyBtn.BackgroundColor3 = Color3.fromRGB(64,100,240)
+    end)
+    copyBtn.MouseButton1Up:Connect(function()
+        copyBtn.BackgroundColor3 = Color3.fromRGB(98, 132, 255)
+    end)
+    copyBtn.MouseEnter:Connect(function()
+        copyBtn.BackgroundColor3 = Color3.fromRGB(128,170,255)
+    end)
+    copyBtn.MouseLeave:Connect(function()
+        copyBtn.BackgroundColor3 = Color3.fromRGB(98, 132, 255)
+    end)
     copyBtn.MouseButton1Click:Connect(function()
         setclipboard(data.url)
         copyBtn.Text = "Đã copy!"
-        wait(1)
-        copyBtn.Text = "Copy"
+        wait(1.1)
+        copyBtn.Text = "📋 Copy"
     end)
-    local execBtn = Instance.new("TextButton")
-    execBtn.Text = "Chạy"
-    execBtn.Size = UDim2.new(0, 60, 0, 32)
-    execBtn.Position = UDim2.new(1, -140, 1, -42)
-    execBtn.BackgroundColor3 = Color3.fromRGB(90, 200, 120)
+    -- Nút Chạy (hiệu ứng động)
+    local execBtn = Instance.new("TextButton", card)
+    execBtn.Text = "▶ Chạy"
+    execBtn.Size = UDim2.new(0, 72, 0, 34)
+    execBtn.Position = UDim2.new(1, -164, 1, -44)
+    execBtn.BackgroundColor3 = Color3.fromRGB(90, 220, 140)
     execBtn.TextColor3 = Color3.new(1,1,1)
     execBtn.Font = Enum.Font.GothamBold
-    execBtn.TextSize = 17
-    execBtn.Parent = card
+    execBtn.TextSize = 16
+    execBtn.ZIndex = 3
     local ebCorner = Instance.new("UICorner", execBtn)
-    ebCorner.CornerRadius = UDim.new(0.45, 0)
-    execBtn.MouseButton1Click:Connect(function()
-        local suc, err = pcall(function()
-            loadstring(game:HttpGet(data.url))()
-        end)
-        execBtn.Text = suc and "OK!" or "Lỗi!"
-        wait(0.9)
-        execBtn.Text = "Chạy"
+    ebCorner.CornerRadius = UDim.new(0.5, 0)
+    execBtn.MouseButton1Down:Connect(function()
+        execBtn.BackgroundColor3 = Color3.fromRGB(60,180,100)
     end)
+    execBtn.MouseButton1Up:Connect(function()
+        execBtn.BackgroundColor3 = Color3.fromRGB(90, 220, 140)
+    end)
+    execBtn.MouseEnter:Connect(function()
+        execBtn.BackgroundColor3 = Color3.fromRGB(120,255,180)
+    end)
+    execBtn.MouseLeave:Connect(function()
+        execBtn.BackgroundColor3 = Color3.fromRGB(90, 220, 140)
+    end)
+    execBtn.MouseButton1Click:Connect(function()
+        execBtn.Text = "Đang chạy..."
+        local suc, msg = pcall(function()
+            local str = game:HttpGet(data.url)
+            local f, err = loadstring(str)
+            if not f then error("Script lỗi: "..tostring(err)) end
+            f()
+        end)
+        if suc then
+            execBtn.Text = "✓ OK!"
+            execBtn.BackgroundColor3 = Color3.fromRGB(40,200,120)
+        else
+            execBtn.Text = "✗ Lỗi!"
+            execBtn.BackgroundColor3 = Color3.fromRGB(200,30,60)
+        end
+        wait(1.1)
+        execBtn.Text = "▶ Chạy"
+        execBtn.BackgroundColor3 = Color3.fromRGB(90,220,140)
+    end)
+
+    -- Animation hover nổi
+    local IsHover = false
     card.MouseEnter:Connect(function()
+        IsHover = true
         card.BackgroundColor3 = Color3.fromRGB(54, 62, 90)
+        for i=1,6 do
+            if not IsHover then break end
+            card.Position = card.Position + UDim2.new(0,0,0,-1)
+            wait(0.01)
+        end
     end)
     card.MouseLeave:Connect(function()
-        card.BackgroundColor3 = Color3.fromRGB(44, 52, 68)
+        IsHover = false
+        card.BackgroundColor3 = Color3.fromRGB(38, 45, 60)
+        card.Position = UDim2.new(0,0,0,0)
     end)
     return card
 end
+
 function updateLibraryList()
+    -- Loading effect
     for _, v in pairs(libScroll:GetChildren()) do
         if v:IsA("Frame") then v:Destroy() end
     end
     local query = searchBox.Text:lower()
-    local selCat = dropCat.Text:match("^(.-) ▼$") or "Tất cả"
+    local selCat = dropCat.Text:match("^[^%a]*(.-) ▼$") or "Tất cả"
     local count = 0
     for _, data in ipairs(scriptLibrary) do
         local matchCat = (selCat == "Tất cả") or (data.category == selCat)
@@ -1117,9 +1292,10 @@ function updateLibraryList()
         if matchCat and matchSearch then
             createScriptCard(data).Parent = libScroll
             count = count + 1
+            wait()  -- Hiệu ứng loading mượt khi render
         end
     end
-    scriptCountLabel.Text = "Số lượng script: " .. count .. "/" .. #scriptLibrary
+    scriptCountLabel.Text = "🌟 Số lượng script: " .. count .. " / " .. #scriptLibrary .. " | Right-click tên script để xem mã!"
     libScroll.CanvasSize = UDim2.new(0,0,0,libLayout.AbsoluteContentSize.Y+18)
 end
 searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
