@@ -771,10 +771,10 @@ end)
 -- ==== ADVANCED GIAO DIỆN TAB LIBRARY (GhostHub style + nâng cấp tối đa) ====
 local scriptLibrary = {
     -- Blox Fruits
-    {name="Blox Fruits | Thunder Z Hub",desc="Autofarm, Raid, Fruit, ESP, v.v.",url="https://raw.githubusercontent.com/ThunderZ-HUB/script/main/BloxFruit.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
-    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Auto Raid, Fruit Snipe.",url="https://raw.githubusercontent.com/acsu123/HOHO_H/main/HohoHub.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
-    {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit, ESP.",url="https://raw.githubusercontent.com/xQuartyx/DonateMe/main/ScriptLoader",category="Blox Fruits",icon="rbxassetid://12285139195"},
-    {name="Blox Fruits | Zaque Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/ZaqeDev/ZaqeHub/main/ZaqeHub",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Thunder Z Hub",desc="Autofarm, Raid, Fruit, ESP, v.v.",url="https://raw.githubusercontent.com/ThundarZ/Welcome/refs/heads/main/Main/BloxFruit/FindFruit.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Auto Raid, Fruit Snipe.",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit, ESP.",url="https://auth.quartyz.com/scripts/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Zaque Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/Mei2232/ZaqueHub/main/Zaque%20Hub",category="Blox Fruits",icon="rbxassetid://12285139195"},
     -- King Legacy
     {name="King Legacy | NhanHub V2",desc="Farm, Boss, Stats, Skill, ESP.",url="https://raw.githubusercontent.com/NhanHub/KingLegacyV2/main/Main.lua",category="King Legacy",icon="rbxassetid://12285139334"},
     {name="King Legacy | Legendary Hub",desc="Auto Farm, Boss, Stats, ESP.",url="https://raw.githubusercontent.com/LegendaryScripts/KingLegacy/main/LegendaryHub.lua",category="King Legacy",icon="rbxassetid://12285139334"},
