@@ -1,3 +1,8 @@
+-- GreensVN Hub V1.25 - All-in-One Script Hub (No Stealth, No Admin Detect, Welcome Popup, Hack Tab Scrollable)
+-- By Oxbl149 & GreensVN
+
+-- ==== ADMIN-STYLE WELCOME POPUP (viền trắng nổi bật cho popup + tên) ====
+do
     local player = game:GetService("Players").LocalPlayer
 
     local preGui = Instance.new("ScreenGui")
