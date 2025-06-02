@@ -1,0 +1,478 @@
+--[[
+
+GreensXploit - Roblox Universal Executor UI
+By @GreensVN
+Inspired by many executors: Synapse X, Hydrogen, DeltaX, Stigma, Project Legma, etc.
+
+--]]
+
+-- SETTINGS
+local GreensXploit = {}
+GreensXploit.Version = "1.0.0"
+GreensXploit.Name = "GreensXploit"
+GreensXploit.Author = "GreensVN"
+GreensXploit.Colors = {
+    Primary = Color3.fromRGB(40, 40, 60),
+    Accent = Color3.fromRGB(80, 220, 120),
+    Button = Color3.fromRGB(70, 70, 90),
+    ButtonAccent = Color3.fromRGB(100, 255, 140),
+    Text = Color3.fromRGB(255, 255, 255),
+    Error = Color3.fromRGB(255, 60, 60)
+}
+
+-- SERVICES
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local CoreGui = (gethui and gethui()) or game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+
+-- SINGLETON: Prevent multiple instances
+if CoreGui:FindFirstChild(GreensXploit.Name) then
+    CoreGui[GreensXploit.Name]:Destroy()
+end
+
+-- UI CREATION
+local function create(class, props, children)
+    local inst = Instance.new(class)
+    for k, v in next, props or {} do inst[k] = v end
+    if children then
+        for _, v in ipairs(children) do v.Parent = inst end
+    end
+    return inst
+end
+
+local MainGui = create("ScreenGui", {
+    Name = GreensXploit.Name,
+    Parent = CoreGui,
+    ResetOnSpawn = false,
+    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+    IgnoreGuiInset = true
+})
+
+local MainFrame = create("Frame", {
+    Name = "MainFrame",
+    Parent = MainGui,
+    BackgroundColor3 = GreensXploit.Colors.Primary,
+    Size = UDim2.new(0, 670, 0, 370),
+    Position = UDim2.new(0.5, -335, 0.45, -185),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    BorderSizePixel = 0,
+    Active = true,
+    Draggable = true
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 14)}),
+    create("UIStroke", {Color = GreensXploit.Colors.Accent, Thickness = 1.2})
+})
+
+-- Title bar
+local TitleBar = create("Frame", {
+    Name = "TitleBar",
+    Parent = MainFrame,
+    BackgroundColor3 = GreensXploit.Colors.Accent,
+    Size = UDim2.new(1, 0, 0, 38),
+    BorderSizePixel = 0
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 12)}),
+})
+local TitleLabel = create("TextLabel", {
+    Parent = TitleBar,
+    BackgroundTransparency = 1,
+    Text = "🌱 GreensXploit - "..GreensXploit.Version,
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 20,
+    TextColor3 = GreensXploit.Colors.Text,
+    Size = UDim2.new(1, -120, 1, 0),
+    Position = UDim2.new(0, 12, 0, 0),
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+local MinimizeBtn = create("TextButton", {
+    Parent = TitleBar,
+    BackgroundTransparency = 1,
+    Text = "-",
+    TextColor3 = GreensXploit.Colors.Text,
+    Font = Enum.Font.SourceSans,
+    TextSize = 22,
+    Size = UDim2.new(0, 36, 0, 36),
+    Position = UDim2.new(1, -72, 0.5, -18),
+    Name = "Minimize"
+})
+local CloseBtn = create("TextButton", {
+    Parent = TitleBar,
+    BackgroundTransparency = 1,
+    Text = "X",
+    TextColor3 = GreensXploit.Colors.Error,
+    Font = Enum.Font.SourceSans,
+    TextSize = 22,
+    Size = UDim2.new(0, 36, 0, 36),
+    Position = UDim2.new(1, -36, 0.5, -18),
+    Name = "Close"
+})
+
+-- Tabs
+local Tabs = {}
+local TabBar = create("Frame", {
+    Name = "TabBar",
+    Parent = MainFrame,
+    BackgroundColor3 = GreensXploit.Colors.Button,
+    Size = UDim2.new(0, 120, 1, -38),
+    Position = UDim2.new(0, 0, 0, 38),
+    BorderSizePixel = 0
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 8)}),
+})
+local TabListLayout = create("UIListLayout", {Parent = TabBar, Padding = UDim.new(0, 8)})
+
+local ContentFrame = create("Frame", {
+    Name = "ContentFrame",
+    Parent = MainFrame,
+    BackgroundColor3 = GreensXploit.Colors.Primary,
+    Size = UDim2.new(1, -120, 1, -38),
+    Position = UDim2.new(0, 120, 0, 38),
+    BorderSizePixel = 0
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 8)})
+})
+
+-- TAB: Executor
+local ExecutorTabBtn = create("TextButton", {
+    Parent = TabBar,
+    Text = "Executor",
+    Name = "ExecutorTab",
+    Size = UDim2.new(1, -16, 0, 36),
+    BackgroundColor3 = GreensXploit.Colors.ButtonAccent,
+    TextColor3 = GreensXploit.Colors.Text,
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 7)})})
+
+local ExecutorTab = create("Frame", {
+    Name = "ExecutorTab",
+    Parent = ContentFrame,
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 1, 0),
+    Visible = true
+})
+
+-- Executor Editor Area
+local EditorFrame = create("Frame", {
+    Name = "EditorFrame",
+    Parent = ExecutorTab,
+    BackgroundColor3 = Color3.fromRGB(30, 30, 45),
+    Size = UDim2.new(1, -32, 1, -96),
+    Position = UDim2.new(0, 16, 0, 16),
+    BorderSizePixel = 0
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 6)}),
+    create("UIStroke", {Color = GreensXploit.Colors.Accent, Thickness = 0.7})
+})
+local EditorBox = create("TextBox", {
+    Parent = EditorFrame,
+    Name = "EditorBox",
+    BackgroundTransparency = 1,
+    MultiLine = true,
+    ClearTextOnFocus = false,
+    Text = "-- Welcome to GreensXploit!\n-- Paste your script here and press EXE.",
+    Font = Enum.Font.Code,
+    TextSize = 16,
+    TextColor3 = GreensXploit.Colors.Text,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    TextYAlignment = Enum.TextYAlignment.Top,
+    Size = UDim2.new(1, -16, 1, -16),
+    Position = UDim2.new(0, 8, 0, 8),
+    ClipsDescendants = true
+})
+
+-- Buttons: EXE, CLEAR, INJECT
+local ButtonBar = create("Frame", {
+    Parent = ExecutorTab,
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, -32, 0, 50),
+    Position = UDim2.new(0, 16, 1, -62)
+})
+local BtnLayout = create("UIListLayout", {Parent = ButtonBar, Padding = UDim.new(0, 12), FillDirection = Enum.FillDirection.Horizontal, SortOrder = Enum.SortOrder.LayoutOrder, VerticalAlignment = Enum.VerticalAlignment.Center})
+local EXEBtn = create("TextButton", {
+    Parent = ButtonBar,
+    Text = "EXE",
+    Name = "EXEBtn",
+    Size = UDim2.new(0, 110, 1, 0),
+    BackgroundColor3 = GreensXploit.Colors.ButtonAccent,
+    TextColor3 = Color3.new(0,0,0),
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 8)})})
+local CLEARBtn = create("TextButton", {
+    Parent = ButtonBar,
+    Text = "CLEAR",
+    Name = "CLEARBtn",
+    Size = UDim2.new(0, 110, 1, 0),
+    BackgroundColor3 = GreensXploit.Colors.Button,
+    TextColor3 = GreensXploit.Colors.Text,
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 8)})})
+local INJECTBtn = create("TextButton", {
+    Parent = ButtonBar,
+    Text = "INJECT",
+    Name = "INJECTBtn",
+    Size = UDim2.new(0, 110, 1, 0),
+    BackgroundColor3 = Color3.fromRGB(220, 230, 120),
+    TextColor3 = Color3.fromRGB(0, 0, 0),
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 8)})})
+
+-- Output Box
+local OutputBox = create("TextLabel", {
+    Parent = ExecutorTab,
+    Name = "OutputBox",
+    BackgroundColor3 = Color3.fromRGB(24, 24, 32),
+    BackgroundTransparency = 0.1,
+    Text = "",
+    Font = Enum.Font.Code,
+    TextSize = 15,
+    TextColor3 = Color3.new(0.9, 1, 0.9),
+    Size = UDim2.new(1, -32, 0, 32),
+    Position = UDim2.new(0, 16, 1, -32),
+    TextXAlignment = Enum.TextXAlignment.Left
+}, {create("UICorner", {CornerRadius = UDim.new(0, 6)})})
+
+-- TAB: ScriptHub
+local ScriptHubTabBtn = create("TextButton", {
+    Parent = TabBar,
+    Text = "ScriptHub",
+    Name = "ScriptHubTab",
+    Size = UDim2.new(1, -16, 0, 36),
+    BackgroundColor3 = GreensXploit.Colors.Button,
+    TextColor3 = GreensXploit.Colors.Text,
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 7)})})
+
+local ScriptHubTab = create("Frame", {
+    Name = "ScriptHubTab",
+    Parent = ContentFrame,
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 1, 0),
+    Visible = false
+})
+
+local ScriptHubLabel = create("TextLabel", {
+    Parent = ScriptHubTab,
+    BackgroundTransparency = 1,
+    Text = "Popular Scripts",
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 20,
+    TextColor3 = GreensXploit.Colors.Accent,
+    Size = UDim2.new(1, -24, 0, 30),
+    Position = UDim2.new(0, 12, 0, 12),
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+
+local ScriptList = create("ScrollingFrame", {
+    Parent = ScriptHubTab,
+    BackgroundColor3 = Color3.fromRGB(27, 27, 35),
+    Size = UDim2.new(1, -24, 1, -60),
+    Position = UDim2.new(0, 12, 0, 48),
+    BorderSizePixel = 0,
+    CanvasSize = UDim2.new(0, 0, 0, 0),
+    ScrollBarThickness = 6
+}, {
+    create("UICorner", {CornerRadius = UDim.new(0, 8)}),
+    create("UIListLayout", {Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder})
+})
+
+-- Add built-in scripts (from Codex, Hydrogen, etc.)
+local BuiltInScripts = {
+    {
+        Name = "Dark Dex V4",
+        Desc = "Game explorer GUI. Useful for developers.",
+        Script = "local file = \"dexV4.lua\"; local raw = isfile and isfile(file) and readfile(file); raw = raw or game:HttpGetAsync(\"https://raw.githubusercontent.com/loglizzy/dexV4/main/source.lua\"); loadstring(raw)();"
+    },
+    {
+        Name = "Infinite Yield",
+        Desc = "Admin commands, 300+ commands.",
+        Script = "loadstring(game:HttpGetAsync(\"https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source\"))();"
+    },
+    {
+        Name = "Unnamed ESP",
+        Desc = "Player ESP for Roblox, undetectable.",
+        Script = "pcall(function() loadstring(game:HttpGet(\"https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua\"))(); end);"
+    },
+    {
+        Name = "Hydroxide",
+        Desc = "Pen-testing tool for Roblox games.",
+        Script = "loadstring(game:HttpGetAsync(\"https://raw.githubusercontent.com/Upbolt/Hydroxide/revision/init.lua\"))();"
+    },
+    {
+        Name = "Owl Hub",
+        Desc = "Hub with 30+ games.",
+        Script = "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt\"))();"
+    }
+}
+
+for _, data in ipairs(BuiltInScripts) do
+    local btn = create("TextButton", {
+        Parent = ScriptList,
+        Size = UDim2.new(1, -8, 0, 44),
+        BackgroundColor3 = GreensXploit.Colors.ButtonAccent,
+        Text = data.Name.." - "..data.Desc,
+        TextColor3 = Color3.new(0,0,0),
+        Font = Enum.Font.SourceSans,
+        TextSize = 16,
+        BorderSizePixel = 0
+    }, {create("UICorner", {CornerRadius = UDim.new(0, 7)})})
+    btn.MouseButton1Click:Connect(function()
+        EditorBox.Text = data.Script
+        OutputBox.Text = "[ScriptHub] Script loaded to editor."
+    end)
+end
+
+ScriptList.CanvasSize = UDim2.new(0, 0, 0, #BuiltInScripts * 52)
+
+-- TAB: Settings
+local SettingsTabBtn = create("TextButton", {
+    Parent = TabBar,
+    Text = "Settings",
+    Name = "SettingsTab",
+    Size = UDim2.new(1, -16, 0, 36),
+    BackgroundColor3 = GreensXploit.Colors.Button,
+    TextColor3 = GreensXploit.Colors.Text,
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 18,
+    BorderSizePixel = 0
+}, {create("UICorner", {CornerRadius = UDim.new(0, 7)})})
+
+local SettingsTab = create("Frame", {
+    Name = "SettingsTab",
+    Parent = ContentFrame,
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 1, 0),
+    Visible = false
+})
+local SettingsLabel = create("TextLabel", {
+    Parent = SettingsTab,
+    BackgroundTransparency = 1,
+    Text = "Settings [Theme, FPS unlock, Language, etc.]",
+    Font = Enum.Font.SourceSansBold,
+    TextSize = 20,
+    TextColor3 = GreensXploit.Colors.Accent,
+    Size = UDim2.new(1, -24, 0, 30),
+    Position = UDim2.new(0, 12, 0, 12),
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+
+-- TAB LOGIC
+local function ShowTab(tabName)
+    ExecutorTab.Visible = (tabName == "ExecutorTab")
+    ScriptHubTab.Visible = (tabName == "ScriptHubTab")
+    SettingsTab.Visible = (tabName == "SettingsTab")
+    -- Highlight the selected tab
+    for _, btn in ipairs({ExecutorTabBtn, ScriptHubTabBtn, SettingsTabBtn}) do
+        if btn.Name == tabName then
+            TweenService:Create(btn, TweenInfo.new(0.16), {BackgroundColor3 = GreensXploit.Colors.ButtonAccent}):Play()
+        else
+            TweenService:Create(btn, TweenInfo.new(0.16), {BackgroundColor3 = GreensXploit.Colors.Button}):Play()
+        end
+    end
+end
+
+ExecutorTabBtn.MouseButton1Click:Connect(function() ShowTab("ExecutorTab") end)
+ScriptHubTabBtn.MouseButton1Click:Connect(function() ShowTab("ScriptHubTab") end)
+SettingsTabBtn.MouseButton1Click:Connect(function() ShowTab("SettingsTab") end)
+
+-- BUTTON EVENTS
+EXEBtn.MouseButton1Click:Connect(function()
+    local code = EditorBox.Text or ""
+    if code == "" or code:match("^%s*$") then
+        OutputBox.Text = "[Error] Script is blank!"
+        return
+    end
+    local success, err = pcall(function()
+        local f = loadstring(code)
+        if f then f() else error("Script could not be loaded.") end
+    end)
+    if success then
+        OutputBox.Text = "[Success] Script executed!"
+    else
+        OutputBox.Text = "[Error] "..tostring(err)
+    end
+end)
+
+CLEARBtn.MouseButton1Click:Connect(function()
+    EditorBox.Text = ""
+    OutputBox.Text = "[Info] Cleared script."
+end)
+
+INJECTBtn.MouseButton1Click:Connect(function()
+    OutputBox.Text = "[Info] (Fake) Injected! [This is a UI, not a real exploit.]"
+end)
+
+-- Close/Minimize
+CloseBtn.MouseButton1Click:Connect(function()
+    MainGui:Destroy()
+end)
+MinimizeBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    -- Show tiny restore button
+    local restore = create("TextButton", {
+        Parent = MainGui,
+        Text = "🌱",
+        Size = UDim2.new(0, 40, 0, 40),
+        Position = UDim2.new(0, 12, 1, -52),
+        BackgroundColor3 = GreensXploit.Colors.Accent,
+        TextColor3 = Color3.new(0,0,0),
+        Font = Enum.Font.SourceSansBold,
+        TextSize = 26,
+        BorderSizePixel = 0,
+        Name = "RestoreBtn"
+    }, {create("UICorner", {CornerRadius = UDim.new(1, 0)})})
+    restore.MouseButton1Click:Connect(function()
+        MainFrame.Visible = true
+        restore:Destroy()
+    end)
+end)
+
+-- OPTIONAL: Add Dragify (for main frame)
+do
+    local gui = MainFrame
+    local dragging, dragInput, dragStart, startPos
+    local UserInputService = game:GetService("UserInputService")
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    TitleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true; dragStart = input.Position; startPos = gui.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    TitleBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then dragInput = input end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then update(input) end
+    end)
+end
+
+-- WELCOME NOTIFICATION
+do
+    local StarterGui = game:GetService("StarterGui")
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = GreensXploit.Name;
+            Text = "Welcome to GreensXploit "..GreensXploit.Version.."!";
+            Duration = 4;
+        })
+    end)
+end
+
+-- Enjoy GreensXploit! UI only, not a real executor. To make a real exploit, you need a custom Lua VM.
