@@ -772,7 +772,7 @@ end)
 local scriptLibrary = {
     -- Grow A Garden
     {name="Grow A Garden | NoLag",desc="Buy Candy Blossom, Old Server Finder",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
-    {name="Grow A Garden | Ngon",desc="Auto Buy, Auto Farm, ESP",url="https://raw.githubusercontent.com/nootmaus/GrowAAGarden/refs/heads/main/mauscripts",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Sucalet",desc="Auto Buy, Auto Farm, ESP",url="https://raw.githubusercontent.com/nootmaus/GrowAAGarden/refs/heads/main/mauscripts",category="Grow A Garden",icon="rbxassetid://12285139195"},
     {name="Grow A Garden | Vxeze Hub",desc="Auto Buy, Auto Farm",url="https://raw.githubusercontent.com/Dex-Bear/Vxezehub/refs/heads/main/VxezeHubMain",category="Grow A Garden",icon="rbxassetid://12285139195"},
     {name="Grow A Garden | H4x Script",desc="Auto Buy, Auto Farm",url="https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader2.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
     -- Blox Fruits
@@ -949,7 +949,7 @@ libShadow.ZIndex = 0
 libShadow.Parent = libraryFrame
 
 -- Thanh tìm kiếm & lọc
-local searchBox = Instance.new("TextBox")
+local searchBox = Instance.new("")
 searchBox.PlaceholderText = "🔍 Tìm kiếm script/game..."
 searchBox.Size = UDim2.new(1, -220, 0, 40)
 searchBox.Position = UDim2.new(0, 24, 0, 18)
