@@ -155,7 +155,7 @@ local function applyGuiColor(mainFrame, newColor)
 end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "greensvn hub v1.5"
+screenGui.Name = "greensvn hub v2.0"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -209,7 +209,7 @@ local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "greensvn hub v1.25"
+titleLabel.Text = "greensvn hub v2.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -949,7 +949,7 @@ libShadow.ZIndex = 0
 libShadow.Parent = libraryFrame
 
 -- Thanh tìm kiếm & lọc
-local searchBox = Instance.new("")
+local searchBox = Instance.new("TextBox")
 searchBox.PlaceholderText = "🔍 Tìm kiếm script/game..."
 searchBox.Size = UDim2.new(1, -220, 0, 40)
 searchBox.Position = UDim2.new(0, 24, 0, 18)
