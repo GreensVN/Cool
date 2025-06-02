@@ -768,7 +768,6 @@ execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 end)
 
 -- 3. Library Tab
--- ==== ADVANCED GIAO DIỆN TAB LIBRARY (GhostHub style + nâng cấp tối đa) ====
 local scriptLibrary = {
     -- Grow A Garden
     {name="Grow A Garden | NoLag",desc="Buy Candy Blossom, Old Server Finder",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
@@ -780,9 +779,10 @@ local scriptLibrary = {
     {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Auto Raid, Fruit Snipe.",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit, ESP.",url="https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     {name="Blox Fruits | Banana Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/kimprobloxdz/Banana-Free/refs/heads/main/Protected_5609200582002947.lua.txt",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/MaruHub",category="Blox Fruits",icon="rbxassetid://12285139195"},
     -- King Legacy
-    {name="King Legacy | NhanHub V2",desc="Farm, Boss, Stats, Skill, ESP.",url="https://raw.githubusercontent.com/NhanHub/KingLegacyV2/main/Main.lua",category="King Legacy",icon="rbxassetid://12285139334"},
-    {name="King Legacy | Legendary Hub",desc="Auto Farm, Boss, Stats, ESP.",url="https://raw.githubusercontent.com/LegendaryScripts/KingLegacy/main/LegendaryHub.lua",category="King Legacy",icon="rbxassetid://12285139334"},
+    {name="King Legacy | OMG Hub",desc="Farm, Boss, Stats, Skill, ESP.",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy",icon="rbxassetid://12285139334"},
+    {name="King Legacy | HYPER",desc="Auto Farm, Boss, Stats, ESP.",url="https://raw.githubusercontent.com/DookDekDEE/Hyper/main/script.lua",category="King Legacy",icon="rbxassetid://12285139334"},
     -- Pet Simulator X
     {name="Pet Simulator X | Project WD",desc="Auto Farm, Open Egg, Auto Quest.",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator X",icon="rbxassetid://12285139428"},
     {name="Pet Simulator X | Milk Up",desc="Auto Farm, Pet, Dupe, v.v.",url="https://raw.githubusercontent.com/RunDTM/PetSimulatorX/main/MilkUp.lua",category="Pet Simulator X",icon="rbxassetid://12285139428"},
@@ -790,12 +790,16 @@ local scriptLibrary = {
     {name="Anime Adventures | BLCK",desc="Farm, Replay, Gems, Auto Place.",url="https://raw.githubusercontent.com/BLCKAD/AnimeAdventure/main/BLCKAD.lua",category="Anime Adventures",icon="rbxassetid://12285139563"},
     {name="Anime Adventures | Fruit Hub",desc="Auto Farm, Gems, Tower, v.v.",url="https://raw.githubusercontent.com/fruitblade/AnimeAdventures/main/FruitHub.lua",category="Anime Adventures",icon="rbxassetid://12285139563"},
     -- Doors
-    {name="Doors | Vynixius",desc="Auto win, ESP, No jumpscare.",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Loader.lua",category="Doors",icon="rbxassetid://12285139601"},
-    {name="Doors | Entity Spawner",desc="Spawn entity, troll, ESP.",url="https://raw.githubusercontent.com/plamen6789/RobloxScripts/main/DoorsEntitySpawner",category="Doors",icon="rbxassetid://12285139601"},
+    {name="Doors | Vynixius",desc="Auto win, ESP, No jumpscare.",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors",icon="rbxassetid://12285139601"},
+    {name="Doors | Entity Spawner V2",desc="Spawn entity, troll, ESP.",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua",category="Doors",icon="rbxassetid://12285139601"},
     -- Brookhaven
     {name="Brookhaven | BH Hub",desc="ESP, Troll, Fly, Car Mods.",url="https://raw.githubusercontent.com/1f0yt/community/main/Brookhaven",category="Brookhaven 🏡RP",icon="rbxassetid://12285139711"},
     -- Build A Boat
-    {name="Build A Boat | BAB Hub",desc="Auto Farm, Build, Unlock Block.",url="https://raw.githubusercontent.com/1f0yt/community/main/BuildABoat",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Build A Boat | BoatBuilderHub",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Build A Boat | Build A Boat For Treasure",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/NittarPP/PhotonScript/refs/heads/main/Loading/Loading.lua",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Build A Boat | WeshkyAutoBuild",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/suntisalts/BetaTesting/refs/heads/main/WeshkyAutoBuild.lua",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Build A Boat | Rolly Hub",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/XRoLLu/Rolly_Hub/main/open-source-trash-loader.exe.yeah",category="Build A Boat",icon="rbxassetid://12285139812"},
+    {name="Build A Boat | Ather Hub",desc="Auto Farm, Build.",url="https://api.luarmor.net/files/v3/loaders/2529a5f9dfddd5523ca4e22f21cceffa.lua",category="Build A Boat",icon="rbxassetid://12285139812"},
     -- Arsenal
     {name="Arsenal | OwlHub",desc="Silent Aim, ESP, Fly, v.v.",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal",icon="rbxassetid://12285139941"},
     -- Murder Mystery 2
