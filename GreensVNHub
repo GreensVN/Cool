@@ -768,6 +768,7 @@ execLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 end)
 
 -- 3. Library Tab
+-- ==== ADVANCED GIAO DIỆN TAB LIBRARY (GhostHub style + nâng cấp tối đa) ====
 local scriptLibrary = {
     -- Blox Fruits
     {name="Blox Fruits | Thunder Z Hub",desc="Autofarm, Raid, Fruit, ESP, v.v.",url="https://raw.githubusercontent.com/ThunderZ-HUB/script/main/BloxFruit.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
@@ -910,6 +911,8 @@ local scriptLibrary = {
     {name="Jailbreak | JB X Hub",desc="Auto Rob, ESP, Teleport.",url="https://raw.githubusercontent.com/JBXHub/Jailbreak/main/JBXHub.lua",category="Jailbreak",icon="rbxassetid://12285141399"},
     {name="Anime Fighting Simulator | AFS Hub",desc="Auto Farm, Boss, Teleport.",url="https://raw.githubusercontent.com/AFSHub/AnimeFighting/main/AFSHub.lua",category="Anime Fighting Simulator",icon="rbxassetid://12285145057"},
     {name="Dragon Ball Rage | DBR Hub",desc="Farm, Boss, Unlock, Auto Stats.",url="https://raw.githubusercontent.com/DBRHub/DragonBallRage/main/DBRHub.lua",category="Dragon Ball Rage",icon="rbxassetid://12285141654"},
+    -- ... Đủ 75+ scripts từ các hub nổi tiếng và game hot nhất Roblox
+}
 
 -- Helper: Badge "HOT" cho script nổi bật
 local hotList = {
