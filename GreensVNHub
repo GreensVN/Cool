@@ -1630,5 +1630,231 @@ floatBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+-- ==== IN-GAME OVERLAY PANEL (Advanced GhostHub Style) ====
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+
+local overlayGui = Instance.new("ScreenGui")
+overlayGui.Name = "GreensVNHubOverlay"
+overlayGui.IgnoreGuiInset = true
+overlayGui.ResetOnSpawn = false
+overlayGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+overlayGui.Parent = game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
+-- Overlay Panel
+local overlayPanel = Instance.new("Frame")
+overlayPanel.Size = UDim2.new(0, 220, 0, 82)
+overlayPanel.Position = UDim2.new(1, -244, 1, -110)
+overlayPanel.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
+overlayPanel.BackgroundTransparency = 0.13
+overlayPanel.BorderSizePixel = 0
+overlayPanel.Active = true
+overlayPanel.Draggable = true -- Cho phép kéo thả
+overlayPanel.Parent = overlayGui
+overlayPanel.ZIndex = 1000
+local overlayCorner = Instance.new("UICorner", overlayPanel)
+overlayCorner.CornerRadius = UDim.new(0.45, 0)
+local overlayShadow = Instance.new("ImageLabel", overlayPanel)
+overlayShadow.Image = "rbxassetid://1316045217"
+overlayShadow.BackgroundTransparency = 1
+overlayShadow.Size = UDim2.new(1, 20, 1, 20)
+overlayShadow.Position = UDim2.new(0, -10, 0, -10)
+overlayShadow.ImageTransparency = 0.84
+overlayShadow.ZIndex = 999
+
+-- Header bar
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 32)
+header.BackgroundColor3 = Color3.fromRGB(40, 180, 100)
+header.BackgroundTransparency = 0.27
+header.BorderSizePixel = 0
+header.Parent = overlayPanel
+header.ZIndex = 1001
+local headerCorner = Instance.new("UICorner", header)
+headerCorner.CornerRadius = UDim.new(0.42, 0)
+
+-- Title + icon
+local overlayIcon = Instance.new("ImageLabel", header)
+overlayIcon.Image = "rbxassetid://12285139195" -- (icon Blox Fruits, đổi nếu muốn)
+overlayIcon.Size = UDim2.new(0, 24, 0, 24)
+overlayIcon.Position = UDim2.new(0, 7, 0, 4)
+overlayIcon.BackgroundTransparency = 1
+overlayIcon.ZIndex = 1002
+
+local overlayTitle = Instance.new("TextLabel", header)
+overlayTitle.Text = "GreensVN Hub Overlay"
+overlayTitle.Size = UDim2.new(1, -60, 1, 0)
+overlayTitle.Position = UDim2.new(0, 34, 0, 0)
+overlayTitle.BackgroundTransparency = 1
+overlayTitle.TextColor3 = Color3.fromRGB(255,255,255)
+overlayTitle.Font = Enum.Font.GothamBold
+overlayTitle.TextSize = 17
+overlayTitle.TextXAlignment = Enum.TextXAlignment.Left
+overlayTitle.ZIndex = 1002
+
+-- Nút thu nhỏ/phóng to
+local miniBtn = Instance.new("TextButton", header)
+miniBtn.Text = "–"
+miniBtn.Size = UDim2.new(0, 26, 0, 26)
+miniBtn.Position = UDim2.new(1, -56, 0, 3)
+miniBtn.BackgroundColor3 = Color3.fromRGB(60, 120, 80)
+miniBtn.TextColor3 = Color3.fromRGB(255,255,255)
+miniBtn.Font = Enum.Font.GothamBold
+miniBtn.TextSize = 18
+miniBtn.ZIndex = 1003
+local miniCor = Instance.new("UICorner", miniBtn)
+miniCor.CornerRadius = UDim.new(1,0)
+
+local closeBtn = Instance.new("TextButton", header)
+closeBtn.Text = "×"
+closeBtn.Size = UDim2.new(0, 26, 0, 26)
+closeBtn.Position = UDim2.new(1, -28, 0, 3)
+closeBtn.BackgroundColor3 = Color3.fromRGB(120, 60, 60)
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+closeBtn.ZIndex = 1003
+local closeCor = Instance.new("UICorner", closeBtn)
+closeCor.CornerRadius = UDim.new(1,0)
+
+-- Nội dung Overlay (FPS, Ping, Script Count)
+local content = Instance.new("Frame", overlayPanel)
+content.Size = UDim2.new(1, 0, 1, -32)
+content.Position = UDim2.new(0, 0, 0, 32)
+content.BackgroundTransparency = 1
+content.ZIndex = 1002
+
+local fpsLabel = Instance.new("TextLabel", content)
+fpsLabel.Size = UDim2.new(1, -16, 0, 20)
+fpsLabel.Position = UDim2.new(0, 8, 0, 2)
+fpsLabel.BackgroundTransparency = 1
+fpsLabel.TextColor3 = Color3.fromRGB(120,255,120)
+fpsLabel.Font = Enum.Font.GothamBold
+fpsLabel.TextSize = 16
+fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
+fpsLabel.ZIndex = 1003
+
+local pingLabel = Instance.new("TextLabel", content)
+pingLabel.Size = UDim2.new(1, -16, 0, 20)
+pingLabel.Position = UDim2.new(0, 8, 0, 24)
+pingLabel.BackgroundTransparency = 1
+pingLabel.TextColor3 = Color3.fromRGB(255,255,180)
+pingLabel.Font = Enum.Font.Gotham
+pingLabel.TextSize = 16
+pingLabel.TextXAlignment = Enum.TextXAlignment.Left
+pingLabel.ZIndex = 1003
+
+local scriptLabel = Instance.new("TextLabel", content)
+scriptLabel.Size = UDim2.new(1, -16, 0, 20)
+scriptLabel.Position = UDim2.new(0, 8, 0, 46)
+scriptLabel.BackgroundTransparency = 1
+scriptLabel.TextColor3 = Color3.fromRGB(120,200,255)
+scriptLabel.Font = Enum.Font.Gotham
+scriptLabel.TextSize = 16
+scriptLabel.TextXAlignment = Enum.TextXAlignment.Left
+scriptLabel.ZIndex = 1003
+
+-- FPS counter
+local last = tick()
+local frames = 0
+local fps = 0
+RunService.RenderStepped:Connect(function()
+    frames = frames + 1
+    if tick() - last >= 1 then
+        fps = frames
+        frames = 0
+        last = tick()
+        fpsLabel.Text = "🟢 FPS: "..fps
+    end
+end)
+
+-- Ping (cách đơn giản, lấy từ Players.LocalPlayer.NetworkPing nếu có)
+spawn(function()
+    while wait(1) do
+        local ping = 0
+        pcall(function()
+            ping = math.floor(game:GetService("Stats")
+                     .Network.ServerStatsItem["Data Ping"]:GetValue())
+        end)
+        pingLabel.Text = "📶 Ping: "..(ping > 0 and (ping.." ms") or "Không lấy được")
+    end
+end)
+
+-- Script count (hiển thị số script trong thư viện hoặc đang chạy)
+scriptLabel.Text = "📜 Scripts: Đang tải..."
+if scriptLibrary then
+    scriptLabel.Text = "📜 Scripts: ".. tostring(#scriptLibrary)
+end
+
+-- Thu nhỏ/phóng to
+local minimized = false
+miniBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    if minimized then
+        content.Visible = false
+        overlayPanel.Size = UDim2.new(0,220,0,38)
+        miniBtn.Text = "+"
+    else
+        content.Visible = true
+        overlayPanel.Size = UDim2.new(0,220,0,82)
+        miniBtn.Text = "–"
+    end
+end)
+
+-- Ẩn/hiện overlay
+closeBtn.MouseButton1Click:Connect(function()
+    overlayPanel.Visible = false
+end)
+
+-- Shortcut bật/tắt overlay (F9)
+game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+    if not gpe and input.KeyCode == Enum.KeyCode.F9 then
+        overlayPanel.Visible = not overlayPanel.Visible
+    end
+end)
+
+-- Kéo/thả mượt (cross-executor)
+do
+    local dragToggle, dragInput, dragStart, startPos
+    header.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = overlayPanel.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragToggle = false
+                end
+            end)
+        end
+    end)
+    header.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragToggle then
+            local delta = input.Position - dragStart
+            overlayPanel.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + delta.X,
+                startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+-- Hiệu ứng overlay vào game
+overlayPanel.Position = UDim2.new(1, 80, 1, 80)
+overlayPanel.Visible = false
+wait(0.5)
+for i = 0, 1, 0.08 do
+    overlayPanel.Position = UDim2.new(1, -244 * i + 80 * (1-i), 1, -110 * i + 80 * (1-i))
+    overlayPanel.Visible = true
+    wait(0.02)
+end
+overlayPanel.Position = UDim2.new(1, -244, 1, -110)
+overlayPanel.Visible = true
+
 applyGuiScale(mainFrame, currentScale)
 applyGuiColor(mainFrame, currentColor)
