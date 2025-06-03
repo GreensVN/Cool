@@ -1290,10 +1290,28 @@ local function createScriptCard(data)
         TweenService:Create(copyBtn, TweenInfo.new(0.07), {BackgroundColor3 = Color3.fromRGB(98, 132, 255)}):Play()
     end)    
     copyBtn.MouseButton1Click:Connect(function()
-        setclipboard(data.url)
-        copyBtn.Text = "Đã copy!"
-        wait(1.1)
-        copyBtn.Text = "📋 Copy"
+        local url = data.url
+        local scriptSource = ""
+        local ok, err = pcall(function()
+            scriptSource = game:HttpGet(url)
+        end)
+        if not ok or not scriptSource or scriptSource == "" then
+            copyBtn.Text = "Script rỗng!"
+            wait(1.2)
+            copyBtn.Text = "📋 Copy"
+            return
+        end
+        local loaded, syntaxError = loadstring(scriptSource)
+        if loaded then
+            setclipboard(scriptSource)
+            copyBtn.Text = "Đã copy!"
+            wait(1.1)
+            copyBtn.Text = "📋 Copy"
+        else
+            copyBtn.Text = "Sai mã script!"
+            wait(1.2)
+            copyBtn.Text = "📋 Copy"
+        end
     end)
     -- Nút Chạy (hiệu ứng động)
     local execBtn = Instance.new("TextButton", card)
@@ -1321,19 +1339,37 @@ local function createScriptCard(data)
     end)
     execBtn.MouseButton1Click:Connect(function()
         execBtn.Text = "Đang chạy..."
+        execBtn.BackgroundColor3 = Color3.fromRGB(90,220,140)
+
         local suc, msg = pcall(function()
-            local str = game:HttpGet(data.url)
+            local str = ""
+            local ok, httpErr = pcall(function()
+                str = game:HttpGet(data.url)
+            end)
+            if not ok or not str or str == "" then
+                error("Script rỗng hoặc không tải được!")
+            end
+
             local f, err = loadstring(str)
-            if not f then error("Script lỗi: "..tostring(err)) end
-            f()
+            if not f then
+                error("Script lỗi: " .. tostring(err))
+            end
+
+            local runOk, runErr = pcall(f)
+            if not runOk then
+                error("Chạy script lỗi: " .. tostring(runErr))
+            end
         end)
+
         if suc then
             execBtn.Text = "✓ OK!"
             execBtn.BackgroundColor3 = Color3.fromRGB(40,200,120)
         else
             execBtn.Text = "✗ Lỗi!"
             execBtn.BackgroundColor3 = Color3.fromRGB(200,30,60)
+            print("[EXECUTOR ERROR]:", msg)
         end
+
         wait(1.1)
         execBtn.Text = "▶ Chạy"
         execBtn.BackgroundColor3 = Color3.fromRGB(90,220,140)
