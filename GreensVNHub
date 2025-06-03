@@ -779,7 +779,7 @@ local scriptLibrary = {
     {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Auto Raid, Fruit Snipe.",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit, ESP.",url="https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     {name="Blox Fruits | Banana Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/kimprobloxdz/Banana-Free/refs/heads/main/Protected_5609200582002947.lua.txt",category="Blox Fruits",icon="rbxassetid://12285139195"},
-    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/MaruHub",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid, ESP, v.v.",url="https://raw.githubusercontent.com/xshiba/MaruHub/main/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
     -- King Legacy
     {name="King Legacy | OMG Hub",desc="Farm, Boss, Stats, Skill, ESP.",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy",icon="rbxassetid://12285139334"},
     {name="King Legacy | HYPER",desc="Auto Farm, Boss, Stats, ESP.",url="https://raw.githubusercontent.com/DookDekDEE/Hyper/main/script.lua",category="King Legacy",icon="rbxassetid://12285139334"},
