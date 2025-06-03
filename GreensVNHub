@@ -1450,6 +1450,58 @@ minusBtn.MouseButton1Click:Connect(function()
     setScale(currentScale - SCALE_STEP)
 end)
 
+local overlaySwitch = Instance.new("TextButton")
+overlaySwitch.Name = "OverlaySwitch"
+overlaySwitch.Parent = SettingsTab
+overlaySwitch.Size = UDim2.new(0, 60, 0, 28)
+overlaySwitch.Position = UDim2.new(0, 200, 0, 10) -- chỉnh lại cho phù hợp
+overlaySwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+overlaySwitch.AutoButtonColor = false
+overlaySwitch.Font = Enum.Font.GothamBold
+overlaySwitch.TextSize = 18
+overlaySwitch.TextColor3 = Color3.fromRGB(255,255,255)
+overlaySwitch.Text = ""
+
+local switchDot = Instance.new("Frame")
+switchDot.Parent = overlaySwitch
+switchDot.Size = UDim2.new(0, 24, 0, 24)
+switchDot.Position = UDim2.new(0, 2, 0, 2)
+switchDot.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+switchDot.BorderSizePixel = 0
+switchDot.BackgroundTransparency = 0
+
+local function updateSwitch(state)
+    if state then
+        overlaySwitch.BackgroundColor3 = Color3.fromRGB(0, 180, 80)
+        switchDot.Position = UDim2.new(1, -26, 0, 2)
+        switchDot.BackgroundColor3 = Color3.fromRGB(255,255,255)
+    else
+        overlaySwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        switchDot.Position = UDim2.new(0, 2, 0, 2)
+        switchDot.BackgroundColor3 = Color3.fromRGB(120,120,120)
+    end
+end
+
+-- Giá trị mặc định
+if _G.GreensVN_OverlayEnabled == nil then
+    _G.GreensVN_OverlayEnabled = true
+end
+updateSwitch(_G.GreensVN_OverlayEnabled)
+
+-- Sự kiện bấm nút gạt
+overlaySwitch.MouseButton1Click:Connect(function()
+    _G.GreensVN_OverlayEnabled = not _G.GreensVN_OverlayEnabled
+    updateSwitch(_G.GreensVN_OverlayEnabled)
+end)
+
+-- Đồng bộ nếu giá trị bị đổi từ nơi khác
+spawn(function()
+    while true do
+        updateSwitch(_G.GreensVN_OverlayEnabled)
+        wait(0.2)
+    end
+end)
+
 -- 5. Credit Tab
 local creditFrame = Instance.new("Frame")
 creditFrame.Size = tabFrameSpace
@@ -1632,10 +1684,21 @@ floatBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- ==== IN-GAME OVERLAY PANEL BÊN DƯỚI ICON ROBLOX, KHÔNG KÉO THẢ, CHỮ RAINBOW, FONT 26, KHÔNG NÚT ĐÓNG, HIỆN CPU & GPU ====
+-- ==== IN-GAME OVERLAY PANEL BÊN DƯỚI ICON ROBLOX, KHÔNG KÉO THẢ, KHÔNG TẮT BẰNG F9, KHÔNG TIÊU ĐỀ, HIỆN DÒNG DÀI, TẮT/BẬT BẰNG SETTING ====
+-- Hiển thị: FPS | Ping | CPU | GPU | Người chơi | Uptime | Server Time
+-- Để bật/tắt overlay, dùng biến _G.GreensVN_OverlayEnabled = true/false trong phần setting của GUI chính.
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
+
+-- Ghi nhận thời điểm bắt đầu (Uptime)
+local overlayStartTick = tick()
+
+-- Chức năng bật/tắt overlay qua biến _G.GreensVN_OverlayEnabled
+if _G.GreensVN_OverlayEnabled == nil then
+    _G.GreensVN_OverlayEnabled = true -- Bật mặc định
+end
 
 local overlayGui = Instance.new("ScreenGui")
 overlayGui.Name = "GreensVNHubOverlay"
@@ -1650,7 +1713,7 @@ end
 
 -- DƯỚI ICON ROBLOX (góc trên trái ~36px), panel bắt đầu từ y=62
 local overlayPanel = Instance.new("Frame")
-overlayPanel.Size = UDim2.new(0, 340, 0, 172)
+overlayPanel.Size = UDim2.new(0, 950, 0, 44)
 overlayPanel.Position = UDim2.new(0, 16, 0, 62)
 overlayPanel.BackgroundTransparency = 1
 overlayPanel.BorderSizePixel = 0
@@ -1659,60 +1722,27 @@ overlayPanel.Draggable = false
 overlayPanel.Parent = overlayGui
 overlayPanel.ZIndex = 1000
 
--- Header (không nền)
-local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 44)
-header.BackgroundTransparency = 1
-header.BorderSizePixel = 0
-header.Parent = overlayPanel
-header.ZIndex = 1001
-
--- Title + icon nhỏ
-local overlayIcon = Instance.new("ImageLabel", header)
+-- Icon Roblox nhỏ bên trái (tuỳ bạn giữ hoặc bỏ, nếu bỏ hãy xóa block này)
+local overlayIcon = Instance.new("ImageLabel", overlayPanel)
 overlayIcon.Image = "rbxassetid://12285139195"
 overlayIcon.Size = UDim2.new(0, 36, 0, 36)
 overlayIcon.Position = UDim2.new(0, 0, 0, 4)
 overlayIcon.BackgroundTransparency = 1
 overlayIcon.ZIndex = 1002
 
-local overlayTitle = Instance.new("TextLabel", header)
-overlayTitle.Text = "GreensVN Overlay"
-overlayTitle.Size = UDim2.new(1, -42, 1, 0)
-overlayTitle.Position = UDim2.new(0, 42, 0, 0)
-overlayTitle.BackgroundTransparency = 1
-overlayTitle.TextColor3 = Color3.fromRGB(255,255,255) -- sẽ rainbow
-overlayTitle.Font = Enum.Font.GothamBlack
-overlayTitle.TextSize = 26
-overlayTitle.TextXAlignment = Enum.TextXAlignment.Left
-overlayTitle.ZIndex = 1002
+-- Nội dung Overlay (dòng dài) - chữ to và rainbow
+local infoLabel = Instance.new("TextLabel", overlayPanel)
+infoLabel.Size = UDim2.new(1, -48, 1, -2)
+infoLabel.Position = UDim2.new(0, 44, 0, 0)
+infoLabel.BackgroundTransparency = 1
+infoLabel.Text = "FPS: ... | Ping: ... | CPU: ... | GPU: ... | Người chơi: ... | Uptime: ... | Server: ..."
+infoLabel.Font = Enum.Font.GothamBlack
+infoLabel.TextSize = 26
+infoLabel.TextXAlignment = Enum.TextXAlignment.Left
+infoLabel.TextStrokeTransparency = 0.7
+infoLabel.ZIndex = 1004
 
--- Nội dung Overlay (FPS, Ping, CPU, GPU) - chữ to và rainbow
-local content = Instance.new("Frame", overlayPanel)
-content.Size = UDim2.new(1, 0, 1, -44)
-content.Position = UDim2.new(0, 0, 0, 44)
-content.BackgroundTransparency = 1
-content.ZIndex = 1002
-
-local function makeRainbowLabel(parent, ypos, text)
-    local label = Instance.new("TextLabel", parent)
-    label.Size = UDim2.new(1, -8, 0, 32)
-    label.Position = UDim2.new(0, 4, 0, ypos)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.Font = Enum.Font.GothamBlack
-    label.TextSize = 26
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.TextStrokeTransparency = 0.7
-    label.ZIndex = 1004
-    return label
-end
-
-local fpsLabel = makeRainbowLabel(content, 0, "FPS: ...")
-local pingLabel = makeRainbowLabel(content, 34, "Ping: ...")
-local cpuLabel = makeRainbowLabel(content, 68, "CPU: ...")
-local gpuLabel = makeRainbowLabel(content, 102, "GPU: ...")
-
--- Rainbow effect cho tất cả label
+-- Rainbow effect cho label duy nhất
 local rainbowSpeed = 2
 RunService.RenderStepped:Connect(function()
     local t = tick() * rainbowSpeed
@@ -1722,11 +1752,8 @@ RunService.RenderStepped:Connect(function()
         local b = math.sin(t + 4 + offset) * 0.5 + 0.5
         return Color3.new(r, g, b)
     end
-    fpsLabel.TextColor3 = rainbow(0)
-    pingLabel.TextColor3 = rainbow(1.5)
-    cpuLabel.TextColor3 = rainbow(3)
-    gpuLabel.TextColor3 = rainbow(4.5)
-    overlayTitle.TextColor3 = rainbow(2.5)
+    infoLabel.TextColor3 = rainbow(1.6)
+    overlayPanel.Visible = (_G.GreensVN_OverlayEnabled == nil) or (_G.GreensVN_OverlayEnabled == true)
 end)
 
 -- FPS counter
@@ -1739,56 +1766,107 @@ RunService.RenderStepped:Connect(function()
         fps = frames
         frames = 0
         last = tick()
-        fpsLabel.Text = "FPS: "..fps
     end
 end)
 
--- Ping hiển thị (nếu có)
+-- Ping, CPU, GPU hiển thị
+local ping = "..."
+local cpu = "..."
+local gpu = "..."
 spawn(function()
-    while wait(1) do
-        local ping = 0
+    while true do
+        -- Ping
+        local pingVal = 0
         pcall(function()
-            ping = math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
+            pingVal = math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
         end)
-        pingLabel.Text = "Ping: "..(ping > 0 and (ping.." ms") or "N/A")
-    end
-end)
-
--- CPU & GPU usage (Roblox Lua không lấy trực tiếp được, có thể lấy từ Stats nếu có, nếu không thì hiện N/A)
-spawn(function()
-    while wait(1) do
-        local cpu = "N/A"
-        local gpu = "N/A"
+        ping = (pingVal > 0 and (pingVal.." ms") or "N/A")
+        -- CPU & GPU usage
+        local cpuVal, gpuVal = "N/A", "N/A"
         pcall(function()
             local stats = game:GetService("Stats")
             -- CPU
             if stats then
                 local cpuItem = stats:FindFirstChild("PerformanceStats") and stats.PerformanceStats:FindFirstChild("Physics") or nil
                 if cpuItem and cpuItem:FindFirstChild("Percent") then
-                    cpu = tostring(math.floor(cpuItem.Percent.Value + 0.5)).."%"
+                    cpuVal = tostring(math.floor(cpuItem.Percent.Value + 0.5)).."%"
                 end
                 -- GPU (Roblox không công khai GPU usage, dùng Graphics nếu có)
                 local gpuItem = stats:FindFirstChild("PerformanceStats") and stats.PerformanceStats:FindFirstChild("Graphics") or nil
                 if gpuItem and gpuItem:FindFirstChild("Percent") then
-                    gpu = tostring(math.floor(gpuItem.Percent.Value + 0.5)).."%"
+                    gpuVal = tostring(math.floor(gpuItem.Percent.Value + 0.5)).."%"
                 end
             end
         end)
-        cpuLabel.Text = "CPU: " .. cpu
-        gpuLabel.Text = "GPU: " .. gpu
+        cpu = cpuVal
+        gpu = gpuVal
+        wait(1)
     end
 end)
 
--- Không còn nút đóng, overlay không thể tắt bằng nút, chỉ có thể tắt bằng F9 hoặc xóa GUI
+-- Server Time (UTC+7), Uptime, Người chơi
+local serverTimeStr = "..."
+spawn(function()
+    while true do
+        local ok, serverTimeVal = pcall(function()
+            return game.ReplicatedStorage:FindFirstChild("ServerTime") and game.ReplicatedStorage.ServerTime.Value or nil
+        end)
+        if ok and serverTimeVal then
+            -- Đổi sang định dạng giờ:phút:giây
+            local t = math.floor(serverTimeVal)
+            local h = math.floor(t/3600)
+            local m = math.floor((t%3600)/60)
+            local s = t%60
+            serverTimeStr = string.format("%02d:%02d:%02d", h, m, s)
+        else
+            serverTimeStr = "N/A"
+        end
+        wait(1)
+    end
+end)
+local uptimeStr = "..."
+local playerCountStr = "..."
 
--- Shortcut bật/tắt overlay (F9)
-game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
-    if not gpe and input.KeyCode == Enum.KeyCode.F9 then
-        overlayPanel.Visible = not overlayPanel.Visible
+local function formatUptime(sec)
+    local h = math.floor(sec/3600)
+    local m = math.floor((sec%3600)/60)
+    local s = math.floor(sec%60)
+    if h > 0 then
+        return string.format("%02dh%02dm%02ds", h, m, s)
+    else
+        return string.format("%02dm%02ds", m, s)
+    end
+end
+
+spawn(function()
+    while true do
+        -- Số lượng người chơi
+        local count = 0
+        pcall(function()
+            count = #Players:GetPlayers()
+        end)
+        playerCountStr = tostring(count)
+        -- Uptime
+        local uptimeSec = math.floor(tick() - overlayStartTick)
+        uptimeStr = formatUptime(uptimeSec)
+        -- Server Time (UTC+7)
+        local now = os.time() + (7*3600)
+        local hh = os.date("!%H", now)
+        local mm = os.date("!%M", now)
+        local ss = os.date("!%S", now)
+        serverTimeStr = string.format("%s:%s:%s", hh, mm, ss)
+        wait(1)
     end
 end)
 
-overlayPanel.Visible = true
+-- Update infoLabel mỗi frame
+RunService.RenderStepped:Connect(function()
+    infoLabel.Text =
+        ("FPS: %s | Ping: %s | CPU: %s | GPU: %s | Người chơi: %s | Uptime: %s | Server: %s")
+        :format(fps, ping, cpu, gpu, playerCountStr, uptimeStr, serverTimeStr)
+end)
+
+overlayPanel.Visible = (_G.GreensVN_OverlayEnabled == nil) or (_G.GreensVN_OverlayEnabled == true)
 
 applyGuiScale(mainFrame, currentScale)
 applyGuiColor(mainFrame, currentColor)
