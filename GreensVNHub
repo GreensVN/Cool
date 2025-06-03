@@ -2,6 +2,7 @@
 -- By Oxbl149 & GreensVN
 
 -- ==== ADMIN-STYLE WELCOME POPUP (viền trắng nổi bật cho popup + tên) ====
+do
     local player = game:GetService("Players").LocalPlayer
 
     local preGui = Instance.new("ScreenGui")
