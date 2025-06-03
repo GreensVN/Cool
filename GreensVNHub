@@ -1632,7 +1632,7 @@ floatBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- ==== IN-GAME OVERLAY PANEL BÊN DƯỚI ICON ROBLOX, CHỮ TO, MÀU RAINBOW ====
+-- ==== IN-GAME OVERLAY PANEL BÊN DƯỚI ICON ROBLOX, KHÔNG KÉO THẢ, CHỮ RAINBOW, FONT 30, KHÔNG NÚT ĐÓNG ====
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
@@ -1648,20 +1648,20 @@ if not parented then
     overlayGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- DƯỚI ICON ROBLOX (thường ở góc trên trái ~36px), panel bắt đầu từ y=62
+-- DƯỚI ICON ROBLOX (góc trên trái ~36px), panel bắt đầu từ y=62
 local overlayPanel = Instance.new("Frame")
-overlayPanel.Size = UDim2.new(0, 320, 0, 140)
+overlayPanel.Size = UDim2.new(0, 340, 0, 158)
 overlayPanel.Position = UDim2.new(0, 16, 0, 62)
 overlayPanel.BackgroundTransparency = 1
 overlayPanel.BorderSizePixel = 0
-overlayPanel.Active = true
-overlayPanel.Draggable = true
+overlayPanel.Active = false -- Không kéo thả
+overlayPanel.Draggable = false
 overlayPanel.Parent = overlayGui
 overlayPanel.ZIndex = 1000
 
 -- Header (không nền)
 local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 44)
+header.Size = UDim2.new(1, 0, 0, 50)
 header.BackgroundTransparency = 1
 header.BorderSizePixel = 0
 header.Parent = overlayPanel
@@ -1670,37 +1670,28 @@ header.ZIndex = 1001
 -- Title + icon nhỏ
 local overlayIcon = Instance.new("ImageLabel", header)
 overlayIcon.Image = "rbxassetid://12285139195"
-overlayIcon.Size = UDim2.new(0, 32, 0, 32)
-overlayIcon.Position = UDim2.new(0, 0, 0, 6)
+overlayIcon.Size = UDim2.new(0, 36, 0, 36)
+overlayIcon.Position = UDim2.new(0, 0, 0, 7)
 overlayIcon.BackgroundTransparency = 1
 overlayIcon.ZIndex = 1002
 
 local overlayTitle = Instance.new("TextLabel", header)
 overlayTitle.Text = "GreensVN Overlay"
-overlayTitle.Size = UDim2.new(1, -38, 1, 0)
-overlayTitle.Position = UDim2.new(0, 38, 0, 0)
+overlayTitle.Size = UDim2.new(1, -42, 1, 0)
+overlayTitle.Position = UDim2.new(0, 42, 0, 0)
 overlayTitle.BackgroundTransparency = 1
 overlayTitle.TextColor3 = Color3.fromRGB(255,255,255) -- sẽ rainbow
 overlayTitle.Font = Enum.Font.GothamBlack
-overlayTitle.TextSize = 24 * 1.5 -- chữ to hơn 1.5 lần
+overlayTitle.TextSize = 30
 overlayTitle.TextXAlignment = Enum.TextXAlignment.Left
 overlayTitle.ZIndex = 1002
 
--- Nút ẩn (close)
-local closeBtn = Instance.new("TextButton", header)
-closeBtn.Text = "×"
-closeBtn.Size = UDim2.new(0, 32, 0, 32)
-closeBtn.Position = UDim2.new(1, -34, 0, 6)
-closeBtn.BackgroundTransparency = 1
-closeBtn.TextColor3 = Color3.fromRGB(255,100,100)
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 24
-closeBtn.ZIndex = 1003
+-- KHÔNG có nút đóng (×)
 
 -- Nội dung Overlay (FPS, Ping, Script Count) - chữ to và rainbow
 local content = Instance.new("Frame", overlayPanel)
-content.Size = UDim2.new(1, 0, 1, -44)
-content.Position = UDim2.new(0, 0, 0, 44)
+content.Size = UDim2.new(1, 0, 1, -50)
+content.Position = UDim2.new(0, 0, 0, 50)
 content.BackgroundTransparency = 1
 content.ZIndex = 1002
 
@@ -1711,9 +1702,9 @@ local function makeRainbowLabel(parent, ypos, text)
     label.BackgroundTransparency = 1
     label.Text = text
     label.Font = Enum.Font.GothamBlack
-    label.TextSize = 24 * 1.5
+    label.TextSize = 30
     label.TextXAlignment = Enum.TextXAlignment.Left
-    label.TextStrokeTransparency = 0.67
+    label.TextStrokeTransparency = 0.7
     label.ZIndex = 1004
     return label
 end
@@ -1770,10 +1761,7 @@ else
     scriptLabel.Text = "Scripts: đang tải..."
 end
 
--- Ẩn/hiện overlay
-closeBtn.MouseButton1Click:Connect(function()
-    overlayPanel.Visible = false
-end)
+-- Không còn nút đóng, overlay không thể tắt bằng nút, chỉ có thể tắt bằng F9 hoặc xóa GUI
 
 -- Shortcut bật/tắt overlay (F9)
 game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
@@ -1782,35 +1770,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
     end
 end)
 
--- Kéo/thả mượt (cross-executor)
-do
-    local dragToggle, dragInput, dragStart, startPos
-    header.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragToggle = true
-            dragStart = input.Position
-            startPos = overlayPanel.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragToggle = false
-                end
-            end)
-        end
-    end)
-    header.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if input == dragInput and dragToggle then
-            local delta = input.Position - dragStart
-            overlayPanel.Position = UDim2.new(
-                startPos.X.Scale, startPos.X.Offset + delta.X,
-                startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
-end
+-- Không kéo/thả nữa!
 
 overlayPanel.Visible = true
 
