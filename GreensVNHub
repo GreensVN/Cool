@@ -781,6 +781,8 @@ local scriptLibrary = {
     {name="Grow A Garden | Garden (One Click Script)",desc="One Click Script =))",url="https://api.realaya.xyz/v1/files/l/yqx3a5r6t4oj1o0lbx14nutwl4sc97bq.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
     {name="Grow A Garden | Lion Hub",desc="Auto Buy, Auto Farm",url="https://api.luarmor.net/files/v3/loaders/e0c7fcf6c077fc23475cf4ce4db58e42.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
     {name="Grow A Garden | Airflow Hub",desc="Auto Buy, Auto Farm",url="https://api.luarmor.net/files/v3/loaders/255ac567ced3dcb9e69aa7e44c423f19.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Alchemy Hub",desc="Auto Buy, Auto Farm, Dupe money",url="https://scripts.alchemyhub.xyz",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Neox Hub",desc="Auto Buy, Auto Farm",url="https://raw.githubusercontent.com/lilsketty/sketty-loader/refs/heads/main/GETSKETTY",category="Grow A Garden",icon="rbxassetid://12285139195"},
     -- Dead Rails
     {name="Dead Rails | SpineWare",desc="Auto Farm, Auto Sell, Auto Bounty, Auto Burn, ESP",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails",icon="rbxassetid://12285139195"},
     {name="Dead Rails | Alippo Hub",desc="Farm Auto Bonds, Bypass, Teleport",url="https://pastebin.com/raw/8rwA08Ch",category="Dead Rails",icon="rbxassetid://12285139195"},
@@ -810,7 +812,7 @@ local scriptLibrary = {
     {name="Doors | Vynixius",desc="Auto win, ESP, No jumpscare.",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors",icon="rbxassetid://12285139601"},
     {name="Doors | Entity Spawner V2",desc="Spawn entity, troll, ESP.",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua",category="Doors",icon="rbxassetid://12285139601"},
     -- Brookhaven
-    {name="Brookhaven | BH Hub",desc="ESP, Troll, Fly, Car Mods.",url="https://raw.githubusercontent.com/1f0yt/community/main/Brookhaven",category="Brookhaven 🏡RP",icon="rbxassetid://12285139711"},
+    {name="Brookhaven | Sander XY",desc="ESP, Troll, Fly, Car Mods.",url="https://raw.githubusercontent.com/kigredns/testUIDK/refs/heads/main/panel.lua",category="Brookhaven 🏡RP",icon="rbxassetid://12285139711"},
     -- Build A Boat
     {name="Build A Boat | BoatBuilderHub",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1",category="Build A Boat",icon="rbxassetid://12285139812"},
     {name="Build A Boat | Build A Boat For Treasure",desc="Auto Farm, Build.",url="https://raw.githubusercontent.com/NittarPP/PhotonScript/refs/heads/main/Loading/Loading.lua",category="Build A Boat",icon="rbxassetid://12285139812"},
@@ -840,7 +842,7 @@ local scriptLibrary = {
     -- Bee Swarm Simulator
     {name="Bee Swarm | BSS Hub",desc="Auto Farm, Quest, Honey.",url="https://raw.githubusercontent.com/1f0yt/community/main/BeeSwarmSimulator",category="Bee Swarm Simulator",icon="rbxassetid://12285141130"},
     -- Da Hood
-    {name="Da Hood | SpaceX",desc="Silent Aim, God, Fly, Cash Aura.",url="https://raw.githubusercontent.com/SpaceXHub/DaHood/main/main.lua",category="Da Hood",icon="rbxassetid://12285141227"},
+    {name="Da Hood | Space Hub",desc="Silent Aim, God, Fly, Cash Aura.",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood",icon="rbxassetid://12285141227"},
     -- Tower of Hell
     {name="Tower of Hell | TOH Hub",desc="Auto Win, Anti Cheat, ESP.",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerofHell",category="Tower of Hell",icon="rbxassetid://12285141308"},
     -- Jailbreak
@@ -1630,93 +1632,72 @@ floatBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- ==== IN-GAME OVERLAY PANEL (Advanced GhostHub Style) ====
-local StarterGui = game:GetService("StarterGui")
+-- ==== IN-GAME OVERLAY PANEL GÓC TRÁI TRÊN (KHÔNG NỀN, KHÔNG THU NHỎ/PHÓNG TO) ====
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local HttpService = game:GetService("HttpService")
+local LocalPlayer = Players.LocalPlayer
 
+-- Tạo ScreenGui
 local overlayGui = Instance.new("ScreenGui")
 overlayGui.Name = "GreensVNHubOverlay"
 overlayGui.IgnoreGuiInset = true
 overlayGui.ResetOnSpawn = false
 overlayGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-overlayGui.Parent = game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+-- Ưu tiên CoreGui, nếu lỗi thì PlayerGui
+local parented = false
+pcall(function() overlayGui.Parent = game.CoreGui; parented = true end)
+if not parented then
+    overlayGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
 
--- Overlay Panel
+-- Panel chính, không nền, chỉ chứa label
 local overlayPanel = Instance.new("Frame")
-overlayPanel.Size = UDim2.new(0, 220, 0, 82)
-overlayPanel.Position = UDim2.new(1, -244, 1, -110)
-overlayPanel.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
-overlayPanel.BackgroundTransparency = 0.13
+overlayPanel.Size = UDim2.new(0, 220, 0, 92)
+overlayPanel.Position = UDim2.new(0, 16, 0, 16)
+overlayPanel.BackgroundTransparency = 1
 overlayPanel.BorderSizePixel = 0
 overlayPanel.Active = true
-overlayPanel.Draggable = true -- Cho phép kéo thả
+overlayPanel.Draggable = true -- Kéo thả
 overlayPanel.Parent = overlayGui
 overlayPanel.ZIndex = 1000
-local overlayCorner = Instance.new("UICorner", overlayPanel)
-overlayCorner.CornerRadius = UDim.new(0.45, 0)
-local overlayShadow = Instance.new("ImageLabel", overlayPanel)
-overlayShadow.Image = "rbxassetid://1316045217"
-overlayShadow.BackgroundTransparency = 1
-overlayShadow.Size = UDim2.new(1, 20, 1, 20)
-overlayShadow.Position = UDim2.new(0, -10, 0, -10)
-overlayShadow.ImageTransparency = 0.84
-overlayShadow.ZIndex = 999
 
--- Header bar
+-- Header (không nền)
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 32)
-header.BackgroundColor3 = Color3.fromRGB(40, 180, 100)
-header.BackgroundTransparency = 0.27
+header.BackgroundTransparency = 1
 header.BorderSizePixel = 0
 header.Parent = overlayPanel
 header.ZIndex = 1001
-local headerCorner = Instance.new("UICorner", header)
-headerCorner.CornerRadius = UDim.new(0.42, 0)
 
--- Title + icon
+-- Title + icon nhỏ
 local overlayIcon = Instance.new("ImageLabel", header)
-overlayIcon.Image = "rbxassetid://12285139195" -- (icon Blox Fruits, đổi nếu muốn)
-overlayIcon.Size = UDim2.new(0, 24, 0, 24)
-overlayIcon.Position = UDim2.new(0, 7, 0, 4)
+overlayIcon.Image = "rbxassetid://12285139195"
+overlayIcon.Size = UDim2.new(0, 22, 0, 22)
+overlayIcon.Position = UDim2.new(0, 0, 0, 5)
 overlayIcon.BackgroundTransparency = 1
 overlayIcon.ZIndex = 1002
 
 local overlayTitle = Instance.new("TextLabel", header)
-overlayTitle.Text = "GreensVN Hub Overlay"
-overlayTitle.Size = UDim2.new(1, -60, 1, 0)
-overlayTitle.Position = UDim2.new(0, 34, 0, 0)
+overlayTitle.Text = "GreensVN Overlay"
+overlayTitle.Size = UDim2.new(1, -26, 1, 0)
+overlayTitle.Position = UDim2.new(0, 26, 0, 0)
 overlayTitle.BackgroundTransparency = 1
-overlayTitle.TextColor3 = Color3.fromRGB(255,255,255)
+overlayTitle.TextColor3 = Color3.fromRGB(120,255,120)
 overlayTitle.Font = Enum.Font.GothamBold
-overlayTitle.TextSize = 17
+overlayTitle.TextSize = 16
 overlayTitle.TextXAlignment = Enum.TextXAlignment.Left
 overlayTitle.ZIndex = 1002
 
--- Nút thu nhỏ/phóng to
-local miniBtn = Instance.new("TextButton", header)
-miniBtn.Text = "–"
-miniBtn.Size = UDim2.new(0, 26, 0, 26)
-miniBtn.Position = UDim2.new(1, -56, 0, 3)
-miniBtn.BackgroundColor3 = Color3.fromRGB(60, 120, 80)
-miniBtn.TextColor3 = Color3.fromRGB(255,255,255)
-miniBtn.Font = Enum.Font.GothamBold
-miniBtn.TextSize = 18
-miniBtn.ZIndex = 1003
-local miniCor = Instance.new("UICorner", miniBtn)
-miniCor.CornerRadius = UDim.new(1,0)
-
+-- Nút ẩn (close)
 local closeBtn = Instance.new("TextButton", header)
 closeBtn.Text = "×"
-closeBtn.Size = UDim2.new(0, 26, 0, 26)
-closeBtn.Position = UDim2.new(1, -28, 0, 3)
-closeBtn.BackgroundColor3 = Color3.fromRGB(120, 60, 60)
-closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Size = UDim2.new(0, 22, 0, 22)
+closeBtn.Position = UDim2.new(1, -24, 0, 5)
+closeBtn.BackgroundTransparency = 1
+closeBtn.TextColor3 = Color3.fromRGB(255,100,100)
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 18
+closeBtn.TextSize = 17
 closeBtn.ZIndex = 1003
-local closeCor = Instance.new("UICorner", closeBtn)
-closeCor.CornerRadius = UDim.new(1,0)
 
 -- Nội dung Overlay (FPS, Ping, Script Count)
 local content = Instance.new("Frame", overlayPanel)
@@ -1726,34 +1707,34 @@ content.BackgroundTransparency = 1
 content.ZIndex = 1002
 
 local fpsLabel = Instance.new("TextLabel", content)
-fpsLabel.Size = UDim2.new(1, -16, 0, 20)
-fpsLabel.Position = UDim2.new(0, 8, 0, 2)
+fpsLabel.Size = UDim2.new(1, -8, 0, 20)
+fpsLabel.Position = UDim2.new(0, 4, 0, 2)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.TextColor3 = Color3.fromRGB(120,255,120)
 fpsLabel.Font = Enum.Font.GothamBold
-fpsLabel.TextSize = 16
+fpsLabel.TextSize = 15
 fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
-fpsLabel.ZIndex = 1003
+fpsLabel.ZIndex = 1004
 
 local pingLabel = Instance.new("TextLabel", content)
-pingLabel.Size = UDim2.new(1, -16, 0, 20)
-pingLabel.Position = UDim2.new(0, 8, 0, 24)
+pingLabel.Size = UDim2.new(1, -8, 0, 20)
+pingLabel.Position = UDim2.new(0, 4, 0, 24)
 pingLabel.BackgroundTransparency = 1
 pingLabel.TextColor3 = Color3.fromRGB(255,255,180)
 pingLabel.Font = Enum.Font.Gotham
-pingLabel.TextSize = 16
+pingLabel.TextSize = 15
 pingLabel.TextXAlignment = Enum.TextXAlignment.Left
-pingLabel.ZIndex = 1003
+pingLabel.ZIndex = 1004
 
 local scriptLabel = Instance.new("TextLabel", content)
-scriptLabel.Size = UDim2.new(1, -16, 0, 20)
-scriptLabel.Position = UDim2.new(0, 8, 0, 46)
+scriptLabel.Size = UDim2.new(1, -8, 0, 20)
+scriptLabel.Position = UDim2.new(0, 4, 0, 46)
 scriptLabel.BackgroundTransparency = 1
 scriptLabel.TextColor3 = Color3.fromRGB(120,200,255)
 scriptLabel.Font = Enum.Font.Gotham
-scriptLabel.TextSize = 16
+scriptLabel.TextSize = 15
 scriptLabel.TextXAlignment = Enum.TextXAlignment.Left
-scriptLabel.ZIndex = 1003
+scriptLabel.ZIndex = 1004
 
 -- FPS counter
 local last = tick()
@@ -1765,42 +1746,27 @@ RunService.RenderStepped:Connect(function()
         fps = frames
         frames = 0
         last = tick()
-        fpsLabel.Text = "🟢 FPS: "..fps
+        fpsLabel.Text = "FPS: "..fps
     end
 end)
 
--- Ping (cách đơn giản, lấy từ Players.LocalPlayer.NetworkPing nếu có)
+-- Ping hiển thị (nếu có)
 spawn(function()
     while wait(1) do
         local ping = 0
         pcall(function()
-            ping = math.floor(game:GetService("Stats")
-                     .Network.ServerStatsItem["Data Ping"]:GetValue())
+            ping = math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
         end)
-        pingLabel.Text = "📶 Ping: "..(ping > 0 and (ping.." ms") or "Không lấy được")
+        pingLabel.Text = "Ping: "..(ping > 0 and (ping.." ms") or "N/A")
     end
 end)
 
--- Script count (hiển thị số script trong thư viện hoặc đang chạy)
-scriptLabel.Text = "📜 Scripts: Đang tải..."
-if scriptLibrary then
-    scriptLabel.Text = "📜 Scripts: ".. tostring(#scriptLibrary)
+-- Số script (tùy bạn chỉnh lại lấy đúng biến scriptLibrary)
+if _G.scriptLibrary and type(_G.scriptLibrary)=="table" then
+    scriptLabel.Text = "Scripts: ".. tostring(#_G.scriptLibrary)
+else
+    scriptLabel.Text = "Scripts: đang tải..."
 end
-
--- Thu nhỏ/phóng to
-local minimized = false
-miniBtn.MouseButton1Click:Connect(function()
-    minimized = not minimized
-    if minimized then
-        content.Visible = false
-        overlayPanel.Size = UDim2.new(0,220,0,38)
-        miniBtn.Text = "+"
-    else
-        content.Visible = true
-        overlayPanel.Size = UDim2.new(0,220,0,82)
-        miniBtn.Text = "–"
-    end
-end)
 
 -- Ẩn/hiện overlay
 closeBtn.MouseButton1Click:Connect(function()
@@ -1844,16 +1810,7 @@ do
     end)
 end
 
--- Hiệu ứng overlay vào game
-overlayPanel.Position = UDim2.new(1, 80, 1, 80)
-overlayPanel.Visible = false
-wait(0.5)
-for i = 0, 1, 0.08 do
-    overlayPanel.Position = UDim2.new(1, -244 * i + 80 * (1-i), 1, -110 * i + 80 * (1-i))
-    overlayPanel.Visible = true
-    wait(0.02)
-end
-overlayPanel.Position = UDim2.new(1, -244, 1, -110)
+-- Hiện overlay ngay sau khi load
 overlayPanel.Visible = true
 
 applyGuiScale(mainFrame, currentScale)
