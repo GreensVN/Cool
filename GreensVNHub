@@ -1806,24 +1806,6 @@ end)
 
 -- Server Time (UTC+7), Uptime, Người chơi
 local serverTimeStr = "..."
-spawn(function()
-    while true do
-        local ok, serverTimeVal = pcall(function()
-            return game.ReplicatedStorage:FindFirstChild("ServerTime") and game.ReplicatedStorage.ServerTime.Value or nil
-        end)
-        if ok and serverTimeVal then
-            -- Đổi sang định dạng giờ:phút:giây
-            local t = math.floor(serverTimeVal)
-            local h = math.floor(t/3600)
-            local m = math.floor((t%3600)/60)
-            local s = t%60
-            serverTimeStr = string.format("%02d:%02d:%02d", h, m, s)
-        else
-            serverTimeStr = "N/A"
-        end
-        wait(1)
-    end
-end)
 local uptimeStr = "..."
 local playerCountStr = "..."
 
@@ -1850,15 +1832,24 @@ spawn(function()
         local uptimeSec = math.floor(tick() - overlayStartTick)
         uptimeStr = formatUptime(uptimeSec)
         -- Server Time (UTC+7)
-        local now = os.time() + (7*3600)
-        local hh = os.date("!%H", now)
-        local mm = os.date("!%M", now)
-        local ss = os.date("!%S", now)
-        serverTimeStr = string.format("%s:%s:%s", hh, mm, ss)
-        wait(1)
-    end
-end)
-
+        spawn(function()
+            while true do
+                local ok, serverTimeVal = pcall(function()
+                    return game.ReplicatedStorage:FindFirstChild("ServerTime") and game.ReplicatedStorage.ServerTime.Value or nil
+                end)
+                if ok and serverTimeVal then
+                -- Đổi sang định dạng giờ:phút:giây
+                local t = math.floor(serverTimeVal)
+                local h = math.floor(t/3600)
+                local m = math.floor((t%3600)/60)
+                local s = t%60
+                serverTimeStr = string.format("%02d:%02d:%02d", h, m, s)
+            else
+                serverTimeStr = "N/A"
+            end
+            wait(1)
+        end
+    end)
 -- Update infoLabel mỗi frame
 RunService.RenderStepped:Connect(function()
     infoLabel.Text =
