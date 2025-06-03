@@ -1632,38 +1632,36 @@ floatBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- ==== IN-GAME OVERLAY PANEL GÓC TRÁI TRÊN (KHÔNG NỀN, KHÔNG THU NHỎ/PHÓNG TO) ====
+-- ==== IN-GAME OVERLAY PANEL BÊN DƯỚI ICON ROBLOX, CHỮ TO, MÀU RAINBOW ====
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 
--- Tạo ScreenGui
 local overlayGui = Instance.new("ScreenGui")
 overlayGui.Name = "GreensVNHubOverlay"
 overlayGui.IgnoreGuiInset = true
 overlayGui.ResetOnSpawn = false
 overlayGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
--- Ưu tiên CoreGui, nếu lỗi thì PlayerGui
 local parented = false
 pcall(function() overlayGui.Parent = game.CoreGui; parented = true end)
 if not parented then
     overlayGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- Panel chính, không nền, chỉ chứa label
+-- DƯỚI ICON ROBLOX (thường ở góc trên trái ~36px), panel bắt đầu từ y=62
 local overlayPanel = Instance.new("Frame")
-overlayPanel.Size = UDim2.new(0, 220, 0, 92)
-overlayPanel.Position = UDim2.new(0, 16, 0, 16)
+overlayPanel.Size = UDim2.new(0, 320, 0, 140)
+overlayPanel.Position = UDim2.new(0, 16, 0, 62)
 overlayPanel.BackgroundTransparency = 1
 overlayPanel.BorderSizePixel = 0
 overlayPanel.Active = true
-overlayPanel.Draggable = true -- Kéo thả
+overlayPanel.Draggable = true
 overlayPanel.Parent = overlayGui
 overlayPanel.ZIndex = 1000
 
 -- Header (không nền)
 local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 32)
+header.Size = UDim2.new(1, 0, 0, 44)
 header.BackgroundTransparency = 1
 header.BorderSizePixel = 0
 header.Parent = overlayPanel
@@ -1672,69 +1670,73 @@ header.ZIndex = 1001
 -- Title + icon nhỏ
 local overlayIcon = Instance.new("ImageLabel", header)
 overlayIcon.Image = "rbxassetid://12285139195"
-overlayIcon.Size = UDim2.new(0, 22, 0, 22)
-overlayIcon.Position = UDim2.new(0, 0, 0, 5)
+overlayIcon.Size = UDim2.new(0, 32, 0, 32)
+overlayIcon.Position = UDim2.new(0, 0, 0, 6)
 overlayIcon.BackgroundTransparency = 1
 overlayIcon.ZIndex = 1002
 
 local overlayTitle = Instance.new("TextLabel", header)
 overlayTitle.Text = "GreensVN Overlay"
-overlayTitle.Size = UDim2.new(1, -26, 1, 0)
-overlayTitle.Position = UDim2.new(0, 26, 0, 0)
+overlayTitle.Size = UDim2.new(1, -38, 1, 0)
+overlayTitle.Position = UDim2.new(0, 38, 0, 0)
 overlayTitle.BackgroundTransparency = 1
-overlayTitle.TextColor3 = Color3.fromRGB(120,255,120)
-overlayTitle.Font = Enum.Font.GothamBold
-overlayTitle.TextSize = 16
+overlayTitle.TextColor3 = Color3.fromRGB(255,255,255) -- sẽ rainbow
+overlayTitle.Font = Enum.Font.GothamBlack
+overlayTitle.TextSize = 24 * 1.5 -- chữ to hơn 1.5 lần
 overlayTitle.TextXAlignment = Enum.TextXAlignment.Left
 overlayTitle.ZIndex = 1002
 
 -- Nút ẩn (close)
 local closeBtn = Instance.new("TextButton", header)
 closeBtn.Text = "×"
-closeBtn.Size = UDim2.new(0, 22, 0, 22)
-closeBtn.Position = UDim2.new(1, -24, 0, 5)
+closeBtn.Size = UDim2.new(0, 32, 0, 32)
+closeBtn.Position = UDim2.new(1, -34, 0, 6)
 closeBtn.BackgroundTransparency = 1
 closeBtn.TextColor3 = Color3.fromRGB(255,100,100)
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 17
+closeBtn.TextSize = 24
 closeBtn.ZIndex = 1003
 
--- Nội dung Overlay (FPS, Ping, Script Count)
+-- Nội dung Overlay (FPS, Ping, Script Count) - chữ to và rainbow
 local content = Instance.new("Frame", overlayPanel)
-content.Size = UDim2.new(1, 0, 1, -32)
-content.Position = UDim2.new(0, 0, 0, 32)
+content.Size = UDim2.new(1, 0, 1, -44)
+content.Position = UDim2.new(0, 0, 0, 44)
 content.BackgroundTransparency = 1
 content.ZIndex = 1002
 
-local fpsLabel = Instance.new("TextLabel", content)
-fpsLabel.Size = UDim2.new(1, -8, 0, 20)
-fpsLabel.Position = UDim2.new(0, 4, 0, 2)
-fpsLabel.BackgroundTransparency = 1
-fpsLabel.TextColor3 = Color3.fromRGB(120,255,120)
-fpsLabel.Font = Enum.Font.GothamBold
-fpsLabel.TextSize = 15
-fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
-fpsLabel.ZIndex = 1004
+local function makeRainbowLabel(parent, ypos, text)
+    local label = Instance.new("TextLabel", parent)
+    label.Size = UDim2.new(1, -8, 0, 36)
+    label.Position = UDim2.new(0, 4, 0, ypos)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.Font = Enum.Font.GothamBlack
+    label.TextSize = 24 * 1.5
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextStrokeTransparency = 0.67
+    label.ZIndex = 1004
+    return label
+end
 
-local pingLabel = Instance.new("TextLabel", content)
-pingLabel.Size = UDim2.new(1, -8, 0, 20)
-pingLabel.Position = UDim2.new(0, 4, 0, 24)
-pingLabel.BackgroundTransparency = 1
-pingLabel.TextColor3 = Color3.fromRGB(255,255,180)
-pingLabel.Font = Enum.Font.Gotham
-pingLabel.TextSize = 15
-pingLabel.TextXAlignment = Enum.TextXAlignment.Left
-pingLabel.ZIndex = 1004
+local fpsLabel = makeRainbowLabel(content, 0, "FPS: ...")
+local pingLabel = makeRainbowLabel(content, 38, "Ping: ...")
+local scriptLabel = makeRainbowLabel(content, 76, "Scripts: ...")
 
-local scriptLabel = Instance.new("TextLabel", content)
-scriptLabel.Size = UDim2.new(1, -8, 0, 20)
-scriptLabel.Position = UDim2.new(0, 4, 0, 46)
-scriptLabel.BackgroundTransparency = 1
-scriptLabel.TextColor3 = Color3.fromRGB(120,200,255)
-scriptLabel.Font = Enum.Font.Gotham
-scriptLabel.TextSize = 15
-scriptLabel.TextXAlignment = Enum.TextXAlignment.Left
-scriptLabel.ZIndex = 1004
+-- Rainbow effect cho tất cả label
+local rainbowSpeed = 2
+RunService.RenderStepped:Connect(function()
+    local t = tick() * rainbowSpeed
+    local function rainbow(offset)
+        local r = math.sin(t + offset) * 0.5 + 0.5
+        local g = math.sin(t + 2 + offset) * 0.5 + 0.5
+        local b = math.sin(t + 4 + offset) * 0.5 + 0.5
+        return Color3.new(r, g, b)
+    end
+    fpsLabel.TextColor3 = rainbow(0)
+    pingLabel.TextColor3 = rainbow(1.5)
+    scriptLabel.TextColor3 = rainbow(3)
+    overlayTitle.TextColor3 = rainbow(2.5)
+end)
 
 -- FPS counter
 local last = tick()
@@ -1810,7 +1812,6 @@ do
     end)
 end
 
--- Hiện overlay ngay sau khi load
 overlayPanel.Visible = true
 
 applyGuiScale(mainFrame, currentScale)
