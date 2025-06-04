@@ -126,6 +126,8 @@ do
 end
 
 -- ==== GUI CHÍNH VỚI HACK TAB SCROLLABLE ====
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -160,6 +162,33 @@ screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
 
+-- Add background animation (animated gradient)
+local animatedBg = Instance.new("Frame")
+animatedBg.Size = UDim2.new(1, 0, 1, 0)
+animatedBg.Position = UDim2.new(0, 0, 0, 0)
+animatedBg.BackgroundTransparency = 1
+animatedBg.ZIndex = -1
+animatedBg.Parent = screenGui
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50,180,120)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80,60,160)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(40,80,220))
+}
+gradient.Rotation = 0
+gradient.Parent = animatedBg
+
+-- Animate gradient rotation forever
+spawn(function()
+    while true do
+        for i = 0, 360, 1 do
+            gradient.Rotation = i
+            wait(0.03)
+        end
+    end
+end)
+
 -- MainFrame
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 540, 0, 590)
@@ -168,6 +197,14 @@ mainFrame.BackgroundColor3 = DEFAULT_COLOR
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = screenGui
 mainFrame.ClipsDescendants = true
+
+local TweenService = game:GetService("TweenService")
+mainFrame.Size = UDim2.new(0, 0, 0, 0)
+mainFrame.BackgroundTransparency = 1
+TweenService:Create(mainFrame, TweenInfo.new(0.38, Enum.EasingStyle.Back), {
+    Size = UDim2.new(0, 540, 0, 590),
+    BackgroundTransparency = 0
+}):Play()
 
 local mainStroke = Instance.new("UIStroke", mainFrame)
 mainStroke.Color = Color3.fromRGB(90, 180, 90)
@@ -244,6 +281,25 @@ closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
+local TweenService = game:GetService("TweenService")
+
+local function animateBtn(btn, color1, color2)
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = color2}):Play()
+    end)
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.13), {BackgroundColor3 = color1}):Play()
+    end)
+    btn.MouseButton1Down:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = color2:lerp(Color3.new(1,0.6,0.6), 0.2)}):Play()
+    end)
+    btn.MouseButton1Up:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = color2}):Play()
+    end)
+end
+animateBtn(closeBtn, Color3.fromRGB(120,60,60), Color3.fromRGB(180,60,60))
+animateBtn(minBtn, Color3.fromRGB(60,80,60), Color3.fromRGB(90,120,80))
+
 -- Tab holder
 local tabNames = {"Home", "Hack", "Executor", "Library", "Settings", "Credit"}
 local tabHolder = Instance.new("Frame")
@@ -270,6 +326,41 @@ for i, name in ipairs(tabNames) do
     btnCorner.CornerRadius = UDim.new(0.4, 0)
     tabBtns[i] = btn
 end
+
+local TweenService = game:GetService("TweenService")
+local sidebarCollapsed = false
+local COLLAPSED_WIDTH = 38
+local EXPANDED_WIDTH = TAB_WIDTH
+
+local collapseBtn = Instance.new("TextButton")
+collapseBtn.Size = UDim2.new(0, 32, 0, 32)
+collapseBtn.Position = UDim2.new(1, -38, 0, 12)
+collapseBtn.BackgroundColor3 = Color3.fromRGB(30, 60, 30)
+collapseBtn.Text = "≡"
+collapseBtn.Font = Enum.Font.GothamBold
+collapseBtn.TextSize = 18
+collapseBtn.TextColor3 = Color3.fromRGB(255,255,255)
+collapseBtn.Parent = tabHolder
+local collapseCorner = Instance.new("UICorner", collapseBtn)
+collapseCorner.CornerRadius = UDim.new(0.5, 0)
+
+local function animateSidebar(collapse)
+    local newWidth = collapse and COLLAPSED_WIDTH or EXPANDED_WIDTH
+    TweenService:Create(tabHolder, TweenInfo.new(0.32, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, newWidth, 1, -64)}):Play()
+    for i, btn in ipairs(tabBtns) do
+        TweenService:Create(btn, TweenInfo.new(0.18), {
+            TextTransparency = collapse and 1 or 0,
+            BackgroundTransparency = collapse and 0.5 or 0
+        }):Play()
+        btn.Text = collapse and "" or tabNames[i]
+    end
+end
+
+collapseBtn.MouseButton1Click:Connect(function()
+    sidebarCollapsed = not sidebarCollapsed
+    animateSidebar(sidebarCollapsed)
+    collapseBtn.Text = sidebarCollapsed and "▶" or "≡"
+end)
 
 local tabFrames = {}
 local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
@@ -986,6 +1077,14 @@ searchBox.Parent = libraryFrame
 local searchCorner = Instance.new("UICorner", searchBox)
 searchCorner.CornerRadius = UDim.new(0.5, 0)
 
+local TweenService = game:GetService("TweenService")
+searchBox.Focused:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.13), {BackgroundColor3 = Color3.fromRGB(60, 80, 120)}):Play()
+end)
+searchBox.FocusLost:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.18), {BackgroundColor3 = Color3.fromRGB(42, 44, 56)}):Play()
+end)
+
 -- Dropdown lọc category với icon
 local categories = {"Tất cả"}
 local hasCat = {}
@@ -1473,12 +1572,45 @@ creditLabel.TextXAlignment = Enum.TextXAlignment.Center
 creditLabel.TextYAlignment = Enum.TextYAlignment.Center
 creditLabel.Parent = creditFrame
 
--- Tab logic
+local TweenService = game:GetService("TweenService")
+
+local function showTab(idx)
+    for i, frame in ipairs(tabFrames) do
+        if i == idx then
+            frame.Visible = true
+            frame.Position = UDim2.new(0, TAB_WIDTH + 30, 0, 64) -- Slide in từ phải
+            frame.BackgroundTransparency = 1
+            -- Hiệu ứng Slide + Fade
+            TweenService:Create(frame, TweenInfo.new(0.26, Enum.EasingStyle.Quad), {Position = UDim2.new(0, TAB_WIDTH, 0, 64), BackgroundTransparency = 0}):Play()
+        else
+            -- Fade out và ẩn sau 0.22s
+            TweenService:Create(frame, TweenInfo.new(0.22), {BackgroundTransparency = 1}):Play()
+            delay(0.22, function() frame.Visible = false end)
+        end
+        -- Animate tab button highlight
+        TweenService:Create(tabBtns[i], TweenInfo.new(0.18), {
+            BackgroundColor3 = (i==idx) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+        }):Play()
+    end
+end
+
 for i, btn in ipairs(tabBtns) do
     btn.MouseButton1Click:Connect(function()
-        for j, frame in ipairs(tabFrames) do
-            frame.Visible = (j == i)
-            tabBtns[j].BackgroundColor3 = (j == i) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+        showTab(i)
+    end)
+    -- Hiệu ứng hover khi rê chuột vào
+    btn.MouseEnter:Connect(function()
+        if not sidebarCollapsed then
+            TweenService:Create(btn, TweenInfo.new(0.13), {BackgroundColor3 = Color3.fromRGB(90, 170, 120)}):Play()
+        end
+    end)
+    btn.MouseLeave:Connect(function()
+        if not sidebarCollapsed then
+            -- Nếu tab này đang được chọn thì trả lại màu chọn, không thì màu thường
+            local isSelected = tabFrames[i].Visible
+            TweenService:Create(btn, TweenInfo.new(0.18), {
+                BackgroundColor3 = isSelected and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+            }):Play()
         end
     end)
 end
