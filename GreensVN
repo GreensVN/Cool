@@ -1,6 +1,5 @@
--- GreensVN Hub ULTIMATE V2.5 - All-in-One Script Hub (Fixed & Optimized)
+-- GreensVN Hub ULTIMATE V3.0 - Final Masterpiece (All Features Merged)
 -- By Oxbl149 & GreensVN
--- Fixed all syntax/logic errors, merged Stealth, Admin Detect, Ultimate Library, Animations.
 
 -- ==== SERVICES & INITIALIZATION ====
 local TweenService = game:GetService("TweenService")
@@ -10,6 +9,7 @@ local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
+local VirtualUser = game:GetService("VirtualUser")
 local player = Players.LocalPlayer
 
 local function getGuiParent()
@@ -70,7 +70,6 @@ do
     label1.TextColor3 = Color3.fromRGB(64, 44, 0)
     label1.Text = "Welcome, " .. tostring(player.DisplayName or player.Name)
     label1.TextXAlignment = Enum.TextXAlignment.Left
-    label1.TextYAlignment = Enum.TextYAlignment.Center
 
     local label1Stroke = Instance.new("UIStroke", label1)
     label1Stroke.Color = Color3.fromRGB(255,255,255)
@@ -90,7 +89,6 @@ do
     label2Stroke.Color = Color3.fromRGB(255,255,255)
     label2Stroke.Thickness = 1.2
 
-    -- Fade In
     main.BackgroundTransparency = 1
     icon.ImageTransparency = 1
     label1.TextTransparency = 1
@@ -108,7 +106,6 @@ do
         task.wait(0.02)
     end
     task.wait(2.5)
-    -- Fade Out
     for i = 0, 1, 0.1 do
         main.BackgroundTransparency = i
         icon.ImageTransparency = i
@@ -126,6 +123,7 @@ local stealthMode = false
 local adminDetectMode = false
 local STEALTH_CONNECTIONS, ADMIN_CONNECTIONS = {}, {}
 local ADMINS_DETECTED = false
+local screenGui -- Forward declaration
 
 local function activateStealth()
     pcall(function()
@@ -174,18 +172,47 @@ local function isPossibleAdmin(p)
     return false
 end
 
+local function showAdminPopup(msg)
+    local alertGui = Instance.new("ScreenGui")
+    alertGui.Name = "AdminAlert"
+    alertGui.IgnoreGuiInset = true
+    alertGui.ResetOnSpawn = false
+    alertGui.Parent = getGuiParent()
+    
+    local frame = Instance.new("Frame", alertGui)
+    frame.AnchorPoint = Vector2.new(0.5, 0)
+    frame.Position = UDim2.new(0.5, 0, 0.04, 0)
+    frame.Size = UDim2.new(0, 420, 0, 60)
+    frame.BackgroundColor3 = Color3.fromRGB(230, 60, 60)
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0.23, 0)
+    
+    local label = Instance.new("TextLabel", frame)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 22
+    label.TextColor3 = Color3.new(1,1,1)
+    label.Text = msg
+    label.TextWrapped = true
+    
+    task.delay(5, function() if alertGui then alertGui:Destroy() end end)
+end
+
 local function activateAdminDetect()
     for _,c in ipairs(ADMIN_CONNECTIONS) do pcall(function() c:Disconnect() end) end
     ADMIN_CONNECTIONS = {}
     for _,p in pairs(Players:GetPlayers()) do
         if p ~= player and isPossibleAdmin(p) then
             ADMINS_DETECTED = true
+            if screenGui then screenGui.Enabled = false end
+            showAdminPopup("Phát hiện Admin/Dev: "..p.Name.." ! Đã ẩn Hub")
         end
     end
     table.insert(ADMIN_CONNECTIONS, Players.PlayerAdded:Connect(function(p)
         if p ~= player and isPossibleAdmin(p) then
             ADMINS_DETECTED = true
-            screenGui.Enabled = false
+            if screenGui then screenGui.Enabled = false end
+            showAdminPopup("Admin vừa vào game: "..p.Name)
         end
     end))
     table.insert(ADMIN_CONNECTIONS, Players.PlayerRemoving:Connect(function(p)
@@ -197,7 +224,8 @@ local function activateAdminDetect()
             end
             if not anyAdmin then
                 ADMINS_DETECTED = false
-                screenGui.Enabled = true
+                if screenGui then screenGui.Enabled = true end
+                showAdminPopup("Admin đã rời game! Hub đã hiện lại")
             end
         end
     end))
@@ -207,7 +235,7 @@ local function deactivateAdminDetect()
     for _,c in ipairs(ADMIN_CONNECTIONS) do pcall(function() c:Disconnect() end) end
     ADMIN_CONNECTIONS = {}
     ADMINS_DETECTED = false
-    screenGui.Enabled = true
+    if screenGui then screenGui.Enabled = true end
 end
 
 -- ==== MAIN GUI SETUP ====
@@ -216,7 +244,6 @@ local MAX_SIZE = Vector2.new(750, 650)
 local TAB_WIDTH = 132
 local AVATAR_ID = "rbxassetid://86684458914012"
 local DEFAULT_SCALE = 1
-local SCALE_STEP = 0.1
 local MIN_SCALE = 0.7
 local MAX_SCALE = 1.6
 local DEFAULT_COLOR = Color3.fromRGB(30, 32, 40)
@@ -231,51 +258,41 @@ local function applyGuiColor(mainFrame, newColor)
     mainFrame.BackgroundColor3 = newColor
 end
 
-local screenGui = Instance.new("ScreenGui")
+screenGui = Instance.new("ScreenGui")
 screenGui.Name = "GreensVNHubUltimate"
 screenGui.Parent = getGuiParent()
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
 
--- Animated Background
-local animatedBg = Instance.new("Frame")
+local animatedBg = Instance.new("Frame", screenGui)
 animatedBg.Size = UDim2.new(1, 0, 1, 0)
 animatedBg.BackgroundTransparency = 1
 animatedBg.ZIndex = -1
-animatedBg.Parent = screenGui
-
-local gradient = Instance.new("UIGradient")
+local gradient = Instance.new("UIGradient", animatedBg)
 gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(50,180,120)),
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80,60,160)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(40,80,220))
 }
-gradient.Parent = animatedBg
-
 RunService:BindToRenderStep("GreensVNBgAnim", Enum.RenderPriority.Camera.Value, function()
     gradient.Rotation = (tick() * 30) % 360
 end)
 
--- MainFrame
-local mainFrame = Instance.new("Frame")
+local mainFrame = Instance.new("Frame", screenGui)
 mainFrame.Size = UDim2.new(0, 0, 0, 0)
 mainFrame.Position = UDim2.new(0.5, -270, 0.5, -295)
 mainFrame.BackgroundColor3 = DEFAULT_COLOR
 mainFrame.BorderSizePixel = 0
-mainFrame.Parent = screenGui
 mainFrame.ClipsDescendants = true
 
 TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
-    Size = UDim2.new(0, 540, 0, 590),
-    BackgroundTransparency = 0
+    Size = UDim2.new(0, 540, 0, 590), BackgroundTransparency = 0
 }):Play()
 
 local mainStroke = Instance.new("UIStroke", mainFrame)
 mainStroke.Color = Color3.fromRGB(90, 180, 90)
 mainStroke.Thickness = 2
-
-local mainCorner = Instance.new("UICorner", mainFrame)
-mainCorner.CornerRadius = UDim.new(0, 16)
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
 
 local shadow = Instance.new("ImageLabel", mainFrame)
 shadow.Name = "Shadow"
@@ -286,7 +303,6 @@ shadow.Size = UDim2.new(1, 40, 1, 40)
 shadow.Position = UDim2.new(0, -20, 0, -20)
 shadow.ZIndex = 0
 
--- TopBar
 local topBar = Instance.new("Frame", mainFrame)
 topBar.Size = UDim2.new(1, 0, 0, 64)
 topBar.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
@@ -294,7 +310,6 @@ topBar.BorderSizePixel = 0
 Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 16)
 
 local avatar = Instance.new("ImageLabel", topBar)
-avatar.Name = "Avatar"
 avatar.Size = UDim2.new(0, 54, 0, 54)
 avatar.Position = UDim2.new(0, 9, 0, 5)
 avatar.BackgroundTransparency = 1
@@ -305,7 +320,7 @@ local titleLabel = Instance.new("TextLabel", topBar)
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub V2.5"
+titleLabel.Text = "GreensVN Hub V3.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -332,7 +347,6 @@ closeBtn.TextSize = 18
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0.5, 0)
 closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
 
--- Tabs
 local tabNames = {"Home", "Hack", "Executor", "Library", "Settings", "Credit"}
 local tabHolder = Instance.new("Frame", mainFrame)
 tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -64)
@@ -340,6 +354,18 @@ tabHolder.Position = UDim2.new(0, 0, 0, 64)
 tabHolder.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
 tabHolder.BorderSizePixel = 0
 Instance.new("UICorner", tabHolder).CornerRadius = UDim.new(0, 16)
+
+local sidebarCollapsed = false
+local COLLAPSED_WIDTH = 38
+local collapseBtn = Instance.new("TextButton", tabHolder)
+collapseBtn.Size = UDim2.new(0, 32, 0, 32)
+collapseBtn.Position = UDim2.new(1, -38, 0, 12)
+collapseBtn.BackgroundColor3 = Color3.fromRGB(30, 60, 30)
+collapseBtn.Text = "≡"
+collapseBtn.Font = Enum.Font.GothamBold
+collapseBtn.TextSize = 18
+collapseBtn.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", collapseBtn).CornerRadius = UDim.new(0.5, 0)
 
 local tabBtns = {}
 for i, name in ipairs(tabNames) do
@@ -355,11 +381,22 @@ for i, name in ipairs(tabNames) do
     tabBtns[i] = btn
 end
 
+collapseBtn.MouseButton1Click:Connect(function()
+    sidebarCollapsed = not sidebarCollapsed
+    local newWidth = sidebarCollapsed and COLLAPSED_WIDTH or TAB_WIDTH
+    TweenService:Create(tabHolder, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = UDim2.new(0, newWidth, 1, -64)}):Play()
+    for i, btn in ipairs(tabBtns) do
+        TweenService:Create(btn, TweenInfo.new(0.2), {
+            TextTransparency = sidebarCollapsed and 1 or 0,
+            BackgroundTransparency = sidebarCollapsed and 0.5 or 0
+        }):Play()
+    end
+    collapseBtn.Text = sidebarCollapsed and "▶" or "≡"
+end)
+
 local tabFrames = {}
 local tabFrameSpace = UDim2.new(1, -TAB_WIDTH, 1, -64)
 local tabFramePos = UDim2.new(0, TAB_WIDTH, 0, 64)
-
--- Create empty tab frames
 for i=1, #tabNames do
     local f = Instance.new("Frame", mainFrame)
     f.Size = tabFrameSpace
@@ -373,9 +410,9 @@ end
 
 -- 1. HOME TAB
 local homeFrame = tabFrames[1]
+Instance.new("UIPadding", homeFrame).PaddingLeft = UDim.new(0, 40)
 local welcomeLabel = Instance.new("TextLabel", homeFrame)
 welcomeLabel.Size = UDim2.new(1, -40, 0, 36)
-welcomeLabel.Position = UDim2.new(0, 40, 0, 10)
 welcomeLabel.BackgroundTransparency = 1
 welcomeLabel.Font = Enum.Font.GothamBlack
 welcomeLabel.TextSize = 30
@@ -385,44 +422,73 @@ welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name)
 local ws = Instance.new("UIStroke", welcomeLabel)
 ws.Color = Color3.fromRGB(255,255,255); ws.Thickness = 1.5
 
--- (Home Tab Info fetching omitted for brevity but fully functional in complete code, keeping it clean)
-local infoLabel = Instance.new("TextLabel", homeFrame)
-infoLabel.Size = UDim2.new(1, -60, 1, -60)
-infoLabel.Position = UDim2.new(0, 30, 0, 50)
-infoLabel.BackgroundTransparency = 1
-infoLabel.Font = Enum.Font.Gotham
-infoLabel.TextSize = 20
-infoLabel.TextColor3 = Color3.fromRGB(200, 255, 200)
-infoLabel.TextXAlignment = Enum.TextXAlignment.Left
-infoLabel.TextYAlignment = Enum.TextYAlignment.Top
-infoLabel.Text = "Loading User Info..."
-Instance.new("UIPadding", homeFrame).PaddingLeft = UDim.new(0, 10)
-
+local bigAvatar = Instance.new("ImageLabel", homeFrame)
+bigAvatar.Size = UDim2.new(0,130,0,130)
+bigAvatar.Position = UDim2.new(0, 0, 0, 40)
+bigAvatar.BackgroundTransparency = 1
+Instance.new("UICorner", bigAvatar).CornerRadius = UDim.new(1, 0)
 task.spawn(function()
-    local txt = "Name: "..player.Name.."\nDisplay: "..player.DisplayName.."\nUserID: "..player.UserId.."\nAge: "..player.AccountAge.." days\n\n"
-    local ok, res = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://ipinfo.io/json")) end)
-    if ok and res then
-        txt = txt .. "IP: "..(res.ip or "N/A").."\nLocation: "..(res.city or "N/A")..", "..(res.country or "N/A")
-    else
-        txt = txt .. "IP: N/A\nLocation: N/A"
-    end
-    infoLabel.Text = txt
+    local thumb = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    if thumb[2] then bigAvatar.Image = thumb[1] end
 end)
 
--- 2. HACK TAB (Scrollable)
+local infoLabels = {"Name: "..player.Name, "Username: "..player.DisplayName, "UserID: "..player.UserId, "Age: "..player.AccountAge.." days", "Place: Loading...", "IP: Loading...", "Location: Loading..."}
+for i, txt in ipairs(infoLabels) do
+    local lbl = Instance.new("TextLabel", homeFrame)
+    lbl.Size = UDim2.new(0, 330, 0, 24)
+    lbl.Position = UDim2.new(0, 145, 0, 40 + (i-1)*26)
+    lbl.BackgroundTransparency = 1
+    lbl.Font = Enum.Font.Gotham
+    lbl.TextSize = 19
+    lbl.TextColor3 = Color3.fromRGB(200, 255, 200)
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Text = txt
+    if i == 5 then lbl.Name = "PlaceLabel" end
+    if i == 6 then lbl.Name = "IPLabel" end
+    if i == 7 then lbl.Name = "LocLabel" end
+end
+task.spawn(function()
+    local ok, info = pcall(function() return MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset) end)
+    if ok and info then homeFrame.PlaceLabel.Text = "Place: "..info.Name.." [ID: "..game.PlaceId.."]" end
+end)
+task.spawn(function()
+    local ok, res = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://ipinfo.io/json")) end)
+    if ok and res then
+        homeFrame.IPLabel.Text = "IP: "..(res.ip or "N/A")
+        homeFrame.LocLabel.Text = "Location: "..(res.city or "N/A")..", "..(res.country or "N/A")
+    end
+end)
+
+-- 2. HACK TAB
 local scroll = Instance.new("ScrollingFrame", tabFrames[2])
 scroll.Size = UDim2.new(1, -12, 1, -12)
 scroll.Position = UDim2.new(0, 6, 0, 6)
 scroll.BackgroundTransparency = 1
 scroll.BorderSizePixel = 0
 scroll.ScrollBarThickness = 8
-scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-
 local listLayout = Instance.new("UIListLayout", scroll)
 listLayout.Padding = UDim.new(0, 8)
 
+local notifLabel = Instance.new("TextLabel", scroll)
+notifLabel.Size = UDim2.new(1, -4, 0, 30)
+notifLabel.BackgroundTransparency = 0.4
+notifLabel.BackgroundColor3 = Color3.fromRGB(45, 130, 45)
+notifLabel.Text = ""
+notifLabel.TextColor3 = Color3.fromRGB(255,255,255)
+notifLabel.Font = Enum.Font.GothamBold
+notifLabel.TextSize = 16
+notifLabel.Visible = false
+Instance.new("UICorner", notifLabel).CornerRadius = UDim.new(0.5, 0)
+
+local function showHackNotification(txt)
+    notifLabel.Text = txt
+    notifLabel.Visible = true
+    task.spawn(function() task.wait(2.5) notifLabel.Visible = false end)
+end
+
 local hackScripts = {
+    {"Anti Kick (Bảo mật)", ""}, {"Anti Ban (Bảo mật)", ""},
     {"k00pgui v12", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12"},
     {"Infinite Yield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
     {"Dead Rail", "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"},
@@ -435,7 +501,7 @@ local hackScripts = {
     {"Tool Giver Remake", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ToolGiver"}
 }
 
-for _, data in ipairs(hackScripts) do
+for i, data in ipairs(hackScripts) do
     local btn = Instance.new("TextButton", scroll)
     btn.Size = UDim2.new(1, -4, 0, 40)
     btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
@@ -444,14 +510,42 @@ for _, data in ipairs(hackScripts) do
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 18
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0.3, 0)
+    
     btn.MouseButton1Click:Connect(function()
-        pcall(function()
-            loadstring(game:HttpGet(data[2]))()
-        end)
+        if i == 1 then
+            pcall(function() hookfunction(player.Kick, function() return end) end)
+            pcall(function()
+                local mt = getrawmetatable(game)
+                setreadonly(mt, false)
+                local oldNamecall = mt.__namecall
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod and getnamecallmethod() or ""
+                    if (method == "Kick" or method:lower() == "kick") and (self == player or tostring(self)=="Players") then return end
+                    return oldNamecall(self, ...)
+                end)
+                setreadonly(mt, true)
+            end)
+            showHackNotification("Anti Kick is active now")
+        elseif i == 2 then
+            pcall(function()
+                local mt = getrawmetatable(game)
+                setreadonly(mt, false)
+                local oldNamecall = mt.__namecall
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod and getnamecallmethod() or ""
+                    if method:lower():find("ban") or tostring(self):lower():find("ban") then return end
+                    return oldNamecall(self, ...)
+                end)
+                setreadonly(mt, true)
+            end)
+            showHackNotification("Anti Ban is active now")
+        else
+            pcall(function() loadstring(game:HttpGet(data[2]))() end)
+        end
     end)
 end
 
--- 3. EXECUTOR TAB (Scrollable)
+-- 3. EXECUTOR TAB
 local execScroll = Instance.new("ScrollingFrame", tabFrames[3])
 execScroll.Size = UDim2.new(1, -12, 1, -12)
 execScroll.Position = UDim2.new(0, 6, 0, 6)
@@ -459,15 +553,18 @@ execScroll.BackgroundTransparency = 1
 execScroll.BorderSizePixel = 0
 execScroll.ScrollBarThickness = 8
 execScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-local execLayout = Instance.new("UIListLayout", execScroll)
-execLayout.Padding = UDim.new(0, 8)
+Instance.new("UIListLayout", execScroll).Padding = UDim.new(0, 8)
 
 local executorScripts = {
     {"AppleWare", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AppleWare"},
+    {"Arceus X V3", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ArceusXV3"},
     {"Delta X", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/DeltaX"},
     {"KRNL", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/krnl"},
-    {"Hydrogen", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Hydrogen"},
     {"Codex", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Codex"},
+    {"Hydrogen", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Hydrogen"},
+    {"Tidal", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Tidal"},
+    {"Ligma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Ligma"},
+    {"Project Legma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ProjectLegma"},
     {"Synapse X Remake", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SynapseXRemake"},
     {"RC7", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Rc7"},
     {"Stigma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Stigma"}
@@ -486,15 +583,16 @@ for _, data in ipairs(executorScripts) do
     end)
 end
 
--- 4. LIBRARY TAB (Ultimate Grid)
+-- 4. LIBRARY TAB
 local scriptLibrary = {
-    {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
-    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
-    {name="Dead Rails | SpineWare",desc="Auto Farm, Sell, Bounty",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails",icon="rbxassetid://12285139195"},
-    {name="Doors | Vynixius",desc="Auto win, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors",icon="rbxassetid://12285139601"},
-    {name="Pet Sim X | Project WD",desc="Auto Farm, Open Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator",icon="rbxassetid://12285139428"},
-    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal",icon="rbxassetid://12285139941"},
-    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2",icon="rbxassetid://12285140055"},
+    {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits"},
+    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden"},
+    {name="Dead Rails | SpineWare",desc="Auto Farm, Sell, Bounty",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails"},
+    {name="Doors | Vynixius",desc="Auto win, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors"},
+    {name="Pet Sim X | Project WD",desc="Auto Farm, Open Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator"},
+    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal"},
+    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2"},
+    {name="King Legacy | OMG Hub",desc="Farm, Boss, ESP",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy"}
 }
 
 local libraryFrame = tabFrames[4]
@@ -529,9 +627,9 @@ dropList.Position = UDim2.new(1, -190, 0, 56)
 dropList.BackgroundColor3 = Color3.fromRGB(42,44,56)
 dropList.ZIndex = 20
 Instance.new("UICorner", dropList).CornerRadius = UDim.new(0.5, 0)
-local dropListLayout = Instance.new("UIListLayout", dropList)
+Instance.new("UIListLayout", dropList)
 
-local cats = {"Tất cả", "Blox Fruits", "Grow A Garden", "Dead Rails", "Doors", "Pet Simulator", "Arsenal", "MM2"}
+local cats = {"Tất cả", "Blox Fruits", "Grow A Garden", "Dead Rails", "Doors", "Pet Simulator", "Arsenal", "MM2", "King Legacy"}
 for _, cat in ipairs(cats) do
     local b = Instance.new("TextButton", dropList)
     b.Size = UDim2.new(1, 0, 0, 38)
@@ -558,61 +656,132 @@ libScroll.BackgroundTransparency = 1
 libScroll.BorderSizePixel = 0
 libScroll.ScrollBarThickness = 6
 libScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-
 local libLayout = Instance.new("UIGridLayout", libScroll)
 libLayout.CellPadding = UDim2.new(0, 10, 0, 10)
 libLayout.CellSize = UDim2.new(0.48, -5, 0, 100)
+
+local hotList = {["Blox Fruits"] = true, ["Grow A Garden"] = true, ["Dead Rails"] = true}
+local favScripts = {}
 
 local function createScriptCard(data)
     local card = Instance.new("Frame")
     card.BackgroundColor3 = Color3.fromRGB(38, 45, 60)
     Instance.new("UICorner", card).CornerRadius = UDim.new(0.2, 0)
+
+    if hotList[data.category or ""] then
+        local badge = Instance.new("TextLabel", card)
+        badge.Text = "🔥 HOT"
+        badge.Size = UDim2.new(0, 54, 0, 22)
+        badge.Position = UDim2.new(0, 10, 0, 8)
+        badge.BackgroundColor3 = Color3.fromRGB(255, 110, 100)
+        badge.Font = Enum.Font.GothamBold
+        badge.TextSize = 14
+        badge.TextColor3 = Color3.new(1,1,1)
+        Instance.new("UICorner", badge).CornerRadius = UDim.new(0.5, 0)
+    end
+
+    local favBtn = Instance.new("TextButton", card)
+    favBtn.Size = UDim2.new(0, 30, 0, 30)
+    favBtn.Position = UDim2.new(1, -35, 0, 5)
+    favBtn.BackgroundTransparency = 1
+    favBtn.Text = favScripts[data.name] and "★" or "☆"
+    favBtn.Font = Enum.Font.GothamBold
+    favBtn.TextSize = 20
+    favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+    favBtn.MouseButton1Click:Connect(function()
+        favScripts[data.name] = not favScripts[data.name]
+        favBtn.Text = favScripts[data.name] and "★" or "☆"
+        favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+    end)
+
+    local nameBtn = Instance.new("TextButton", card)
+    nameBtn.Size = UDim2.new(1, -50, 0, 30)
+    nameBtn.Position = UDim2.new(0, 10, 0, 5)
+    nameBtn.BackgroundTransparency = 1
+    nameBtn.Text = data.name
+    nameBtn.Font = Enum.Font.GothamBold
+    nameBtn.TextSize = 16
+    nameBtn.TextColor3 = Color3.fromRGB(120,255,120)
+    nameBtn.TextXAlignment = Enum.TextXAlignment.Left
     
-    local name = Instance.new("TextLabel", card)
-    name.Size = UDim2.new(1, -10, 0, 30)
-    name.Position = UDim2.new(0, 5, 0, 5)
-    name.BackgroundTransparency = 1
-    name.Text = data.name
-    name.Font = Enum.Font.GothamBold
-    name.TextSize = 16
-    name.TextColor3 = Color3.fromRGB(120,255,120)
-    name.TextXAlignment = Enum.TextXAlignment.Left
+    nameBtn.MouseButton2Click:Connect(function()
+        local popup = Instance.new("Frame", libraryFrame)
+        popup.Size = UDim2.new(0, 400, 0, 300)
+        popup.Position = UDim2.new(0.5, -200, 0.5, -150)
+        popup.BackgroundColor3 = Color3.fromRGB(22, 24, 32)
+        Instance.new("UICorner", popup).CornerRadius = UDim.new(0.1, 0)
+        
+        local close = Instance.new("TextButton", popup)
+        close.Size = UDim2.new(0,30,0,30)
+        close.Position = UDim2.new(1, -35, 0, 5)
+        close.Text = "✖"
+        close.TextColor3 = Color3.fromRGB(255,100,100)
+        close.Font = Enum.Font.GothamBold
+        close.BackgroundColor3 = Color3.fromRGB(60,60,70)
+        Instance.new("UICorner", close).CornerRadius = UDim.new(0.5, 0)
+        close.MouseButton1Click:Connect(function() popup:Destroy() end)
+        
+        local codeScroll = Instance.new("ScrollingFrame", popup)
+        codeScroll.Size = UDim2.new(1, -20, 1, -50)
+        codeScroll.Position = UDim2.new(0, 10, 0, 40)
+        codeScroll.BackgroundTransparency = 1
+        
+        local codeLabel = Instance.new("TextLabel", codeScroll)
+        codeLabel.Size = UDim2.new(1, 0, 0, 1000)
+        codeLabel.BackgroundTransparency = 1
+        codeLabel.Font = Enum.Font.Code
+        codeLabel.TextSize = 14
+        codeLabel.TextColor3 = Color3.fromRGB(180,255,180)
+        codeLabel.TextXAlignment = Enum.TextXAlignment.Left
+        codeLabel.TextYAlignment = Enum.TextYAlignment.Top
+        codeLabel.Text = "Đang tải..."
+        task.spawn(function()
+            local ok, src = pcall(function() return game:HttpGet(data.url) end)
+            codeLabel.Text = ok and src:sub(1, 5000) or "Lỗi tải mã!"
+        end)
+    end)
 
     local desc = Instance.new("TextLabel", card)
-    desc.Size = UDim2.new(1, -10, 0, 30)
-    desc.Position = UDim2.new(0, 5, 0, 35)
+    desc.Size = UDim2.new(1, -20, 0, 25)
+    desc.Position = UDim2.new(0, 10, 0, 35)
     desc.BackgroundTransparency = 1
     desc.Text = data.desc
     desc.Font = Enum.Font.Gotham
     desc.TextSize = 14
     desc.TextColor3 = Color3.fromRGB(200,230,255)
-    desc.TextWrapped = true
     desc.TextXAlignment = Enum.TextXAlignment.Left
 
     local runBtn = Instance.new("TextButton", card)
-    runBtn.Size = UDim2.new(0.5, -7, 0, 25)
-    runBtn.Position = UDim2.new(0, 5, 1, -30)
+    runBtn.Size = UDim2.new(0.45, -5, 0, 25)
+    runBtn.Position = UDim2.new(0, 10, 1, -30)
     runBtn.BackgroundColor3 = Color3.fromRGB(90, 220, 140)
-    runBtn.Text = "Chạy"
+    runBtn.Text = "▶ Chạy"
     runBtn.Font = Enum.Font.GothamBold
     runBtn.TextSize = 14
     runBtn.TextColor3 = Color3.new(0,0,0)
     Instance.new("UICorner", runBtn).CornerRadius = UDim.new(0.3, 0)
-    runBtn.MouseButton1Click:Connect(function()
-        pcall(function() loadstring(game:HttpGet(data.url))() end)
-    end)
+    runBtn.MouseButton1Click:Connect(function() pcall(function() loadstring(game:HttpGet(data.url))() end) end)
 
     local copyBtn = Instance.new("TextButton", card)
-    copyBtn.Size = UDim2.new(0.5, -7, 0, 25)
-    copyBtn.Position = UDim2.new(0.5, 2, 1, -30)
+    copyBtn.Size = UDim2.new(0.45, -5, 0, 25)
+    copyBtn.Position = UDim2.new(0.5, 5, 1, -30)
     copyBtn.BackgroundColor3 = Color3.fromRGB(98, 132, 255)
-    copyBtn.Text = "Copy"
+    copyBtn.Text = "📋 Copy"
     copyBtn.Font = Enum.Font.GothamBold
     copyBtn.TextSize = 14
     copyBtn.TextColor3 = Color3.new(1,1,1)
     Instance.new("UICorner", copyBtn).CornerRadius = UDim.new(0.3, 0)
     copyBtn.MouseButton1Click:Connect(function()
         if setclipboard then setclipboard(data.url) end
+        copyBtn.Text = "Đã copy!"
+        task.wait(1) copyBtn.Text = "📋 Copy"
+    end)
+
+    card.MouseEnter:Connect(function()
+        TweenService:Create(card, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(54, 62, 90)}):Play()
+    end)
+    card.MouseLeave:Connect(function()
+        TweenService:Create(card, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(38, 45, 60)}):Play()
     end)
     return card
 end
@@ -645,10 +814,36 @@ stTitle.Font = Enum.Font.GothamBold
 stTitle.TextSize = 26
 stTitle.TextColor3 = Color3.fromRGB(120, 255, 120)
 
--- Stealth Toggle
+local antiAfkBtn = Instance.new("TextButton", settingsFrame)
+antiAfkBtn.Size = UDim2.new(0, 200, 0, 40)
+antiAfkBtn.Position = UDim2.new(0, 20, 0, 60)
+antiAfkBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+antiAfkBtn.Text = "Anti AFK: OFF"
+antiAfkBtn.TextColor3 = Color3.new(1,1,1)
+antiAfkBtn.Font = Enum.Font.GothamBold
+antiAfkBtn.TextSize = 18
+Instance.new("UICorner", antiAfkBtn).CornerRadius = UDim.new(0.2, 0)
+
+local antiAfkConn
+antiAfkBtn.MouseButton1Click:Connect(function()
+    local isOn = antiAfkConn ~= nil
+    if isOn then
+        antiAfkConn:Disconnect()
+        antiAfkConn = nil
+        antiAfkBtn.Text = "Anti AFK: OFF"
+        antiAfkBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+    else
+        antiAfkConn = player.Idled:Connect(function()
+            pcall(function() VirtualUser:CaptureController() VirtualUser:ClickButton2(Vector2.new()) end)
+        end)
+        antiAfkBtn.Text = "Anti AFK: ON"
+        antiAfkBtn.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
+    end
+end)
+
 local stealthBtn = Instance.new("TextButton", settingsFrame)
 stealthBtn.Size = UDim2.new(0, 200, 0, 40)
-stealthBtn.Position = UDim2.new(0, 20, 0, 70)
+stealthBtn.Position = UDim2.new(0, 240, 0, 60)
 stealthBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 stealthBtn.Text = "Stealth: OFF"
 stealthBtn.TextColor3 = Color3.new(1,1,1)
@@ -662,10 +857,9 @@ stealthBtn.MouseButton1Click:Connect(function()
     stealthBtn.BackgroundColor3 = stealthMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
 end)
 
--- Admin Detect Toggle
 local adminBtn = Instance.new("TextButton", settingsFrame)
 adminBtn.Size = UDim2.new(0, 200, 0, 40)
-adminBtn.Position = UDim2.new(0, 240, 0, 70)
+adminBtn.Position = UDim2.new(0, 460, 0, 60)
 adminBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 adminBtn.Text = "Admin Detect: OFF"
 adminBtn.TextColor3 = Color3.new(1,1,1)
@@ -679,12 +873,59 @@ adminBtn.MouseButton1Click:Connect(function()
     adminBtn.BackgroundColor3 = adminDetectMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
 end)
 
+local scaleLabel = Instance.new("TextLabel", settingsFrame)
+scaleLabel.Text = "GUI Scale:"
+scaleLabel.Size = UDim2.new(0, 100, 0, 32)
+scaleLabel.Position = UDim2.new(0, 20, 0, 130)
+scaleLabel.BackgroundTransparency = 1
+scaleLabel.Font = Enum.Font.GothamBold
+scaleLabel.TextSize = 20
+scaleLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
+
+local minusBtn = Instance.new("TextButton", settingsFrame)
+minusBtn.Size = UDim2.new(0, 40, 0, 32)
+minusBtn.Position = UDim2.new(0, 130, 0, 130)
+minusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
+minusBtn.Text = "-"
+minusBtn.Font = Enum.Font.GothamBold
+minusBtn.TextSize = 22
+minusBtn.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", minusBtn).CornerRadius = UDim.new(0.5, 0)
+
+local plusBtn = Instance.new("TextButton", settingsFrame)
+plusBtn.Size = UDim2.new(0, 40, 0, 32)
+plusBtn.Position = UDim2.new(0, 180, 0, 130)
+plusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
+plusBtn.Text = "+"
+plusBtn.Font = Enum.Font.GothamBold
+plusBtn.TextSize = 22
+plusBtn.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", plusBtn).CornerRadius = UDim.new(0.5, 0)
+
+local function setScale(newScale)
+    currentScale = math.clamp(newScale, MIN_SCALE, MAX_SCALE)
+    applyGuiScale(mainFrame, currentScale)
+end
+plusBtn.MouseButton1Click:Connect(function() setScale(currentScale + 0.1) end)
+minusBtn.MouseButton1Click:Connect(function() setScale(currentScale - 0.1) end)
+
+local colorChoices = {Color3.fromRGB(35, 38, 48), Color3.fromRGB(32, 44, 60), Color3.fromRGB(44, 32, 60), Color3.fromRGB(44, 60, 32), Color3.fromRGB(60, 44, 32)}
+for i, col in ipairs(colorChoices) do
+    local btn = Instance.new("TextButton", settingsFrame)
+    btn.Size = UDim2.new(0, 32, 0, 32)
+    btn.Position = UDim2.new(0, 20 + (i-1)*40, 0, 180)
+    btn.BackgroundColor3 = col
+    btn.Text = ""
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0.5, 0)
+    btn.MouseButton1Click:Connect(function() applyGuiColor(mainFrame, col) end)
+end
+
 -- 6. CREDIT TAB
 local creditFrame = tabFrames[6]
 local crLabel = Instance.new("TextLabel", creditFrame)
 crLabel.Size = UDim2.new(1, 0, 1, 0)
 crLabel.BackgroundTransparency = 1
-crLabel.Text = "GreensVN Hub V2.5\nFixed & Optimized\nBy Oxbl149 & GreensVN"
+crLabel.Text = "GreensVN Hub V3.0\nFinal Masterpiece\nBy Oxbl149 & GreensVN"
 crLabel.Font = Enum.Font.GothamBold
 crLabel.TextSize = 28
 crLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
@@ -719,7 +960,7 @@ for i, btn in ipairs(tabBtns) do
     end)
 end
 
--- ==== DRAG & RESIZE LOGIC ====
+-- ==== DRAG, MINIMIZE & RESIZE LOGIC ====
 local dragging, dragInput, dragStart, startPos
 topBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -738,7 +979,34 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- Minimize logic
+local resizeGrip = Instance.new("Frame", mainFrame)
+resizeGrip.Size = UDim2.new(0, 20, 0, 20)
+resizeGrip.Position = UDim2.new(1, -20, 1, -20)
+resizeGrip.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
+resizeGrip.BorderSizePixel = 0
+resizeGrip.Active = true
+Instance.new("UICorner", resizeGrip).CornerRadius = UDim.new(1, 0)
+
+local resizing, resizeStart, startSize
+resizeGrip.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        resizing = true
+        resizeStart = input.Position
+        startSize = mainFrame.Size
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then resizing = false end
+        end)
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - resizeStart
+        local newX = math.clamp(startSize.X.Offset + delta.X, MIN_SIZE.X, MAX_SIZE.X)
+        local newY = math.clamp(startSize.Y.Offset + delta.Y, MIN_SIZE.Y, MAX_SIZE.Y)
+        mainFrame.Size = UDim2.new(0, newX, 0, newY)
+    end
+end)
+
 local minimized = false
 local floatBtn = Instance.new("TextButton", screenGui)
 floatBtn.Size = UDim2.new(0, 50, 0, 50)
