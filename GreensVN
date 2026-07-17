@@ -1,5 +1,5 @@
--- GreensVN Hub ULTIMATE V5.0 - Absolute Final Masterpiece (All 9 Files Merged)
--- Features: Full UI, Stealth, Admin Detect (Group Check), 75+ Scripts, Multi-Click Library, Full Home API.
+-- GreensVN Hub ULTIMATE V6.0 - The Absolute Zenith
+-- Restored V1.5 Deep Stealth (hookfunction warn/print, KickChecker loop) & V1.5 Admin Friend Check.
 -- By Oxbl149 & GreensVN
 
 -- ==== SERVICES & INITIALIZATION ====
@@ -116,7 +116,7 @@ do
     preGui:Destroy()
 end
 
--- ==== STEALTH & ADMIN DETECT SYSTEM (FULL GROUP CHECK) ====
+-- ==== DEEP STEALTH & ADMIN DETECT SYSTEM ====
 local stealthMode = false
 local adminDetectMode = false
 local STEALTH_CONNECTIONS, ADMIN_CONNECTIONS = {}, {}
@@ -125,11 +125,29 @@ local screenGui
 
 local function activateStealth()
     pcall(function()
-        for _,v in pairs({"syn","is_synapse_function","isexecutorclosure","fluxus","get_hidden_gui","gethui","getgenv","getrawmetatable"}) do
+        for _,v in pairs({"syn","is_synapse_function","isexecutorclosure","iskrnlclosure","pebc_execute","pebc","fluxus","get_hidden_gui","gethui","get_hidden_ui","getgenv"," getrenv","getgc", "getreg","getrawmetatable"}) do
             if getgenv()[v] then getgenv()[v] = nil end
+        end
+        if gethui then
+            for _,obj in pairs(gethui():GetChildren()) do
+                if obj:IsA("ScreenGui") and (obj.Name:lower():find("synapse") or obj.Name:lower():find("krnl") or obj.Name:lower():find("fluxus")) then
+                    pcall(function() obj:Destroy() end)
+                end
+            end
         end
     end)
     pcall(function()
+        local _G = getgenv and getgenv() or _G
+        for k,v in pairs(_G) do
+            if type(v) == "function" and (tostring(k):lower():find("hack") or tostring(k):lower():find("exploit")) then _G[k] = nil end
+        end
+    end)
+    pcall(function()
+        local dummy = function() return end
+        if warn then hookfunction(warn, dummy) end
+        if error then hookfunction(error, dummy) end
+        if print then hookfunction(print, dummy) end
+        if debug and debug.traceback then hookfunction(debug.traceback, dummy) end
         if setreadonly and getrawmetatable then
             local mt = getrawmetatable(game)
             setreadonly(mt, false)
@@ -156,6 +174,18 @@ local function activateStealth()
             end
         end))
     end)
+    pcall(function()
+        if _G._Stealth_KickChecker then return end
+        _G._Stealth_KickChecker = true
+        spawn(function()
+            while stealthMode do
+                task.wait(10)
+                if player.Kick and not isexecutorclosure(player.Kick) then
+                    pcall(function() hookfunction(player.Kick, function() return end) end)
+                end
+            end
+        end)
+    end)
 end
 
 local function deactivateStealth()
@@ -166,17 +196,28 @@ end
 local function isPossibleAdmin(p)
     local name = p.Name:lower()
     local display = (p.DisplayName or ""):lower()
-    if name:find("admin") or name:find("mod") or name:find("dev") or name:find("staff") or display:find("admin") or display:find("mod") or display:find("dev") or display:find("staff") then return true end
-    if p.UserId < 1000000 then return true end
+    if name:find("admin") or name:find("mod") or name:find("dev") or name:find("staff") or display:find("admin") or display:find("mod") or display:find("dev") or display:find("staff") then
+        return true, "Tên có từ khóa Admin/Mod/Dev"
+    end
+    if p.UserId < 1000000 then return true, "UserId nhỏ (Dev gốc)" end
+    
+    if pcall(function() return p:GetFriendsOnline end) and typeof(p:GetFriendsOnline()) == "table" then
+        for _,f in ipairs(p:GetFriendsOnline()) do
+            if f.IsOnline and (f.Name:lower():find("roblox") or f.Name:lower():find("admin")) then 
+                return true, "Có bạn bè Roblox/Admin" 
+            end
+        end
+    end
+    
     local groups = {1200769, 2868472, 5708463, 1}
     for _, gid in ipairs(groups) do
         local ok, rank = pcall(function() return p:GetRankInGroup(gid) end)
-        if ok and rank and rank >= 200 then return true end
+        if ok and rank and rank >= 200 then return true, "Rank nhóm cao" end
     end
     local ok2, isIn = pcall(function() return p:IsInGroup(1200769) end)
     if ok2 and isIn then
         local ok3, rank2 = pcall(function() return p:GetRankInGroup(1200769) end)
-        if ok3 and rank2 and rank2 >= 200 then return true end
+        if ok3 and rank2 and rank2 >= 200 then return true, "Roblox Staff" end
     end
     return false
 end
@@ -197,7 +238,7 @@ local function showAdminPopup(msg)
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
     label.Font = Enum.Font.GothamBold
-    label.TextSize = 22
+    label.TextSize = 20
     label.TextColor3 = Color3.new(1,1,1)
     label.Text = msg
     label.TextWrapped = true
@@ -208,30 +249,42 @@ local function activateAdminDetect()
     for _,c in ipairs(ADMIN_CONNECTIONS) do pcall(function() c:Disconnect() end) end
     ADMIN_CONNECTIONS = {}
     for _,p in pairs(Players:GetPlayers()) do
-        if p ~= player and isPossibleAdmin(p) then
-            ADMINS_DETECTED = true
-            if screenGui then screenGui.Enabled = false end
-            showAdminPopup("Phát hiện Admin/Dev: "..p.Name.." ! Đã ẩn Hub")
+        if p ~= player then
+            local isAdm, reason = isPossibleAdmin(p)
+            if isAdm then
+                ADMINS_DETECTED = true
+                if screenGui then screenGui.Enabled = false end
+                showAdminPopup("Phát hiện Admin ("..p.Name..")\nLý do: "..reason)
+            end
         end
     end
     table.insert(ADMIN_CONNECTIONS, Players.PlayerAdded:Connect(function(p)
-        if p ~= player and isPossibleAdmin(p) then
-            ADMINS_DETECTED = true
-            if screenGui then screenGui.Enabled = false end
-            showAdminPopup("Admin vừa vào game: "..p.Name)
+        if p ~= player then
+            local isAdm, reason = isPossibleAdmin(p)
+            if isAdm then
+                ADMINS_DETECTED = true
+                if screenGui then screenGui.Enabled = false end
+                showAdminPopup("Admin vừa vào ("..p.Name..")\nLý do: "..reason)
+            end
         end
     end))
     table.insert(ADMIN_CONNECTIONS, Players.PlayerRemoving:Connect(function(p)
-        if p ~= player and isPossibleAdmin(p) then
-            task.wait(1)
-            local anyAdmin = false
-            for _,pl in pairs(Players:GetPlayers()) do
-                if pl ~= player and isPossibleAdmin(pl) then anyAdmin = true break end
-            end
-            if not anyAdmin then
-                ADMINS_DETECTED = false
-                if screenGui then screenGui.Enabled = true end
-                showAdminPopup("Admin đã rời game! Hub đã hiện lại")
+        if p ~= player then
+            local isAdm, _ = isPossibleAdmin(p)
+            if isAdm then
+                task.wait(1)
+                local anyAdmin = false
+                for _,pl in pairs(Players:GetPlayers()) do
+                    if pl ~= player then
+                        local isA, _ = isPossibleAdmin(pl)
+                        if isA then anyAdmin = true break end
+                    end
+                end
+                if not anyAdmin then
+                    ADMINS_DETECTED = false
+                    if screenGui then screenGui.Enabled = true end
+                    showAdminPopup("Admin đã rời game! Hub đã hiện lại")
+                end
             end
         end
     end))
@@ -326,7 +379,7 @@ local titleLabel = Instance.new("TextLabel", topBar)
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub V5.0"
+titleLabel.Text = "GreensVN Hub V6.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -353,7 +406,6 @@ closeBtn.TextSize = 18
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0.5, 0)
 closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
 
--- Hover Animation cho Min/Close
 local function animateBtn(btn, c1, c2)
     btn.MouseEnter:Connect(function() TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = c2}):Play() end)
     btn.MouseLeave:Connect(function() TweenService:Create(btn, TweenInfo.new(0.13), {BackgroundColor3 = c1}):Play() end)
@@ -424,7 +476,7 @@ for i=1, #tabNames do
     tabFrames[i] = f
 end
 
--- 1. HOME TAB (Full API Thủ Đô & Châu Lục)
+-- 1. HOME TAB
 local homeFrame = tabFrames[1]
 Instance.new("UIPadding", homeFrame).PaddingLeft = UDim.new(0, 40)
 local welcomeLabel = Instance.new("TextLabel", homeFrame)
@@ -619,7 +671,7 @@ for _, data in ipairs(executorScripts) do
     end)
 end
 
--- 4. LIBRARY TAB (FULL 75+ SCRIPTS, ADVANCED MOUSE INTERACTION, FAV FILTER, SEARCH ANIM, SCRIPT COUNT)
+-- 4. LIBRARY TAB (75+ SCRIPTS)
 local scriptLibrary = {
     {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits"},
     {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden"},
@@ -1120,7 +1172,7 @@ local creditFrame = tabFrames[6]
 local crLabel = Instance.new("TextLabel", creditFrame)
 crLabel.Size = UDim2.new(1, 0, 1, 0)
 crLabel.BackgroundTransparency = 1
-crLabel.Text = "GreensVN Hub V5.0\nAbsolute Final Masterpiece\nBy Oxbl149 & GreensVN"
+crLabel.Text = "GreensVN Hub V6.0\nThe Absolute Zenith\nBy Oxbl149 & GreensVN"
 crLabel.Font = Enum.Font.GothamBold
 crLabel.TextSize = 28
 crLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
