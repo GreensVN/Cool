@@ -1,5 +1,5 @@
--- GreensVN Hub ULTIMATE V6.0 - The Absolute Zenith
--- Restored V1.5 Deep Stealth (hookfunction warn/print, KickChecker loop) & V1.5 Admin Friend Check.
+-- GreensVN Hub ULTIMATE V7.0 - The Absolute Zenith (All 9 Files Merged & Fixed)
+-- Features: Full UI, Deep Stealth, Admin Detect (Group/Friend), 75+ Scripts with Icons, Mobile Touch Tooltip, Settings Notif.
 -- By Oxbl149 & GreensVN
 
 -- ==== SERVICES & INITIALIZATION ====
@@ -379,7 +379,7 @@ local titleLabel = Instance.new("TextLabel", topBar)
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub V6.0"
+titleLabel.Text = "GreensVN Hub V7.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -671,94 +671,94 @@ for _, data in ipairs(executorScripts) do
     end)
 end
 
--- 4. LIBRARY TAB (75+ SCRIPTS)
+-- 4. LIBRARY TAB (FULL 75+ SCRIPTS WITH ICONS & MOBILE TOUCH TOOLTIP)
 local scriptLibrary = {
-    {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits"},
-    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden"},
-    {name="Dead Rails | SpineWare",desc="Auto Farm, Sell, Bounty",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails"},
-    {name="Doors | Vynixius",desc="Auto win, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors"},
-    {name="Pet Sim X | Project WD",desc="Auto Farm, Open Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator"},
-    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal"},
-    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2"},
-    {name="King Legacy | OMG Hub",desc="Farm, Boss, ESP",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy"},
-    {name="Grow A Garden | Sucalet",desc="Auto Buy, Farm, ESP",url="https://raw.githubusercontent.com/nootmaus/GrowAAGarden/refs/heads/main/mauscripts",category="Grow A Garden"},
-    {name="Grow A Garden | Vxeze Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/Dex-Bear/Vxezehub/refs/heads/main/VxezeHubMain",category="Grow A Garden"},
-    {name="Grow A Garden | H4x Script",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader2.lua",category="Grow A Garden"},
-    {name="Grow A Garden | Native Hub",desc="Auto Buy, Farm",url="https://getnative.cc/script/loader",category="Grow A Garden"},
-    {name="Grow A Garden | Dupe Money",desc="Dupe Money",url="https://raw.githubusercontent.com/Bern0va/Scripts/refs/heads/main/gag-dupe.lua",category="Grow A Garden"},
-    {name="Grow A Garden | Lunor Hub",desc="Collect, Farm, ESP",url="https://lunor.dev/loader",category="Grow A Garden"},
-    {name="Grow A Garden | Dupe Script",desc="Dupe",url="https://pastefy.app/P5CQPKQ2/raw",category="Grow A Garden"},
-    {name="Grow A Garden | Lion Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/e0c7fcf6c077fc23475cf4ce4db58e42.lua",category="Grow A Garden"},
-    {name="Grow A Garden | Airflow Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/255ac567ced3dcb9e69aa7e44c423f19.lua",category="Grow A Garden"},
-    {name="Grow A Garden | Alchemy Hub",desc="Auto Buy, Dupe",url="https://scripts.alchemyhub.xyz",category="Grow A Garden"},
-    {name="Grow A Garden | Neox Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/lilsketty/sketty-loader/refs/heads/main/GETSKETTY",category="Grow A Garden"},
-    {name="Dead Rails | Alippo Hub",desc="Farm Bonds, Bypass",url="https://pastebin.com/raw/8rwA08Ch",category="Dead Rails"},
-    {name="Dead Rails | Rift",desc="Auto Farm, Collect, ESP",url="https://rifton.top/loader.lua",category="Dead Rails"},
-    {name="Dead Rails | OP Script",desc="Auto Collect, Heal, Aimbot",url="https://nicuse.xyz/MainHub.lua",category="Dead Rails"},
-    {name="Dead Rails | Native Hub",desc="Bonds Farm",url="https://getnative.cc/script/loader",category="Dead Rails"},
-    {name="Dead Rails | Kiciahook V2",desc="Collect, Farm, ESP",url="https://raw.githubusercontent.com/kiciahook/kiciahook/refs/heads/main/loader.luau",category="Dead Rails"},
-    {name="Dead Rails | ESP Script",desc="Master ESP",url="https://raw.githubusercontent.com/TrustsenseDev/MicroHub/refs/heads/main/loader.lua",category="Dead Rails"},
-    {name="Dead Rails | Null Fire",desc="Master ESP",url="https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader",category="Dead Rails"},
-    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Raid",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits"},
-    {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit",url="https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua",category="Blox Fruits"},
-    {name="Blox Fruits | Banana Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/kimprobloxdz/Banana-Free/refs/heads/main/Protected_5609200582002947.lua.txt",category="Blox Fruits"},
-    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/xshiba/MaruHub/main/Loader.lua",category="Blox Fruits"},
-    {name="Blox Fruits | Redz Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau",category="Blox Fruits"},
-    {name="King Legacy | HYPER",desc="Auto Farm, Boss, Stats",url="https://raw.githubusercontent.com/DookDekDEE/Hyper/main/script.lua",category="King Legacy"},
-    {name="Pet Sim X | Milk Up",desc="Auto Farm, Pet, Dupe",url="https://raw.githubusercontent.com/RunDTM/PetSimulatorX/main/MilkUp.lua",category="Pet Simulator"},
-    {name="Anime Adventures | BLCK",desc="Farm, Replay, Auto Place",url="https://raw.githubusercontent.com/BLCKAD/AnimeAdventure/main/BLCKAD.lua",category="Anime Adventures"},
-    {name="Anime Adventures | Fruit Hub",desc="Auto Farm, Gems, Tower",url="https://raw.githubusercontent.com/fruitblade/AnimeAdventures/main/FruitHub.lua",category="Anime Adventures"},
-    {name="Doors | Entity Spawner V2",desc="Spawn entity, troll, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua",category="Doors"},
-    {name="Brookhaven | Sander XY",desc="ESP, Troll, Fly, Car Mods",url="https://raw.githubusercontent.com/kigredns/testUIDK/refs/heads/main/panel.lua",category="Brookhaven"},
-    {name="Build A Boat | BoatBuilderHub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1",category="Build A Boat"},
-    {name="Build A Boat | For Treasure",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/NittarPP/PhotonScript/refs/heads/main/Loading/Loading.lua",category="Build A Boat"},
-    {name="Build A Boat | WeshkyAutoBuild",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/suntisalts/BetaTesting/refs/heads/main/WeshkyAutoBuild.lua",category="Build A Boat"},
-    {name="Build A Boat | Rolly Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/XRoLLu/Rolly_Hub/main/open-source-trash-loader.exe.yeah",category="Build A Boat"},
-    {name="Build A Boat | Ather Hub",desc="Auto Farm, Build",url="https://api.luarmor.net/files/v3/loaders/2529a5f9dfddd5523ca4e22f21cceffa.lua",category="Build A Boat"},
-    {name="Murder Mystery 2 | Prismo",desc="ESP, Knife, Win",url="https://raw.githubusercontent.com/PrismoHub/MM2/main/PrismoHub.lua",category="MM2"},
-    {name="Shindo Life | Shindo Hub",desc="Auto Farm, Spin, Boss",url="https://raw.githubusercontent.com/8ZShindo/ShindoHub/main/Script",category="Shindo Life"},
-    {name="Adopt Me! | AdoptMe Hub",desc="Auto Farm, Dupe, Egg",url="https://raw.githubusercontent.com/1f0yt/community/main/AdoptMe",category="Adopt Me!"},
-    {name="Survive the Killer! | STK Hub",desc="Auto Coin, ESP, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SurvivetheKiller",category="Survive the Killer!"},
-    {name="Project Slayers | PSX Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/PSXHUB/ProjectSlayers/main/PSXHUB.lua",category="Project Slayers"},
-    {name="BedWars | Vape V4",desc="Kill Aura, ESP, Fly",url="https://raw.githubusercontent.com/7GranddadPGN/VapeV4ForRoblox/main/NewMainScript.lua",category="BedWars"},
-    {name="Evade | Evade Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Evade",category="Evade"},
-    {name="Elemental Battlegrounds | EB Hub",desc="Auto Kill, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/ElementalBattlegrounds",category="Elemental Battlegrounds"},
-    {name="Anime Fighters | AFS Hub",desc="Farm, Teleport, Boss",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeFighters",category="Anime Fighters"},
-    {name="Bee Swarm | BSS Hub",desc="Auto Farm, Quest, Honey",url="https://raw.githubusercontent.com/1f0yt/community/main/BeeSwarmSimulator",category="Bee Swarm Simulator"},
-    {name="Da Hood | Space Hub",desc="Silent Aim, God, Fly",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood"},
-    {name="Tower of Hell | TOH Hub",desc="Auto Win, Anti Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerofHell",category="Tower of Hell"},
-    {name="Jailbreak | JB Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Jailbreak",category="Jailbreak"},
-    {name="Natural Disaster | NDS Hub",desc="Auto Survive, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/NaturalDisasterSurvival",category="Natural Disaster"},
-    {name="Funky Friday | FF Hub",desc="Auto Play, Unlock All",url="https://raw.githubusercontent.com/1f0yt/community/main/FunkyFriday",category="Funky Friday"},
-    {name="Dragon Blox | DBZ Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/1f0yt/community/main/DragonBlox",category="Dragon Blox"},
-    {name="My Restaurant | MR Hub",desc="Auto Earn, Speed",url="https://raw.githubusercontent.com/1f0yt/community/main/MyRestaurant",category="My Restaurant"},
-    {name="Slap Battles | SB Hub",desc="Auto Slap, Anti Ban",url="https://raw.githubusercontent.com/1f0yt/community/main/SlapBattles",category="Slap Battles"},
-    {name="The Mimic | Mimic Hub",desc="ESP, Auto Win",url="https://raw.githubusercontent.com/1f0yt/community/main/TheMimic",category="The Mimic"},
-    {name="Car Dealership | CDT Hub",desc="Auto Money, Unlock Car",url="https://raw.githubusercontent.com/1f0yt/community/main/CarDealershipTycoon",category="Car Dealership Tycoon"},
-    {name="Clicker Simulator | CS Hub",desc="Auto Click, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/ClickerSimulator",category="Clicker Simulator"},
-    {name="All Star TD | ASTD Hub",desc="Auto Farm, Gems",url="https://raw.githubusercontent.com/1f0yt/community/main/AllStarTowerDefense",category="All Star Tower Defense"},
-    {name="Pls Donate | PD Hub",desc="Auto Claim, ESP, Send",url="https://raw.githubusercontent.com/1f0yt/community/main/PlsDonate",category="Pls Donate"},
-    {name="Mining Sim 2 | MS2 Hub",desc="Auto Mine, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/MiningSimulator2",category="Mining Simulator 2"},
-    {name="Tower Defense | TDS Hub",desc="Auto Place, Farm, Tower",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerDefenseSimulator",category="Tower Defense Simulator"},
-    {name="Anime Dimensions | AD Hub",desc="Auto Farm, Code, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeDimensions",category="Anime Dimensions"},
-    {name="Ninja Legends | NL Hub",desc="Auto Swing, Sell, Buy",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaLegends",category="Ninja Legends"},
-    {name="BIG Paintball | BP Hub",desc="Silent Aim, ESP, Win",url="https://raw.githubusercontent.com/1f0yt/community/main/BigPaintball",category="BIG Paintball"},
-    {name="Mad City | MC Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/MadCity",category="Mad City"},
-    {name="Speed Run 4 | SR Hub",desc="Auto Complete, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SpeedRun4",category="Speed Run 4"},
-    {name="Theme Park Tycoon 2 | TPT2",desc="Auto Build, Money",url="https://raw.githubusercontent.com/1f0yt/community/main/ThemeParkTycoon2",category="Theme Park Tycoon 2"},
-    {name="Ninja Tycoon | NT Hub",desc="Auto Farm, Unlock",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaTycoon",category="Ninja Tycoon"},
-    {name="Weight Lifting | WLS Hub",desc="Auto Lift, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/WeightLiftingSimulator",category="Weight Lifting Simulator"},
-    {name="Bubble Gum Sim | BGS Hub",desc="Auto Blow, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/BubbleGumSimulator",category="Bubble Gum Simulator"},
-    {name="Rogue Lineage | RL Hub",desc="ESP, Anti Ban, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/RogueLineage",category="Rogue Lineage"},
-    {name="Islands | Islands Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/1f0yt/community/main/Islands",category="Islands"},
-    {name="Lumber Tycoon 2 | LT2 Hub",desc="Auto Dupe, Sell, Saw",url="https://raw.githubusercontent.com/1f0yt/community/main/LumberTycoon2",category="Lumber Tycoon 2"},
-    {name="Counter Blox | CB Hub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/CounterBlox",category="Counter Blox"},
-    {name="Tower Blitz | TB Hub",desc="Auto Farm, Tower, Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerBlitz",category="Tower Blitz"},
-    {name="Super Power Training | SPTS",desc="Auto Train, Quest",url="https://raw.githubusercontent.com/1f0yt/community/main/SuperPowerTrainingSimulator",category="Super Power Training Sim"},
-    {name="Breaking Point | BP Hub",desc="ESP, Auto Win, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/BreakingPoint",category="Breaking Point"},
-    {name="Ragdoll Engine | RE Hub",desc="Troll, Fly, Push",url="https://raw.githubusercontent.com/1f0yt/community/main/RagdollEngine",category="Ragdoll Engine"},
-    {name="Prison Life | PL Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/PrisonLife",category="Prison Life"},
-    {name="Treasure Quest | TQ Hub",desc="Auto Farm, Item, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/TreasureQuest",category="Treasure Quest"}
+    {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | SpineWare",desc="Auto Farm, Sell, Bounty",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Doors | Vynixius",desc="Auto win, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors",icon="rbxassetid://12285139195"},
+    {name="Pet Sim X | Project WD",desc="Auto Farm, Open Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator",icon="rbxassetid://12285139195"},
+    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal",icon="rbxassetid://12285139195"},
+    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2",icon="rbxassetid://12285139195"},
+    {name="King Legacy | OMG Hub",desc="Farm, Boss, ESP",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Sucalet",desc="Auto Buy, Farm, ESP",url="https://raw.githubusercontent.com/nootmaus/GrowAAGarden/refs/heads/main/mauscripts",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Vxeze Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/Dex-Bear/Vxezehub/refs/heads/main/VxezeHubMain",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | H4x Script",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader2.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Native Hub",desc="Auto Buy, Farm",url="https://getnative.cc/script/loader",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Dupe Money",desc="Dupe Money",url="https://raw.githubusercontent.com/Bern0va/Scripts/refs/heads/main/gag-dupe.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Lunor Hub",desc="Collect, Farm, ESP",url="https://lunor.dev/loader",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Dupe Script",desc="Dupe",url="https://pastefy.app/P5CQPKQ2/raw",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Lion Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/e0c7fcf6c077fc23475cf4ce4db58e42.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Airflow Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/255ac567ced3dcb9e69aa7e44c423f19.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Alchemy Hub",desc="Auto Buy, Dupe",url="https://scripts.alchemyhub.xyz",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Neox Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/lilsketty/sketty-loader/refs/heads/main/GETSKETTY",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Alippo Hub",desc="Farm Bonds, Bypass",url="https://pastebin.com/raw/8rwA08Ch",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Rift",desc="Auto Farm, Collect, ESP",url="https://rifton.top/loader.lua",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | OP Script",desc="Auto Collect, Heal, Aimbot",url="https://nicuse.xyz/MainHub.lua",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Native Hub",desc="Bonds Farm",url="https://getnative.cc/script/loader",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Kiciahook V2",desc="Collect, Farm, ESP",url="https://raw.githubusercontent.com/kiciahook/kiciahook/refs/heads/main/loader.luau",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | ESP Script",desc="Master ESP",url="https://raw.githubusercontent.com/TrustsenseDev/MicroHub/refs/heads/main/loader.lua",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Null Fire",desc="Master ESP",url="https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Raid",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit",url="https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Banana Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/kimprobloxdz/Banana-Free/refs/heads/main/Protected_5609200582002947.lua.txt",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/xshiba/MaruHub/main/Loader.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Redz Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="King Legacy | HYPER",desc="Auto Farm, Boss, Stats",url="https://raw.githubusercontent.com/DookDekDEE/Hyper/main/script.lua",category="King Legacy",icon="rbxassetid://12285139195"},
+    {name="Pet Sim X | Milk Up",desc="Auto Farm, Pet, Dupe",url="https://raw.githubusercontent.com/RunDTM/PetSimulatorX/main/MilkUp.lua",category="Pet Simulator",icon="rbxassetid://12285139195"},
+    {name="Anime Adventures | BLCK",desc="Farm, Replay, Auto Place",url="https://raw.githubusercontent.com/BLCKAD/AnimeAdventure/main/BLCKAD.lua",category="Anime Adventures",icon="rbxassetid://12285139195"},
+    {name="Anime Adventures | Fruit Hub",desc="Auto Farm, Gems, Tower",url="https://raw.githubusercontent.com/fruitblade/AnimeAdventures/main/FruitHub.lua",category="Anime Adventures",icon="rbxassetid://12285139195"},
+    {name="Doors | Entity Spawner V2",desc="Spawn entity, troll, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua",category="Doors",icon="rbxassetid://12285139195"},
+    {name="Brookhaven | Sander XY",desc="ESP, Troll, Fly, Car Mods",url="https://raw.githubusercontent.com/kigredns/testUIDK/refs/heads/main/panel.lua",category="Brookhaven",icon="rbxassetid://12285139195"},
+    {name="Build A Boat | BoatBuilderHub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1",category="Build A Boat",icon="rbxassetid://12285139195"},
+    {name="Build A Boat | For Treasure",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/NittarPP/PhotonScript/refs/heads/main/Loading/Loading.lua",category="Build A Boat",icon="rbxassetid://12285139195"},
+    {name="Build A Boat | WeshkyAutoBuild",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/suntisalts/BetaTesting/refs/heads/main/WeshkyAutoBuild.lua",category="Build A Boat",icon="rbxassetid://12285139195"},
+    {name="Build A Boat | Rolly Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/XRoLLu/Rolly_Hub/main/open-source-trash-loader.exe.yeah",category="Build A Boat",icon="rbxassetid://12285139195"},
+    {name="Build A Boat | Ather Hub",desc="Auto Farm, Build",url="https://api.luarmor.net/files/v3/loaders/2529a5f9dfddd5523ca4e22f21cceffa.lua",category="Build A Boat",icon="rbxassetid://12285139195"},
+    {name="Murder Mystery 2 | Prismo",desc="ESP, Knife, Win",url="https://raw.githubusercontent.com/PrismoHub/MM2/main/PrismoHub.lua",category="MM2",icon="rbxassetid://12285139195"},
+    {name="Shindo Life | Shindo Hub",desc="Auto Farm, Spin, Boss",url="https://raw.githubusercontent.com/8ZShindo/ShindoHub/main/Script",category="Shindo Life",icon="rbxassetid://12285139195"},
+    {name="Adopt Me! | AdoptMe Hub",desc="Auto Farm, Dupe, Egg",url="https://raw.githubusercontent.com/1f0yt/community/main/AdoptMe",category="Adopt Me!",icon="rbxassetid://12285139195"},
+    {name="Survive the Killer! | STK Hub",desc="Auto Coin, ESP, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SurvivetheKiller",category="Survive the Killer!",icon="rbxassetid://12285139195"},
+    {name="Project Slayers | PSX Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/PSXHUB/ProjectSlayers/main/PSXHUB.lua",category="Project Slayers",icon="rbxassetid://12285139195"},
+    {name="BedWars | Vape V4",desc="Kill Aura, ESP, Fly",url="https://raw.githubusercontent.com/7GranddadPGN/VapeV4ForRoblox/main/NewMainScript.lua",category="BedWars",icon="rbxassetid://12285139195"},
+    {name="Evade | Evade Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Evade",category="Evade",icon="rbxassetid://12285139195"},
+    {name="Elemental Battlegrounds | EB Hub",desc="Auto Kill, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/ElementalBattlegrounds",category="Elemental Battlegrounds",icon="rbxassetid://12285139195"},
+    {name="Anime Fighters | AFS Hub",desc="Farm, Teleport, Boss",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeFighters",category="Anime Fighters",icon="rbxassetid://12285139195"},
+    {name="Bee Swarm | BSS Hub",desc="Auto Farm, Quest, Honey",url="https://raw.githubusercontent.com/1f0yt/community/main/BeeSwarmSimulator",category="Bee Swarm Simulator",icon="rbxassetid://12285139195"},
+    {name="Da Hood | Space Hub",desc="Silent Aim, God, Fly",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood",icon="rbxassetid://12285139195"},
+    {name="Tower of Hell | TOH Hub",desc="Auto Win, Anti Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerofHell",category="Tower of Hell",icon="rbxassetid://12285139195"},
+    {name="Jailbreak | JB Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Jailbreak",category="Jailbreak",icon="rbxassetid://12285139195"},
+    {name="Natural Disaster | NDS Hub",desc="Auto Survive, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/NaturalDisasterSurvival",category="Natural Disaster",icon="rbxassetid://12285139195"},
+    {name="Funky Friday | FF Hub",desc="Auto Play, Unlock All",url="https://raw.githubusercontent.com/1f0yt/community/main/FunkyFriday",category="Funky Friday",icon="rbxassetid://12285139195"},
+    {name="Dragon Blox | DBZ Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/1f0yt/community/main/DragonBlox",category="Dragon Blox",icon="rbxassetid://12285139195"},
+    {name="My Restaurant | MR Hub",desc="Auto Earn, Speed",url="https://raw.githubusercontent.com/1f0yt/community/main/MyRestaurant",category="My Restaurant",icon="rbxassetid://12285139195"},
+    {name="Slap Battles | SB Hub",desc="Auto Slap, Anti Ban",url="https://raw.githubusercontent.com/1f0yt/community/main/SlapBattles",category="Slap Battles",icon="rbxassetid://12285139195"},
+    {name="The Mimic | Mimic Hub",desc="ESP, Auto Win",url="https://raw.githubusercontent.com/1f0yt/community/main/TheMimic",category="The Mimic",icon="rbxassetid://12285139195"},
+    {name="Car Dealership | CDT Hub",desc="Auto Money, Unlock Car",url="https://raw.githubusercontent.com/1f0yt/community/main/CarDealershipTycoon",category="Car Dealership Tycoon",icon="rbxassetid://12285139195"},
+    {name="Clicker Simulator | CS Hub",desc="Auto Click, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/ClickerSimulator",category="Clicker Simulator",icon="rbxassetid://12285139195"},
+    {name="All Star TD | ASTD Hub",desc="Auto Farm, Gems",url="https://raw.githubusercontent.com/1f0yt/community/main/AllStarTowerDefense",category="All Star Tower Defense",icon="rbxassetid://12285139195"},
+    {name="Pls Donate | PD Hub",desc="Auto Claim, ESP, Send",url="https://raw.githubusercontent.com/1f0yt/community/main/PlsDonate",category="Pls Donate",icon="rbxassetid://12285139195"},
+    {name="Mining Sim 2 | MS2 Hub",desc="Auto Mine, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/MiningSimulator2",category="Mining Simulator 2",icon="rbxassetid://12285139195"},
+    {name="Tower Defense | TDS Hub",desc="Auto Place, Farm, Tower",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerDefenseSimulator",category="Tower Defense Simulator",icon="rbxassetid://12285139195"},
+    {name="Anime Dimensions | AD Hub",desc="Auto Farm, Code, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeDimensions",category="Anime Dimensions",icon="rbxassetid://12285139195"},
+    {name="Ninja Legends | NL Hub",desc="Auto Swing, Sell, Buy",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaLegends",category="Ninja Legends",icon="rbxassetid://12285139195"},
+    {name="BIG Paintball | BP Hub",desc="Silent Aim, ESP, Win",url="https://raw.githubusercontent.com/1f0yt/community/main/BigPaintball",category="BIG Paintball",icon="rbxassetid://12285139195"},
+    {name="Mad City | MC Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/MadCity",category="Mad City",icon="rbxassetid://12285139195"},
+    {name="Speed Run 4 | SR Hub",desc="Auto Complete, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SpeedRun4",category="Speed Run 4",icon="rbxassetid://12285139195"},
+    {name="Theme Park Tycoon 2 | TPT2",desc="Auto Build, Money",url="https://raw.githubusercontent.com/1f0yt/community/main/ThemeParkTycoon2",category="Theme Park Tycoon 2",icon="rbxassetid://12285139195"},
+    {name="Ninja Tycoon | NT Hub",desc="Auto Farm, Unlock",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaTycoon",category="Ninja Tycoon",icon="rbxassetid://12285139195"},
+    {name="Weight Lifting | WLS Hub",desc="Auto Lift, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/WeightLiftingSimulator",category="Weight Lifting Simulator",icon="rbxassetid://12285139195"},
+    {name="Bubble Gum Sim | BGS Hub",desc="Auto Blow, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/BubbleGumSimulator",category="Bubble Gum Simulator",icon="rbxassetid://12285139195"},
+    {name="Rogue Lineage | RL Hub",desc="ESP, Anti Ban, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/RogueLineage",category="Rogue Lineage",icon="rbxassetid://12285139195"},
+    {name="Islands | Islands Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/1f0yt/community/main/Islands",category="Islands",icon="rbxassetid://12285139195"},
+    {name="Lumber Tycoon 2 | LT2 Hub",desc="Auto Dupe, Sell, Saw",url="https://raw.githubusercontent.com/1f0yt/community/main/LumberTycoon2",category="Lumber Tycoon 2",icon="rbxassetid://12285139195"},
+    {name="Counter Blox | CB Hub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/CounterBlox",category="Counter Blox",icon="rbxassetid://12285139195"},
+    {name="Tower Blitz | TB Hub",desc="Auto Farm, Tower, Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerBlitz",category="Tower Blitz",icon="rbxassetid://12285139195"},
+    {name="Super Power Training | SPTS",desc="Auto Train, Quest",url="https://raw.githubusercontent.com/1f0yt/community/main/SuperPowerTrainingSimulator",category="Super Power Training Sim",icon="rbxassetid://12285139195"},
+    {name="Breaking Point | BP Hub",desc="ESP, Auto Win, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/BreakingPoint",category="Breaking Point",icon="rbxassetid://12285139195"},
+    {name="Ragdoll Engine | RE Hub",desc="Troll, Fly, Push",url="https://raw.githubusercontent.com/1f0yt/community/main/RagdollEngine",category="Ragdoll Engine",icon="rbxassetid://12285139195"},
+    {name="Prison Life | PL Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/PrisonLife",category="Prison Life",icon="rbxassetid://12285139195"},
+    {name="Treasure Quest | TQ Hub",desc="Auto Farm, Item, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/TreasureQuest",category="Treasure Quest",icon="rbxassetid://12285139195"}
 }
 
 local libraryFrame = tabFrames[4]
@@ -890,6 +890,16 @@ local function createScriptCard(data)
         Instance.new("UICorner", badge).CornerRadius = UDim.new(0.5, 0)
     end
 
+    if data.icon then
+        local iconImg = Instance.new("ImageLabel", card)
+        iconImg.Image = data.icon
+        iconImg.Size = UDim2.new(0, 45, 0, 45)
+        iconImg.Position = UDim2.new(0, 10, 0, 35)
+        iconImg.BackgroundTransparency = 1
+        iconImg.ZIndex = 3
+        Instance.new("UICorner", iconImg).CornerRadius = UDim.new(0.5, 0)
+    end
+
     local favBtn = Instance.new("TextButton", card)
     favBtn.Size = UDim2.new(0, 30, 0, 30)
     favBtn.Position = UDim2.new(1, -35, 0, 5)
@@ -918,22 +928,22 @@ local function createScriptCard(data)
     local nameLabel = Instance.new("TextLabel", libBtn)
     nameLabel.Text = data.name
     nameLabel.Font = Enum.Font.GothamBold
-    nameLabel.TextSize = 18
+    nameLabel.TextSize = 16
     nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
     nameLabel.BackgroundTransparency = 1
-    nameLabel.Size = UDim2.new(1, -20, 0, 30)
-    nameLabel.Position = UDim2.new(0, 10, 0, 10)
+    nameLabel.Size = UDim2.new(1, -70, 0, 30)
+    nameLabel.Position = UDim2.new(0, 60, 0, 10)
     nameLabel.TextXAlignment = Enum.TextXAlignment.Left
     nameLabel.ZIndex = 4
 
     local descLabel = Instance.new("TextLabel", libBtn)
     descLabel.Text = data.desc
     descLabel.Font = Enum.Font.Gotham
-    descLabel.TextSize = 15
+    descLabel.TextSize = 14
     descLabel.TextColor3 = Color3.fromRGB(200,230,255)
     descLabel.BackgroundTransparency = 1
-    descLabel.Size = UDim2.new(1, -20, 0, 30)
-    descLabel.Position = UDim2.new(0, 10, 0, 40)
+    descLabel.Size = UDim2.new(1, -70, 0, 30)
+    descLabel.Position = UDim2.new(0, 60, 0, 35)
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     descLabel.TextWrapped = true
     descLabel.ZIndex = 4
@@ -941,7 +951,7 @@ local function createScriptCard(data)
     local catLabel = Instance.new("TextLabel", libBtn)
     catLabel.Text = data.category or "Khác"
     catLabel.Font = Enum.Font.Gotham
-    catLabel.TextSize = 14
+    catLabel.TextSize = 13
     catLabel.TextColor3 = Color3.fromRGB(255,225,120)
     catLabel.BackgroundTransparency = 1
     catLabel.Position = UDim2.new(1, -110, 0, 10)
@@ -954,7 +964,7 @@ local function createScriptCard(data)
     copyTip.Position = UDim2.new(0, 10, 1, -20)
     copyTip.BackgroundTransparency = 1
     copyTip.Font = Enum.Font.Gotham
-    copyTip.TextSize = 12
+    copyTip.TextSize = 11
     copyTip.TextColor3 = Color3.fromRGB(255,255,120)
     copyTip.TextXAlignment = Enum.TextXAlignment.Center
     copyTip.Text = "Click = Run | Hold = Copy Link | Right-Click = Copy Code"
@@ -966,7 +976,7 @@ local function createScriptCard(data)
     tooltip.BackgroundColor3 = Color3.fromRGB(42,50,70)
     tooltip.TextColor3 = Color3.fromRGB(255,255,255)
     tooltip.Font = Enum.Font.Gotham
-    tooltip.TextSize = 14
+    tooltip.TextSize = 13
     tooltip.TextWrapped = true
     tooltip.Visible = false
     tooltip.ZIndex = 100
@@ -982,6 +992,16 @@ local function createScriptCard(data)
     libBtn.MouseLeave:Connect(function()
         tooltip.Visible = false
         TweenService:Create(libBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(70, 90, 80)}):Play()
+    end)
+    libBtn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            tooltip.Visible = true
+        end
+    end)
+    libBtn.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            tooltip.Visible = false
+        end
     end)
 
     local holding = false
@@ -1050,7 +1070,7 @@ end
 searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
 updateLibraryList()
 
--- 5. SETTINGS TAB
+-- 5. SETTINGS TAB (Có Label thông báo nhỏ)
 local settingsFrame = tabFrames[5]
 local stTitle = Instance.new("TextLabel", settingsFrame)
 stTitle.Size = UDim2.new(1, 0, 0, 40)
@@ -1097,33 +1117,61 @@ stealthBtn.TextColor3 = Color3.new(1,1,1)
 stealthBtn.Font = Enum.Font.GothamBold
 stealthBtn.TextSize = 18
 Instance.new("UICorner", stealthBtn).CornerRadius = UDim.new(0.2, 0)
+
+local stealthNotif = Instance.new("TextLabel", settingsFrame)
+stealthNotif.Size = UDim2.new(0, 300, 0, 28)
+stealthNotif.Position = UDim2.new(0, 460, 0, 66)
+stealthNotif.BackgroundTransparency = 1
+stealthNotif.Font = Enum.Font.Gotham
+stealthNotif.TextSize = 16
+stealthNotif.TextColor3 = Color3.fromRGB(90,255,120)
+stealthNotif.TextXAlignment = Enum.TextXAlignment.Left
+stealthNotif.Visible = false
+
 stealthBtn.MouseButton1Click:Connect(function()
     stealthMode = not stealthMode
     if stealthMode then activateStealth() else deactivateStealth() end
     stealthBtn.Text = "Stealth: " .. (stealthMode and "ON" or "OFF")
     stealthBtn.BackgroundColor3 = stealthMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
+    stealthNotif.Text = "Stealth Mode: " .. (stealthMode and "ON" or "OFF")
+    stealthNotif.Visible = true
+    task.spawn(function() task.wait(1.8) stealthNotif.Visible = false end)
 end)
 
 local adminBtn = Instance.new("TextButton", settingsFrame)
 adminBtn.Size = UDim2.new(0, 200, 0, 40)
-adminBtn.Position = UDim2.new(0, 460, 0, 60)
+adminBtn.Position = UDim2.new(0, 240, 0, 110)
 adminBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 adminBtn.Text = "Admin Detect: OFF"
 adminBtn.TextColor3 = Color3.new(1,1,1)
 adminBtn.Font = Enum.Font.GothamBold
 adminBtn.TextSize = 18
 Instance.new("UICorner", adminBtn).CornerRadius = UDim.new(0.2, 0)
+
+local adminDetectNotif = Instance.new("TextLabel", settingsFrame)
+adminDetectNotif.Size = UDim2.new(0, 300, 0, 28)
+adminDetectNotif.Position = UDim2.new(0, 460, 0, 116)
+adminDetectNotif.BackgroundTransparency = 1
+adminDetectNotif.Font = Enum.Font.Gotham
+adminDetectNotif.TextSize = 16
+adminDetectNotif.TextColor3 = Color3.fromRGB(255,150,60)
+adminDetectNotif.TextXAlignment = Enum.TextXAlignment.Left
+adminDetectNotif.Visible = false
+
 adminBtn.MouseButton1Click:Connect(function()
     adminDetectMode = not adminDetectMode
     if adminDetectMode then activateAdminDetect() else deactivateAdminDetect() end
     adminBtn.Text = "Admin Detect: " .. (adminDetectMode and "ON" or "OFF")
     adminBtn.BackgroundColor3 = adminDetectMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
+    adminDetectNotif.Text = "Tự phát hiện admin: " .. (adminDetectMode and "ON" or "OFF")
+    adminDetectNotif.Visible = true
+    task.spawn(function() task.wait(1.8) adminDetectNotif.Visible = false end)
 end)
 
 local scaleLabel = Instance.new("TextLabel", settingsFrame)
 scaleLabel.Text = "GUI Scale:"
 scaleLabel.Size = UDim2.new(0, 100, 0, 32)
-scaleLabel.Position = UDim2.new(0, 20, 0, 130)
+scaleLabel.Position = UDim2.new(0, 20, 0, 170)
 scaleLabel.BackgroundTransparency = 1
 scaleLabel.Font = Enum.Font.GothamBold
 scaleLabel.TextSize = 20
@@ -1131,7 +1179,7 @@ scaleLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
 
 local minusBtn = Instance.new("TextButton", settingsFrame)
 minusBtn.Size = UDim2.new(0, 40, 0, 32)
-minusBtn.Position = UDim2.new(0, 130, 0, 130)
+minusBtn.Position = UDim2.new(0, 130, 0, 170)
 minusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
 minusBtn.Text = "-"
 minusBtn.Font = Enum.Font.GothamBold
@@ -1141,7 +1189,7 @@ Instance.new("UICorner", minusBtn).CornerRadius = UDim.new(0.5, 0)
 
 local plusBtn = Instance.new("TextButton", settingsFrame)
 plusBtn.Size = UDim2.new(0, 40, 0, 32)
-plusBtn.Position = UDim2.new(0, 180, 0, 130)
+plusBtn.Position = UDim2.new(0, 180, 0, 170)
 plusBtn.BackgroundColor3 = Color3.fromRGB(80, 90, 80)
 plusBtn.Text = "+"
 plusBtn.Font = Enum.Font.GothamBold
@@ -1160,7 +1208,7 @@ local colorChoices = {Color3.fromRGB(35, 38, 48), Color3.fromRGB(32, 44, 60), Co
 for i, col in ipairs(colorChoices) do
     local btn = Instance.new("TextButton", settingsFrame)
     btn.Size = UDim2.new(0, 32, 0, 32)
-    btn.Position = UDim2.new(0, 20 + (i-1)*40, 0, 180)
+    btn.Position = UDim2.new(0, 20 + (i-1)*40, 0, 220)
     btn.BackgroundColor3 = col
     btn.Text = ""
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0.5, 0)
@@ -1172,7 +1220,7 @@ local creditFrame = tabFrames[6]
 local crLabel = Instance.new("TextLabel", creditFrame)
 crLabel.Size = UDim2.new(1, 0, 1, 0)
 crLabel.BackgroundTransparency = 1
-crLabel.Text = "GreensVN Hub V6.0\nThe Absolute Zenith\nBy Oxbl149 & GreensVN"
+crLabel.Text = "GreensVN Hub V7.0\nThe Absolute Zenith\nBy Oxbl149 & GreensVN"
 crLabel.Font = Enum.Font.GothamBold
 crLabel.TextSize = 28
 crLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
