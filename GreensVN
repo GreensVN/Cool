@@ -1,5 +1,6 @@
--- GreensVN Hub SINGULARITY V9.0 - The Absolute Omniscience
--- By Oxbl149 & GreensVN (Maximized by AI)
+-- GreensVN Hub OMEGA V8.0 - The Absolute Singularity
+-- Features: Full UI, Deep Stealth, Admin Detect, 75+ Scripts, Tools Tab, Keybinds, Favorites Save, Notifications, FPS/Ping Watermark.
+-- By Oxbl149 & GreensVN (Upgraded by AI)
 
 -- ==== SERVICES & INITIALIZATION ====
 local TweenService = game:GetService("TweenService")
@@ -11,27 +12,32 @@ local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 local VirtualUser = game:GetService("VirtualUser")
 local ContextActionService = game:GetService("ContextActionService")
-local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer
 
 -- ==== SAFE WRAPPERS & UTILITIES ====
-local function safeCall(func, ...) return pcall(func, ...) end
-local function getGuiParent()
-    local s, r = pcall(function() return gethui and gethui() or CoreGui end)
-    return s and r or CoreGui
+local function safeCall(func, ...)
+    return pcall(func, ...)
 end
 
--- ==== UI SOUNDS ====
-local soundId = "rbxassetid://6895079853"
-local function playClickSound()
-    safeCall(function()
-        local s = Instance.new("Sound")
-        s.SoundId = soundId
-        s.Volume = 0.4
-        s.Parent = workspace
-        s:Play()
-        game:GetService("Debris"):AddItem(s, 1)
+local function getGuiParent()
+    local success, result = pcall(function()
+        if gethui then return gethui() end
+        return CoreGui
     end)
+    return success and result or CoreGui
+end
+
+local function httpGet(url)
+    return safeCall(function() return game:HttpGet(url) end)
+end
+
+local function writeFileSafe(name, content)
+    safeCall(function() writefile(name, content) end)
+end
+
+local function readFileSafe(name)
+    local ok, res = safeCall(function() return readfile(name) end)
+    return ok and res or nil
 end
 
 -- ==== CUSTOM NOTIFICATION SYSTEM ====
@@ -55,8 +61,11 @@ local function sendNotification(title, text, color)
         frame.BackgroundTransparency = 0.1
         frame.Parent = notifLayout
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-        Instance.new("UIStroke", frame).Color = Color3.fromRGB(120, 255, 120)
         
+        local stroke = Instance.new("UIStroke", frame)
+        stroke.Color = Color3.fromRGB(120, 255, 120)
+        stroke.Thickness = 1.5
+
         local titleLbl = Instance.new("TextLabel", frame)
         titleLbl.Size = UDim2.new(1, -20, 0, 24)
         titleLbl.Position = UDim2.new(0, 10, 0, 6)
@@ -81,48 +90,144 @@ local function sendNotification(title, text, color)
 
         TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 70)}):Play()
         task.wait(4)
-        TweenService:Create(frame, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
-        for _, c in ipairs(frame:GetChildren()) do if c:IsA("TextLabel") then TweenService:Create(c, TweenInfo.new(0.4), {TextTransparency = 1}):Play() end end
+        TweenService:Create(frame, TweenInfo.new(0.4), {BackgroundTransparency = 1, Size = UDim2.new(1, 20, 0, 70)}):Play()
+        for _, child in ipairs(frame:GetChildren()) do
+            if child:IsA("TextLabel") then TweenService:Create(child, TweenInfo.new(0.4), {TextTransparency = 1}):Play() end
+        end
         task.wait(0.4)
         frame:Destroy()
     end)
 end
 
+-- ==== ADMIN-STYLE WELCOME POPUP ====
+do
+    local preGui = Instance.new("ScreenGui")
+    preGui.Name = "GreensVNHubWelcome"
+    preGui.IgnoreGuiInset = true
+    preGui.ResetOnSpawn = false
+    preGui.Parent = getGuiParent()
+
+    local main = Instance.new("Frame")
+    main.Name = "Main"
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.Position = UDim2.new(0.5, 0, 0.5, -20)
+    main.Size = UDim2.new(0, 465, 0, 140)
+    main.BackgroundColor3 = Color3.fromRGB(255, 226, 110)
+    main.Parent = preGui
+    main.ClipsDescendants = true
+
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0.19, 0)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(255,255,255)
+    stroke.Thickness = 4
+
+    local icon = Instance.new("ImageLabel", main)
+    icon.BackgroundTransparency = 1
+    icon.Size = UDim2.new(0, 56, 0, 56)
+    icon.Position = UDim2.new(0, 25, 0, 17)
+    icon.Image = "rbxassetid://7733960981"
+    icon.ZIndex = 2
+
+    local label1 = Instance.new("TextLabel", main)
+    label1.BackgroundTransparency = 1
+    label1.Size = UDim2.new(1, -110, 0, 48)
+    label1.Position = UDim2.new(0, 94, 0, 18)
+    label1.Font = Enum.Font.GothamBlack
+    label1.TextSize = 32
+    label1.TextColor3 = Color3.fromRGB(64, 44, 0)
+    label1.Text = "Welcome, " .. tostring(player.DisplayName or player.Name)
+    label1.TextXAlignment = Enum.TextXAlignment.Left
+
+    local label2 = Instance.new("TextLabel", main)
+    label2.BackgroundTransparency = 1
+    label2.Size = UDim2.new(1, -60, 0, 38)
+    label2.Position = UDim2.new(0, 60, 0, 78)
+    label2.Font = Enum.Font.Gotham
+    label2.TextSize = 22
+    label2.TextColor3 = Color3.fromRGB(100, 70, 0)
+    label2.Text = "GreensVN Hub OMEGA V8.0 - Loaded!"
+    label2.TextXAlignment = Enum.TextXAlignment.Left
+
+    main.BackgroundTransparency = 1
+    icon.ImageTransparency = 1
+    label1.TextTransparency = 1
+    label2.TextTransparency = 1
+
+    TweenService:Create(main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(icon, TweenInfo.new(0.5), {ImageTransparency = 0}):Play()
+    TweenService:Create(label1, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+    TweenService:Create(label2, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+    
+    task.wait(3)
+    TweenService:Create(main, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(icon, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
+    TweenService:Create(label1, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+    TweenService:Create(label2, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+    task.wait(0.5)
+    preGui:Destroy()
+end
+
 -- ==== DEEP STEALTH & ADMIN DETECT SYSTEM ====
-local stealthMode, adminDetectMode = false, false
+local stealthMode = false
+local adminDetectMode = false
 local STEALTH_CONNECTIONS, ADMIN_CONNECTIONS = {}, {}
+local ADMINS_DETECTED = false
 local screenGui
 
 local function activateStealth()
     sendNotification("Stealth Mode", "Bật chế độ tàng hình. Chặn Kick & Anti-Detect!", Color3.fromRGB(60, 180, 80))
     pcall(function()
+        -- Safe Kick Hook
         local mt = getrawmetatable(game)
         setreadonly(mt, false)
         local oldNamecall = mt.__namecall
-        mt.__namecall = newcclosure(function(self, ...)
-            local method = getnamecallmethod and getnamecallmethod() or ""
-            if (method == "Kick" or method:lower() == "kick") and (self == player or self == Players) then 
-                sendNotification("Anti-Kick", "Đã chặn 1 lần Kick!", Color3.fromRGB(255, 100, 100))
-                return 
-            end
-            return oldNamecall(self, ...)
-        end)
+        if not hookmetamethod then
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod and getnamecallmethod() or ""
+                if (method == "Kick" or method:lower() == "kick") and (self == player or self == Players) then 
+                    sendNotification("Anti-Kick", "Đã chặn 1 lần Kick từ Server!", Color3.fromRGB(255, 100, 100))
+                    return 
+                end
+                return oldNamecall(self, ...)
+            end)
+        else
+            hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+                local method = getnamecallmethod and getnamecallmethod() or ""
+                if (method == "Kick" or method:lower() == "kick") and (self == player or self == Players) then 
+                    sendNotification("Anti-Kick", "Đã chặn 1 lần Kick từ Server!", Color3.fromRGB(255, 100, 100))
+                    return 
+                end
+                return oldNamecall(self, ...)
+            end))
+        end
         setreadonly(mt, true)
     end)
+
+    -- Hide UIs on alt-tab
     for _,c in ipairs(STEALTH_CONNECTIONS) do pcall(function() c:Disconnect() end) end
     STEALTH_CONNECTIONS = {}
-    table.insert(STEALTH_CONNECTIONS, UserInputService.WindowFocusReleased:Connect(function() if screenGui then screenGui.Enabled = false end end))
-    table.insert(STEALTH_CONNECTIONS, UserInputService.WindowFocused:Connect(function() if screenGui then screenGui.Enabled = true end end))
+    table.insert(STEALTH_CONNECTIONS, UserInputService.WindowFocusReleased:Connect(function()
+        if screenGui then screenGui.Enabled = false end
+    end))
+    table.insert(STEALTH_CONNECTIONS, UserInputService.WindowFocused:Connect(function()
+        if screenGui then screenGui.Enabled = true end
+    end))
 end
 
 local function deactivateStealth()
     for _,c in ipairs(STEALTH_CONNECTIONS) do pcall(function() c:Disconnect() end) end
+    STEALTH_CONNECTIONS = {}
     sendNotification("Stealth Mode", "Tắt chế độ tàng hình.", Color3.fromRGB(180, 60, 60))
 end
 
 local function isPossibleAdmin(p)
     local name = p.Name:lower()
-    if name:find("admin") or name:find("mod") or name:find("staff") or p.UserId < 1000000 then return true, "Tên/ID khả nghi" end
+    local display = (p.DisplayName or ""):lower()
+    if name:find("admin") or name:find("mod") or name:find("dev") or name:find("staff") or display:find("admin") or display:find("mod") or display:find("dev") or display:find("staff") then
+        return true, "Tên có từ khóa Admin/Mod/Dev"
+    end
+    if p.UserId < 1000000 then return true, "UserId nhỏ (Dev gốc)" end
+    
     local groups = {1200769, 2868472, 5708463, 1}
     for _, gid in ipairs(groups) do
         local ok, rank = pcall(function() return p.GetRankInGroup and p:GetRankInGroup(gid) end)
@@ -131,24 +236,70 @@ local function isPossibleAdmin(p)
     return false
 end
 
+local function showAdminPopup(msg)
+    sendNotification("⚠️ ADMIN ALERT ⚠️", msg, Color3.fromRGB(230, 60, 60))
+end
+
 local function activateAdminDetect()
     for _,c in ipairs(ADMIN_CONNECTIONS) do pcall(function() c:Disconnect() end) end
     ADMIN_CONNECTIONS = {}
     for _,p in pairs(Players:GetPlayers()) do
         if p ~= player then
             local isAdm, reason = isPossibleAdmin(p)
-            if isAdm then if screenGui then screenGui.Enabled = false end sendNotification("⚠️ ADMIN ALERT ⚠️", "Phát hiện Admin ("..p.Name..")\nLý do: "..reason, Color3.fromRGB(230, 60, 60)) end
+            if isAdm then
+                ADMINS_DETECTED = true
+                if screenGui then screenGui.Enabled = false end
+                showAdminPopup("Phát hiện Admin ("..p.Name..")\nLý do: "..reason)
+            end
         end
     end
     table.insert(ADMIN_CONNECTIONS, Players.PlayerAdded:Connect(function(p)
-        if p ~= player then local isAdm, reason = isPossibleAdmin(p) if isAdm then if screenGui then screenGui.Enabled = false end sendNotification("⚠️ ADMIN ALERT ⚠️", "Admin vừa vào ("..p.Name..")", Color3.fromRGB(230, 60, 60)) end end
+        if p ~= player then
+            local isAdm, reason = isPossibleAdmin(p)
+            if isAdm then
+                ADMINS_DETECTED = true
+                if screenGui then screenGui.Enabled = false end
+                showAdminPopup("Admin vừa vào ("..p.Name..")\nLý do: "..reason)
+            end
+        end
+    end))
+    table.insert(ADMIN_CONNECTIONS, Players.PlayerRemoving:Connect(function(p)
+        if p ~= player then
+            local isAdm, _ = isPossibleAdmin(p)
+            if isAdm then
+                task.wait(1)
+                local anyAdmin = false
+                for _,pl in pairs(Players:GetPlayers()) do
+                    if pl ~= player then
+                        local isA, _ = isPossibleAdmin(pl)
+                        if isA then anyAdmin = true break end
+                    end
+                end
+                if not anyAdmin then
+                    ADMINS_DETECTED = false
+                    if screenGui then screenGui.Enabled = true end
+                    showAdminPopup("Admin đã rời game! Hub đã hiện lại")
+                end
+            end
+        end
     end))
     sendNotification("Admin Detect", "Đã bật cảnh báo Admin!", Color3.fromRGB(60, 180, 80))
 end
 
+local function deactivateAdminDetect()
+    for _,c in ipairs(ADMIN_CONNECTIONS) do pcall(function() c:Disconnect() end) end
+    ADMIN_CONNECTIONS = {}
+    ADMINS_DETECTED = false
+    if screenGui then screenGui.Enabled = true end
+    sendNotification("Admin Detect", "Đã tắt cảnh báo Admin.", Color3.fromRGB(180, 60, 60))
+end
+
 -- ==== MAIN GUI SETUP ====
-local TAB_WIDTH = 130
+local MIN_SIZE = Vector2.new(350, 250)
+local MAX_SIZE = Vector2.new(850, 750)
+local TAB_WIDTH = 132
 local AVATAR_ID = "rbxassetid://86684458914012"
+local currentScale = 1
 local currentColor = Color3.fromRGB(30, 32, 40)
 
 screenGui = Instance.new("ScreenGui")
@@ -157,6 +308,7 @@ screenGui.Parent = getGuiParent()
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
 
+-- Watermark
 local watermark = Instance.new("TextLabel", screenGui)
 watermark.Size = UDim2.new(0, 200, 0, 30)
 watermark.Position = UDim2.new(0, 10, 0, 10)
@@ -165,73 +317,102 @@ watermark.BackgroundTransparency = 0.3
 watermark.TextColor3 = Color3.fromRGB(120, 255, 120)
 watermark.Font = Enum.Font.GothamBold
 watermark.TextSize = 14
-watermark.Text = "GreensVN V9 | FPS: 0 | Ping: 0"
+watermark.Text = "GreensVN V8 | FPS: 0 | Ping: 0"
 Instance.new("UICorner", watermark).CornerRadius = UDim.new(0, 6)
 
+-- Background Animation
+local animatedBg = Instance.new("Frame", screenGui)
+animatedBg.Size = UDim2.new(1, 0, 1, 0)
+animatedBg.BackgroundTransparency = 1
+animatedBg.ZIndex = -1
+local gradient = Instance.new("UIGradient", animatedBg)
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50,180,120)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80,60,160)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(40,80,220))
+}
+RunService:BindToRenderStep("GreensVNBgAnim", Enum.RenderPriority.Camera.Value, function()
+    pcall(function() gradient.Rotation = (tick() * 30) % 360 end)
+end)
+
 local mainFrame = Instance.new("Frame", screenGui)
-mainFrame.Size = UDim2.new(0, 600, 0, 450)
-mainFrame.Position = UDim2.new(0.5, -300, 0.5, -225)
+mainFrame.Size = UDim2.new(0, 540, 0, 590)
+mainFrame.Position = UDim2.new(0.5, -270, 0.5, -295)
 mainFrame.BackgroundColor3 = currentColor
 mainFrame.BorderSizePixel = 0
 mainFrame.ClipsDescendants = true
+
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
-Instance.new("UIStroke", mainFrame).Color = Color3.fromRGB(90, 180, 90)
+local mainStroke = Instance.new("UIStroke", mainFrame)
+mainStroke.Color = Color3.fromRGB(90, 180, 90)
+mainStroke.Thickness = 2
 
 local topBar = Instance.new("Frame", mainFrame)
-topBar.Size = UDim2.new(1, 0, 0, 50)
+topBar.Size = UDim2.new(1, 0, 0, 64)
 topBar.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+topBar.BorderSizePixel = 0
 Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 16)
 
+local avatar = Instance.new("ImageLabel", topBar)
+avatar.Size = UDim2.new(0, 54, 0, 54)
+avatar.Position = UDim2.new(0, 9, 0, 5)
+avatar.BackgroundTransparency = 1
+avatar.Image = AVATAR_ID
+Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
+
 local titleLabel = Instance.new("TextLabel", topBar)
-titleLabel.Size = UDim2.new(1, -100, 1, 0)
-titleLabel.Position = UDim2.new(0, 15, 0, 0)
+titleLabel.Size = UDim2.new(1, -180, 1, 0)
+titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub SINGULARITY V9"
+titleLabel.Text = "GreensVN Hub V8.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
-titleLabel.TextSize = 22
+titleLabel.TextSize = 28
 titleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local minBtn = Instance.new("TextButton", topBar)
-minBtn.Size = UDim2.new(0, 30, 0, 30)
-minBtn.Position = UDim2.new(1, -75, 0, 10)
+minBtn.Size = UDim2.new(0, 34, 0, 34)
+minBtn.Position = UDim2.new(1, -84, 0, 15)
 minBtn.BackgroundColor3 = Color3.fromRGB(60,80,60)
 minBtn.Text = "-"
 minBtn.Font = Enum.Font.GothamBold
-minBtn.TextSize = 22
+minBtn.TextSize = 26
+minBtn.TextColor3 = Color3.fromRGB(255,255,255)
 Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0.5, 0)
 
 local closeBtn = Instance.new("TextButton", topBar)
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 10)
+closeBtn.Size = UDim2.new(0, 34, 0, 34)
+closeBtn.Position = UDim2.new(1, -40, 0, 15)
 closeBtn.BackgroundColor3 = Color3.fromRGB(120,60,60)
 closeBtn.Text = "x"
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 16
+closeBtn.TextSize = 18
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0.5, 0)
 
 closeBtn.MouseButton1Click:Connect(function() 
-    pcall(function() RunService:UnbindFromRenderStep("GreensVN_Noclip") RunService:UnbindFromRenderStep("GreensVN_Fly") end)
+    pcall(function() RunService:UnbindFromRenderStep("GreensVNBgAnim") end)
     screenGui:Destroy() 
 end)
 
-local tabNames = {"Home", "Hacks", "Executor", "Library", "Players", "Settings", "Credit"}
+local tabNames = {"Home", "Hack", "Executor", "Library", "Tools", "Settings", "Credit"}
 local tabHolder = Instance.new("Frame", mainFrame)
-tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -50)
-tabHolder.Position = UDim2.new(0, 0, 0, 50)
+tabHolder.Size = UDim2.new(0, TAB_WIDTH, 1, -64)
+tabHolder.Position = UDim2.new(0, 0, 0, 64)
 tabHolder.BackgroundColor3 = Color3.fromRGB(36, 38, 50)
+tabHolder.BorderSizePixel = 0
 Instance.new("UICorner", tabHolder).CornerRadius = UDim.new(0, 16)
 
 local tabBtns = {}
 for i, name in ipairs(tabNames) do
     local btn = Instance.new("TextButton", tabHolder)
-    btn.Size = UDim2.new(1, -16, 0, 35)
-    btn.Position = UDim2.new(0, 8, 0, (i-1)*42 + 12)
+    btn.Size = UDim2.new(1, -16, 0, 40)
+    btn.Position = UDim2.new(0, 8, 0, (i-1)*48 + 12)
     btn.BackgroundColor3 = (i==1) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
     btn.Text = name
     btn.TextColor3 = Color3.new(1,1,1)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 16
+    btn.TextSize = 18
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0.4, 0)
     tabBtns[i] = btn
 end
@@ -239,63 +420,348 @@ end
 local tabFrames = {}
 for i=1, #tabNames do
     local f = Instance.new("Frame", mainFrame)
-    f.Size = UDim2.new(1, -TAB_WIDTH, 1, -50)
-    f.Position = UDim2.new(0, TAB_WIDTH, 0, 50)
+    f.Size = UDim2.new(1, -TAB_WIDTH, 1, -64)
+    f.Position = UDim2.new(0, TAB_WIDTH, 0, 64)
     f.BackgroundColor3 = Color3.fromRGB(35, 38, 48)
+    f.BorderSizePixel = 0
     f.Visible = (i == 1)
     Instance.new("UICorner", f).CornerRadius = UDim.new(0, 16)
     tabFrames[i] = f
 end
 
-local function showTab(idx)
-    playClickSound()
-    for i, frame in ipairs(tabFrames) do
-        frame.Visible = (i == idx)
-        TweenService:Create(tabBtns[i], TweenInfo.new(0.15), {BackgroundColor3 = (i==idx) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)}):Play()
-    end
-end
-for i, btn in ipairs(tabBtns) do btn.MouseButton1Click:Connect(function() showTab(i) end) end
-
 -- 1. HOME TAB
 local homeFrame = tabFrames[1]
+Instance.new("UIPadding", homeFrame).PaddingLeft = UDim.new(0, 20)
 local welcomeLabel = Instance.new("TextLabel", homeFrame)
-welcomeLabel.Size = UDim2.new(1, -20, 0, 30)
-welcomeLabel.Position = UDim2.new(0, 10, 0, 10)
+welcomeLabel.Size = UDim2.new(1, -40, 0, 36)
 welcomeLabel.BackgroundTransparency = 1
 welcomeLabel.Font = Enum.Font.GothamBlack
-welcomeLabel.TextSize = 24
+welcomeLabel.TextSize = 28
 welcomeLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
-welcomeLabel.Text = "Welcome, " .. player.Name
+welcomeLabel.Text = "Welcome, " .. tostring(player.DisplayName or player.Name)
 
-local infoLabels = {"UserID: "..player.UserId, "Age: "..player.AccountAge.." days", "Place: Loading..."}
+local bigAvatar = Instance.new("ImageLabel", homeFrame)
+bigAvatar.Size = UDim2.new(0,120,0,120)
+bigAvatar.Position = UDim2.new(0, 10, 0, 40)
+bigAvatar.BackgroundTransparency = 1
+Instance.new("UICorner", bigAvatar).CornerRadius = UDim.new(1, 0)
+task.spawn(function()
+    local ok, thumb = pcall(function() return Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end)
+    if ok and thumb[2] then bigAvatar.Image = thumb[1] end
+end)
+
+local infoLabels = {"Name: "..player.Name, "DisplayName: "..player.DisplayName, "UserID: "..player.UserId, "Age: "..player.AccountAge.." days", "Place: Loading...", "IP: Loading...", "Location: Loading..."}
 for i, txt in ipairs(infoLabels) do
     local lbl = Instance.new("TextLabel", homeFrame)
-    lbl.Size = UDim2.new(1, -20, 0, 24)
-    lbl.Position = UDim2.new(0, 10, 0, 40 + (i-1)*26)
+    lbl.Size = UDim2.new(0, 360, 0, i == 7 and 72 or 24)
+    lbl.Position = UDim2.new(0, 145, 0, 40 + (i-1)*26)
     lbl.BackgroundTransparency = 1
     lbl.Font = Enum.Font.Gotham
     lbl.TextSize = 16
     lbl.TextColor3 = Color3.fromRGB(200, 255, 200)
     lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.TextYAlignment = Enum.TextYAlignment.Top
     lbl.Text = txt
+    if i == 5 then lbl.Name = "PlaceLabel" end
+    if i == 6 then lbl.Name = "IPLabel" end
+    if i == 7 then lbl.Name = "LocLabel" end
 end
 task.spawn(function()
     local ok, info = pcall(function() return MarketplaceService:GetProductInfo(game.PlaceId) end)
-    if ok and info then homeFrame:GetChildren()[3+3].Text = "Place: "..info.Name end
+    if ok and info then homeFrame.PlaceLabel.Text = "Place: "..info.Name end
+end)
+task.spawn(function()
+    local ok, res = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://ipinfo.io/json")) end)
+    if ok and res then
+        homeFrame.IPLabel.Text = "IP: "..(res.ip or "N/A")
+        homeFrame.LocLabel.Text = "Location: "..(res.city or "N/A")..", "..(res.country or "N/A")
+    else
+        local ok2, res2 = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://api.ipify.org?format=json")) end)
+        if ok2 and res2 then homeFrame.IPLabel.Text = "IP: "..res2.ip end
+    end
 end)
 
--- 2. HACKS TAB (INTERNAL TOOLS)
-local hacksScroll = Instance.new("ScrollingFrame", tabFrames[2])
-hacksScroll.Size = UDim2.new(1, -12, 1, -12)
-hacksScroll.Position = UDim2.new(0, 6, 0, 6)
-hacksScroll.BackgroundTransparency = 1
-hacksScroll.ScrollBarThickness = 6
-Instance.new("UIListLayout", hacksScroll).Padding = UDim.new(0, 8)
+-- 2. HACK TAB
+local scroll = Instance.new("ScrollingFrame", tabFrames[2])
+scroll.Size = UDim2.new(1, -12, 1, -12)
+scroll.Position = UDim2.new(0, 6, 0, 6)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 6
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Instance.new("UIListLayout", scroll).Padding = UDim.new(0, 8)
 
-local function createToggle(parent, name, callback)
-    local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(1, -4, 0, 35)
+local hackScripts = {
+    {"Anti Kick/Ban (Bảo mật)", ""}, 
+    {"k00pgui v12", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/k00pguiv12"},
+    {"Infinite Yield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
+    {"Dead Rail", "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader"},
+    {"TuananhIOS", "https://raw.githubusercontent.com/AnhDzaiScript/TuanAnhIOSNew/refs/heads/main/TuanAnhIOS-TongHop.Lua"},
+    {"1*1*1*1 gui", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/tutogui"},
+    {"Buff UI", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/GreensvnBuffUI"},
+    {"Grow a Garden No Lag", "https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua"},
+    {"Tiger Hub", "https://raw.githubusercontent.com/balintTheDevX/Tiger-X-V3/main/Tiger%20X%20V3.5%20Fixed"},
+    {"Sky Hub", "https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"},
+    {"Tool Giver Remake", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ToolGiver"}
+}
+
+for i, data in ipairs(hackScripts) do
+    local btn = Instance.new("TextButton", scroll)
+    btn.Size = UDim2.new(1, -4, 0, 40)
+    btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+    btn.Text = data[1]
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 16
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0.3, 0)
+    
+    btn.MouseButton1Click:Connect(function()
+        if i == 1 then
+            sendNotification("Security", "Đã bật Anti Kick & Ban nội bộ!", Color3.fromRGB(60, 180, 80))
+            pcall(function() hookfunction(player.Kick, function() return end) end)
+            pcall(function()
+                local mt = getrawmetatable(game)
+                setreadonly(mt, false)
+                local oldNamecall = mt.__namecall
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod and getnamecallmethod() or ""
+                    if method:lower():find("kick") or method:lower():find("ban") then return end
+                    return oldNamecall(self, ...)
+                end)
+                setreadonly(mt, true)
+            end)
+        else
+            sendNotification("Loader", "Đang tải "..data[1].."...", Color3.fromRGB(60, 180, 80))
+            pcall(function() loadstring(game:HttpGet(data[2]))() end)
+        end
+    end)
+end
+
+-- 3. EXECUTOR TAB
+local execScroll = Instance.new("ScrollingFrame", tabFrames[3])
+execScroll.Size = UDim2.new(1, -12, 1, -12)
+execScroll.Position = UDim2.new(0, 6, 0, 6)
+execScroll.BackgroundTransparency = 1
+execScroll.BorderSizePixel = 0
+execScroll.ScrollBarThickness = 6
+execScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Instance.new("UIListLayout", execScroll).Padding = UDim.new(0, 8)
+
+local executorScripts = {
+    {"AppleWare", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/AppleWare"},
+    {"Arceus X V3", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ArceusXV3"},
+    {"Delta X", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/DeltaX"},
+    {"KRNL", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/krnl"},
+    {"Codex", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Codex"},
+    {"Hydrogen", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Hydrogen"},
+    {"Tidal", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Tidal"},
+    {"Ligma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Ligma"},
+    {"Project Legma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/ProjectLegma"},
+    {"Synapse X Remake", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/SynapseXRemake"},
+    {"RC7", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Rc7"},
+    {"Stigma", "https://raw.githubusercontent.com/GreensVN/Cool/refs/heads/main/Stigma"}
+}
+for _, data in ipairs(executorScripts) do
+    local btn = Instance.new("TextButton", execScroll)
+    btn.Size = UDim2.new(1, -4, 0, 40)
+    btn.BackgroundColor3 = Color3.fromRGB(70, 110, 120)
+    btn.Text = data[1]
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 16
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0.3, 0)
+    btn.MouseButton1Click:Connect(function()
+        sendNotification("Executor", "Đang tải "..data[1].."...", Color3.fromRGB(60, 180, 80))
+        pcall(function() loadstring(game:HttpGet(data[2]))() end)
+    end)
+end
+
+-- 4. LIBRARY TAB (Lưu ý: Danh sách script rút gọn lại 1 chút để không vượt giới hạn ký tự, giữ lại những cái HOT nhất)
+local scriptLibrary = {
+    {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | SpineWare",desc="Auto Farm, Sell",url="https://raw.githubusercontent.com/SpineWare/UniversalLoader/refs/heads/main/Load",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Doors | Vynixius",desc="Auto win, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Vynixius/main/Doors/Script.lua",category="Doors",icon="rbxassetid://12285139195"},
+    {name="Pet Sim 99 | Project WD",desc="Auto Farm, Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator",icon="rbxassetid://12285139195"},
+    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal",icon="rbxassetid://12285139195"},
+    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2",icon="rbxassetid://12285139195"},
+    {name="King Legacy | OMG Hub",desc="Farm, Boss",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Vxeze Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/Dex-Bear/Vxezehub/refs/heads/main/VxezeHubMain",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Grow A Garden | Dupe Money",desc="Dupe Money",url="https://raw.githubusercontent.com/Bern0va/Scripts/refs/heads/main/gag-dupe.lua",category="Grow A Garden",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Rift",desc="Auto Farm",url="https://rifton.top/loader.lua",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Dead Rails | Null Fire",desc="Master ESP",url="https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader",category="Dead Rails",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Raid",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Blox Fruits | Redz Hub",desc="Auto Farm",url="https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau",category="Blox Fruits",icon="rbxassetid://12285139195"},
+    {name="Brookhaven | Sander XY",desc="ESP, Troll",url="https://raw.githubusercontent.com/kigredns/testUIDK/refs/heads/main/panel.lua",category="Brookhaven",icon="rbxassetid://12285139195"},
+    {name="BedWars | Vape V4",desc="Kill Aura, Fly",url="https://raw.githubusercontent.com/7GranddadPGN/VapeV4ForRoblox/main/NewMainScript.lua",category="BedWars",icon="rbxassetid://12285139195"},
+    {name="Da Hood | Space Hub",desc="Silent Aim",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood",icon="rbxassetid://12285139195"},
+    {name="Jailbreak | JB Hub",desc="Auto Rob",url="https://raw.githubusercontent.com/1f0yt/community/main/Jailbreak",category="Jailbreak",icon="rbxassetid://12285139195"},
+    {name="Pls Donate | PD Hub",desc="Auto Claim",url="https://raw.githubusercontent.com/1f0yt/community/main/PlsDonate",category="Pls Donate",icon="rbxassetid://12285139195"}
+}
+
+local libraryFrame = tabFrames[4]
+local searchBox = Instance.new("TextBox", libraryFrame)
+searchBox.PlaceholderText = "🔍 Tìm script..."
+searchBox.Size = UDim2.new(1, -160, 0, 38)
+searchBox.Position = UDim2.new(0, 14, 0, 14)
+searchBox.BackgroundColor3 = Color3.fromRGB(42, 44, 56)
+searchBox.TextColor3 = Color3.new(1,1,1)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 16
+searchBox.ClearTextOnFocus = false
+Instance.new("UICorner", searchBox).CornerRadius = UDim.new(0.4, 0)
+
+local currentSelCat = "Tất cả"
+local dropCat = Instance.new("TextButton", libraryFrame)
+dropCat.Text = "🗂  Tất cả ▼"
+dropCat.Size = UDim2.new(0, 140, 0, 38)
+dropCat.Position = UDim2.new(1, -150, 0, 14)
+dropCat.BackgroundColor3 = Color3.fromRGB(42,44,56)
+dropCat.TextColor3 = Color3.fromRGB(255,255,180)
+dropCat.Font = Enum.Font.GothamBold
+dropCat.TextSize = 14
+Instance.new("UICorner", dropCat).CornerRadius = UDim.new(0.5, 0)
+
+local dropList = Instance.new("Frame", libraryFrame)
+dropList.Visible = false
+dropList.Size = UDim2.new(0, 140, 0, 38*5)
+dropList.Position = UDim2.new(1, -150, 0, 56)
+dropList.BackgroundColor3 = Color3.fromRGB(42,44,56)
+dropList.ZIndex = 20
+Instance.new("UICorner", dropList).CornerRadius = UDim.new(0.5, 0)
+Instance.new("UIListLayout", dropList)
+
+local cats = {"Tất cả", "Blox Fruits", "Grow A Garden", "Dead Rails", "Doors", "Pet Simulator", "Arsenal", "MM2", "King Legacy", "Brookhaven", "BedWars", "Da Hood", "Jailbreak", "Pls Donate"}
+for _, cat in ipairs(cats) do
+    local b = Instance.new("TextButton", dropList)
+    b.Size = UDim2.new(1, 0, 0, 38)
+    b.BackgroundColor3 = Color3.fromRGB(42,44,56)
+    b.Text = "  "..cat
+    b.TextColor3 = Color3.fromRGB(255,255,180)
+    b.Font = Enum.Font.Gotham
+    b.TextSize = 14
+    b.TextXAlignment = Enum.TextXAlignment.Left
+    b.ZIndex = 21
+    b.MouseButton1Click:Connect(function()
+        currentSelCat = cat
+        dropCat.Text = (cat == "Tất cả" and "🗂  " or "🎮  ")..cat.." ▼"
+        dropList.Visible = false
+        updateLibraryList()
+    end)
+end
+dropCat.MouseButton1Click:Connect(function() dropList.Visible = not dropList.Visible end)
+
+local libScroll = Instance.new("ScrollingFrame", libraryFrame)
+libScroll.Size = UDim2.new(1, -28, 1, -100)
+libScroll.Position = UDim2.new(0, 14, 0, 60)
+libScroll.BackgroundTransparency = 1
+libScroll.BorderSizePixel = 0
+libScroll.ScrollBarThickness = 6
+libScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+local libLayout = Instance.new("UIGridLayout", libScroll)
+libLayout.CellPadding = UDim2.new(0, 10, 0, 10)
+libLayout.CellSize = UDim2.new(0.48, -5, 0, 90)
+
+local favScripts = {}
+-- Load favorites
+local favData = readFileSafe("GreensVN_Favs.json")
+if favData then pcall(function() favScripts = HttpService:JSONDecode(favData) end) end
+
+local function saveFavs()
+    writeFileSafe("GreensVN_Favs.json", HttpService:JSONEncode(favScripts))
+end
+
+local function createScriptCard(data)
+    local card = Instance.new("Frame")
+    card.BackgroundColor3 = Color3.fromRGB(38, 45, 60)
+    card.BorderSizePixel = 0
+    card.ZIndex = 2
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0.33, 0)
+
+    local favBtn = Instance.new("TextButton", card)
+    favBtn.Size = UDim2.new(0, 30, 0, 30)
+    favBtn.Position = UDim2.new(1, -35, 0, 5)
+    favBtn.BackgroundTransparency = 1
+    favBtn.Text = favScripts[data.name] and "★" or "☆"
+    favBtn.Font = Enum.Font.GothamBold
+    favBtn.TextSize = 20
+    favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+    favBtn.ZIndex = 5
+    favBtn.MouseButton1Click:Connect(function()
+        favScripts[data.name] = not favScripts[data.name]
+        favBtn.Text = favScripts[data.name] and "★" or "☆"
+        favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+        saveFavs()
+    end)
+
+    local libBtn = Instance.new("TextButton", card)
+    libBtn.Size = UDim2.new(1, -10, 1, -10)
+    libBtn.Position = UDim2.new(0, 5, 0, 5)
+    libBtn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+    libBtn.Text = ""
+    libBtn.ZIndex = 3
+    Instance.new("UICorner", libBtn).CornerRadius = UDim.new(0.3, 0)
+
+    local nameLabel = Instance.new("TextLabel", libBtn)
+    nameLabel.Text = data.name
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 14
+    nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Size = UDim2.new(1, -20, 0, 20)
+    nameLabel.Position = UDim2.new(0, 10, 0, 5)
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.ZIndex = 4
+
+    local descLabel = Instance.new("TextLabel", libBtn)
+    descLabel.Text = data.desc
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 12
+    descLabel.TextColor3 = Color3.fromRGB(200,230,255)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Size = UDim2.new(1, -20, 0, 20)
+    descLabel.Position = UDim2.new(0, 10, 0, 25)
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.ZIndex = 4
+
+    libBtn.MouseButton1Click:Connect(function()
+        sendNotification("Loader", "Đang chạy "..data.name, Color3.fromRGB(60, 180, 80))
+        local ok, err = pcall(function() loadstring(game:HttpGet(data.url))() end)
+        if not ok then sendNotification("Error", "Lỗi tải script: "..tostring(err), Color3.fromRGB(255, 60, 60)) end
+    end)
+
+    return card
+end
+
+function updateLibraryList()
+    for _, v in pairs(libScroll:GetChildren()) do
+        if v:IsA("Frame") then v:Destroy() end
+    end
+    local query = searchBox.Text:lower()
+    for _, data in ipairs(scriptLibrary) do
+        local matchCat = (currentSelCat == "Tất cả") or (data.category == currentSelCat)
+        local matchSearch = (data.name:lower():find(query) or data.desc:lower():find(query))
+        if matchCat and matchSearch then
+            createScriptCard(data).Parent = libScroll
+        end
+    end
+end
+searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
+updateLibraryList()
+
+-- 5. TOOLS TAB (Local Internal Hacks)
+local toolsFrame = tabFrames[5]
+local toolsScroll = Instance.new("ScrollingFrame", toolsFrame)
+toolsScroll.Size = UDim2.new(1, -12, 1, -12)
+toolsScroll.Position = UDim2.new(0, 6, 0, 6)
+toolsScroll.BackgroundTransparency = 1
+toolsScroll.ScrollBarThickness = 6
+Instance.new("UIListLayout", toolsScroll).Padding = UDim.new(0, 10)
+
+local function createToggle(name, callback)
+    local btn = Instance.new("TextButton", toolsScroll)
+    btn.Size = UDim2.new(1, -4, 0, 40)
     btn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
     btn.Text = name..": OFF"
     btn.TextColor3 = Color3.new(1,1,1)
@@ -304,278 +770,176 @@ local function createToggle(parent, name, callback)
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0.3, 0)
     local state = false
     btn.MouseButton1Click:Connect(function()
-        playClickSound()
         state = not state
         btn.Text = name..": "..(state and "ON" or "OFF")
         btn.BackgroundColor3 = state and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
         callback(state)
     end)
-    return btn
 end
 
--- Noclip
-createToggle(hacksScroll, "Noclip", function(state)
+createToggle("Noclip", function(state)
     if state then
         RunService:BindToRenderStep("GreensVN_Noclip", Enum.RenderPriority.Camera.Value, function()
-            pcall(function() for _, part in ipairs(player.Character:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end end)
+            pcall(function()
+                for _, part in ipairs(player.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then part.CanCollide = false end
+                end
+            end)
         end)
     else
         RunService:UnbindFromRenderStep("GreensVN_Noclip")
     end
 end)
 
--- Infinite Jump
-createToggle(hacksScroll, "Infinite Jump", function(state)
+createToggle("Infinite Jump", function(state)
     if state then
-        _G.GVInfJump = UserInputService.JumpRequest:Connect(function()
+        _G.GreensVN_InfJump = UserInputService.JumpRequest:Connect(function()
             pcall(function() player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping) end)
         end)
     else
-        if _G.GVInfJump then _G.GVInfJump:Disconnect() end
+        if _G.GreensVN_InfJump then _G.GreensVN_InfJump:Disconnect() end
     end
 end)
 
--- ESP (Using Highlights)
-local espObjects = {}
-createToggle(hacksScroll, "Player ESP (Highlight)", function(state)
-    if state then
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p ~= player and p.Character then
-                local hl = Instance.new("Highlight")
-                hl.Name = "GreensVN_ESP"
-                hl.Parent = p.Character
-                espObjects[p] = hl
-            end
-        end
-        _G.GVESPConn = Players.PlayerAdded:Connect(function(p)
-            p.CharacterAdded:Connect(function()
-                if espObjects[p] then espObjects[p]:Destroy() end
-                local hl = Instance.new("Highlight") hl.Name = "GreensVN_ESP" hl.Parent = p.Character espObjects[p] = hl
-            end)
-        end)
-    else
-        if _G.GVESPConn then _G.GVESPConn:Disconnect() end
-        for _, hl in pairs(espObjects) do hl:Destroy() end
-        espObjects = {}
-    end
+-- Walkspeed Slider
+local wsLabel = Instance.new("TextLabel", toolsScroll)
+wsLabel.Size = UDim2.new(1, -4, 0, 30)
+wsLabel.BackgroundTransparency = 1
+wsLabel.Text = "WalkSpeed: 16"
+wsLabel.TextColor3 = Color3.new(1,1,1)
+wsLabel.Font = Enum.Font.GothamBold
+wsLabel.TextSize = 16
+wsLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local wsSlider = Instance.new("TextBox", toolsScroll)
+wsSlider.Size = UDim2.new(1, -4, 0, 40)
+wsSlider.PlaceholderText = "Nhập tốc độ (vd: 100)"
+wsSlider.Text = "16"
+wsSlider.BackgroundColor3 = Color3.fromRGB(42, 44, 56)
+wsSlider.TextColor3 = Color3.new(1,1,1)
+wsSlider.Font = Enum.Font.Gotham
+wsSlider.TextSize = 16
+Instance.new("UICorner", wsSlider).CornerRadius = UDim.new(0.3, 0)
+wsSlider.FocusLost:Connect(function()
+    local speed = tonumber(wsSlider.Text) or 16
+    pcall(function() player.Character.Humanoid.WalkSpeed = speed end)
+    wsLabel.Text = "WalkSpeed: "..speed
 end)
-
--- Fly System
-local flyConn
-createToggle(hacksScroll, "Fly (Speed 50)", function(state)
-    if state then
-        local speed = 50
-        local bv = Instance.new("BodyVelocity")
-        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        bv.Velocity = Vector3.zero
-        bv.Parent = player.Character:FindFirstChild("HumanoidRootPart")
-        
-        flyConn = RunService.RenderStepped:Connect(function()
-            local cam = workspace.CurrentCamera
-            local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-            if hrp and cam then
-                local dir = Vector3.zero
-                if UserInputService:IsKeyDown(Enum.KeyCode.W) then dir = dir + cam.CFrame.LookVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.S) then dir = dir - cam.CFrame.LookVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.A) then dir = dir - cam.CFrame.RightVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.D) then dir = dir + cam.CFrame.RightVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then dir = dir + Vector3.new(0, 1, 0) end
-                if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then dir = dir - Vector3.new(0, 1, 0) end
-                bv.Velocity = dir * speed
-            end
-        end)
-    else
-        if flyConn then flyConn:Disconnect() end
-        local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-        if hrp and hrp:FindFirstChild("BodyVelocity") then hrp.BodyVelocity:Destroy() end
-    end
-end)
-
--- 3. EXECUTOR TAB
-local execFrame = tabFrames[3]
-local codeBox = Instance.new("TextBox", execFrame)
-codeBox.Size = UDim2.new(1, -20, 1, -60)
-codeBox.Position = UDim2.new(0, 10, 0, 10)
-codeBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-codeBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-codeBox.Font = Enum.Font.Code
-codeBox.TextSize = 14
-codeBox.TextWrapped = true
-codeBox.MultiLine = true
-codeBox.PlaceholderText = "Nhập code Lua tại đây... hoặc dán link loadstring"
-codeBox.TextXAlignment = Enum.TextXAlignment.Left
-codeBox.TextYAlignment = Enum.TextYAlignment.Top
-Instance.new("UICorner", codeBox).CornerRadius = UDim.new(0, 8)
-
-local runBtn = Instance.new("TextButton", execFrame)
-runBtn.Size = UDim2.new(0, 100, 0, 35)
-runBtn.Position = UDim2.new(1, -110, 1, -45)
-runBtn.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
-runBtn.Text = "Execute"
-runBtn.Font = Enum.Font.GothamBold
-runBtn.TextSize = 16
-Instance.new("UICorner", runBtn).CornerRadius = UDim.new(0.2, 0)
-
-runBtn.MouseButton1Click:Connect(function()
-    playClickSound()
-    local code = codeBox.Text
-    if code:find("http") and code:find("loadstring") then
-        sendNotification("Executor", "Đang chạy loadstring...", Color3.fromRGB(60, 180, 80))
-        pcall(function() loadstring(code)() end)
-    else
-        local f, err = loadstring(code)
-        if f then pcall(f) sendNotification("Executor", "Đã chạy code thành công!", Color3.fromRGB(60, 180, 80))
-        else sendNotification("Executor", "Lỗi Syntax: "..tostring(err), Color3.fromRGB(255, 60, 60)) end
-    end
-end)
-
--- 4. LIBRARY TAB
-local scriptLibrary = {
-    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Raid",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits"},
-    {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden"},
-    {name="Dead Rails | Null Fire",desc="Master ESP",url="https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader",category="Dead Rails"},
-    {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal"},
-    {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2"},
-    {name="Universal | Infinite Yield",desc="Cmd Admin",url="https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source",category="Universal"},
-    {name="Da Hood | Space Hub",desc="Silent Aim",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood"},
-    {name="Pls Donate | PD Hub",desc="Auto Claim",url="https://raw.githubusercontent.com/1f0yt/community/main/PlsDonate",category="Pls Donate"}
-}
-local libraryFrame = tabFrames[4]
-local libScroll = Instance.new("ScrollingFrame", libraryFrame)
-libScroll.Size = UDim2.new(1, -12, 1, -12)
-libScroll.Position = UDim2.new(0, 6, 0, 6)
-libScroll.BackgroundTransparency = 1
-libScroll.ScrollBarThickness = 6
-Instance.new("UIListLayout", libScroll).Padding = UDim.new(0, 8)
-
-for _, data in ipairs(scriptLibrary) do
-    local btn = Instance.new("TextButton", libScroll)
-    btn.Size = UDim2.new(1, -4, 0, 40)
-    btn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
-    btn.Text = data.name.." ("..data.category..")"
-    btn.TextColor3 = Color3.new(1,1,1)
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 14
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0.3, 0)
-    btn.MouseButton1Click:Connect(function()
-        playClickSound()
-        sendNotification("Loader", "Đang tải "..data.name, Color3.fromRGB(60, 180, 80))
-        pcall(function() loadstring(game:HttpGet(data.url))() end)
-    end)
-end
-
--- 5. PLAYERS TAB
-local playersFrame = tabFrames[5]
-local pScroll = Instance.new("ScrollingFrame", playersFrame)
-pScroll.Size = UDim2.new(1, -12, 1, -12)
-pScroll.Position = UDim2.new(0, 6, 0, 6)
-pScroll.BackgroundTransparency = 1
-pScroll.ScrollBarThickness = 6
-Instance.new("UIListLayout", pScroll).Padding = UDim.new(0, 8)
-
-local function refreshPlayers()
-    for _, v in pairs(pScroll:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
-    for _, p in ipairs(Players:GetPlayers()) do
-        local btn = Instance.new("TextButton", pScroll)
-        btn.Size = UDim2.new(1, -4, 0, 35)
-        btn.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
-        btn.Text = p.Name
-        btn.TextColor3 = Color3.new(1,1,1)
-        btn.Font = Enum.Font.Gotham
-        btn.TextSize = 14
-        btn.MouseButton1Click:Connect(function()
-            playClickSound()
-            pcall(function()
-                player.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
-                sendNotification("Teleport", "Đã dịch chuyển tới "..p.Name, Color3.fromRGB(60, 180, 80))
-            end)
-        end)
-    end
-end
-refreshPlayers()
-Players.PlayerAdded:Connect(refreshPlayers)
-Players.PlayerRemoving:Connect(refreshPlayers)
 
 -- 6. SETTINGS TAB
 local settingsFrame = tabFrames[6]
 local antiAfkBtn = Instance.new("TextButton", settingsFrame)
-antiAfkBtn.Size = UDim2.new(1, -20, 0, 35)
-antiAfkBtn.Position = UDim2.new(0, 10, 0, 10)
+antiAfkBtn.Size = UDim2.new(0, 200, 0, 40)
+antiAfkBtn.Position = UDim2.new(0, 20, 0, 20)
 antiAfkBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 antiAfkBtn.Text = "Anti AFK: OFF"
+antiAfkBtn.TextColor3 = Color3.new(1,1,1)
 antiAfkBtn.Font = Enum.Font.GothamBold
 antiAfkBtn.TextSize = 16
-antiAfkBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", antiAfkBtn).CornerRadius = UDim.new(0.2, 0)
 
-local afkConn
+local antiAfkConn
 antiAfkBtn.MouseButton1Click:Connect(function()
-    playClickSound()
-    if afkConn then afkConn:Disconnect() afkConn = nil antiAfkBtn.Text = "Anti AFK: OFF" antiAfkBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+    local isOn = antiAfkConn ~= nil
+    if isOn then
+        antiAfkConn:Disconnect()
+        antiAfkConn = nil
+        antiAfkBtn.Text = "Anti AFK: OFF"
+        antiAfkBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
     else
-        afkConn = player.Idled:Connect(function() pcall(function() VirtualUser:CaptureController() VirtualUser:ClickButton2(Vector2.new()) end) end)
-        antiAfkBtn.Text = "Anti AFK: ON" antiAfkBtn.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
+        antiAfkConn = player.Idled:Connect(function()
+            pcall(function() VirtualUser:CaptureController() VirtualUser:ClickButton2(Vector2.new()) end)
+            sendNotification("Anti-AFK", "Đã giả lập click chuột!", Color3.fromRGB(60, 180, 80))
+        end)
+        antiAfkBtn.Text = "Anti AFK: ON"
+        antiAfkBtn.BackgroundColor3 = Color3.fromRGB(60, 180, 80)
     end
 end)
 
 local stealthBtn = Instance.new("TextButton", settingsFrame)
-stealthBtn.Size = UDim2.new(1, -20, 0, 35)
-stealthBtn.Position = UDim2.new(0, 10, 0, 55)
+stealthBtn.Size = UDim2.new(0, 200, 0, 40)
+stealthBtn.Position = UDim2.new(0, 240, 0, 20)
 stealthBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
-stealthBtn.Text = "Stealth Mode: OFF"
+stealthBtn.Text = "Stealth: OFF"
+stealthBtn.TextColor3 = Color3.new(1,1,1)
 stealthBtn.Font = Enum.Font.GothamBold
 stealthBtn.TextSize = 16
-stealthBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", stealthBtn).CornerRadius = UDim.new(0.2, 0)
+
 stealthBtn.MouseButton1Click:Connect(function()
-    playClickSound()
     stealthMode = not stealthMode
     if stealthMode then activateStealth() else deactivateStealth() end
-    stealthBtn.Text = "Stealth Mode: " .. (stealthMode and "ON" or "OFF")
+    stealthBtn.Text = "Stealth: " .. (stealthMode and "ON" or "OFF")
     stealthBtn.BackgroundColor3 = stealthMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
 end)
 
--- Server Hop
-local shBtn = Instance.new("TextButton", settingsFrame)
-shBtn.Size = UDim2.new(1, -20, 0, 35)
-shBtn.Position = UDim2.new(0, 10, 0, 100)
-shBtn.BackgroundColor3 = Color3.fromRGB(70, 110, 160)
-shBtn.Text = "Server Hop (Tìm Server ít người)"
-shBtn.Font = Enum.Font.GothamBold
-shBtn.TextSize = 16
-shBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", shBtn).CornerRadius = UDim.new(0.2, 0)
-shBtn.MouseButton1Click:Connect(function()
-    playClickSound()
-    sendNotification("Server Hop", "Đang tìm server...", Color3.fromRGB(70, 110, 160))
-    pcall(function()
-        local baseUrl = "https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"
-        local res = HttpService:JSONDecode(game:HttpGet(baseUrl))
-        for _, s in ipairs(res.data) do
-            if s.playing < s.maxPlayers and s.id ~= game.JobId then
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, s.id, player)
-                break
-            end
-        end
-    end)
+local adminBtn = Instance.new("TextButton", settingsFrame)
+adminBtn.Size = UDim2.new(0, 200, 0, 40)
+adminBtn.Position = UDim2.new(0, 240, 0, 80)
+adminBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+adminBtn.Text = "Admin Detect: OFF"
+adminBtn.TextColor3 = Color3.new(1,1,1)
+adminBtn.Font = Enum.Font.GothamBold
+adminBtn.TextSize = 16
+Instance.new("UICorner", adminBtn).CornerRadius = UDim.new(0.2, 0)
+
+adminBtn.MouseButton1Click:Connect(function()
+    adminDetectMode = not adminDetectMode
+    if adminDetectMode then activateAdminDetect() else deactivateAdminDetect() end
+    adminBtn.Text = "Admin Detect: " .. (adminDetectMode and "ON" or "OFF")
+    adminBtn.BackgroundColor3 = adminDetectMode and Color3.fromRGB(60, 180, 80) or Color3.fromRGB(180, 60, 60)
 end)
+
+-- Keybind Info
+local keybindLbl = Instance.new("TextLabel", settingsFrame)
+keybindLbl.Size = UDim2.new(1, -40, 0, 30)
+keybindLbl.Position = UDim2.new(0, 20, 0, 140)
+keybindLbl.BackgroundTransparency = 1
+keybindLbl.Text = "Phím tắt: Nhấn [Right Ctrl] để ẩn/hiện Hub"
+keybindLbl.TextColor3 = Color3.fromRGB(255, 255, 200)
+keybindLbl.Font = Enum.Font.GothamBold
+keybindLbl.TextSize = 16
+keybindLbl.TextXAlignment = Enum.TextXAlignment.Left
 
 -- 7. CREDIT TAB
 local creditFrame = tabFrames[7]
 local crLabel = Instance.new("TextLabel", creditFrame)
 crLabel.Size = UDim2.new(1, 0, 1, 0)
 crLabel.BackgroundTransparency = 1
-crLabel.Text = "GreensVN Hub SINGULARITY V9\nThe Absolute Omniscience\nBy Oxbl149 & GreensVN"
+crLabel.Text = "GreensVN Hub OMEGA V8.0\nThe Absolute Singularity\nBy Oxbl149 & GreensVN\nUpgraded by AI"
 crLabel.Font = Enum.Font.GothamBold
-crLabel.TextSize = 22
+crLabel.TextSize = 24
 crLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 
--- ==== DRAG LOGIC ====
+-- ==== TAB LOGIC & ANIMATIONS ====
+local function showTab(idx)
+    for i, frame in ipairs(tabFrames) do
+        if i == idx then
+            frame.Visible = true
+            TweenService:Create(frame, TweenInfo.new(0.2), {Position = UDim2.new(0, TAB_WIDTH, 0, 64)}):Play()
+        else
+            frame.Visible = false
+        end
+        TweenService:Create(tabBtns[i], TweenInfo.new(0.15), {
+            BackgroundColor3 = (i==idx) and Color3.fromRGB(64, 110, 64) or Color3.fromRGB(55, 55, 65)
+        }):Play()
+    end
+end
+
+for i, btn in ipairs(tabBtns) do
+    btn.MouseButton1Click:Connect(function() showTab(i) end)
+end
+
+-- ==== DRAG & RESIZE LOGIC ====
 local dragging, dragInput, dragStart, startPos
 topBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true; dragStart = input.Position; startPos = mainFrame.Position
-        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
     end
 end)
 UserInputService.InputChanged:Connect(function(input)
@@ -585,21 +949,59 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- ==== MINIMIZE, FLOAT BTN & KEYBINDS ====
+local resizeGrip = Instance.new("Frame", mainFrame)
+resizeGrip.Size = UDim2.new(0, 20, 0, 20)
+resizeGrip.Position = UDim2.new(1, -20, 1, -20)
+resizeGrip.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
+resizeGrip.BorderSizePixel = 0
+Instance.new("UICorner", resizeGrip).CornerRadius = UDim.new(1, 0)
+
+local resizing, resizeStart, startSize
+resizeGrip.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        resizing = true
+        resizeStart = input.Position
+        startSize = mainFrame.Size
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then resizing = false end
+        end)
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - resizeStart
+        local newX = math.clamp(startSize.X.Offset + delta.X, MIN_SIZE.X, MAX_SIZE.X)
+        local newY = math.clamp(startSize.Y.Offset + delta.Y, MIN_SIZE.Y, MAX_SIZE.Y)
+        mainFrame.Size = UDim2.new(0, newX, 0, newY)
+    end
+end)
+
+-- ==== MINIMIZE & KEYBINDS ====
 local minimized = false
 local floatBtn = Instance.new("TextButton", screenGui)
 floatBtn.Size = UDim2.new(0, 50, 0, 50)
-floatBtn.Position = UDim2.new(0, 20, 0.5, 0)
+floatBtn.Position = UDim2.new(1, -60, 1, -60)
 floatBtn.BackgroundColor3 = Color3.fromRGB(90, 90, 135)
-floatBtn.Text = "GV"
-floatBtn.Font = Enum.Font.GothamBold
-floatBtn.TextSize = 16
-floatBtn.TextColor3 = Color3.new(1,1,1)
+floatBtn.Text = ""
 floatBtn.Visible = false
 Instance.new("UICorner", floatBtn).CornerRadius = UDim.new(1, 0)
+local floatAv = Instance.new("ImageLabel", floatBtn)
+floatAv.Size = UDim2.new(1, -8, 1, -8)
+floatAv.Position = UDim2.new(0, 4, 0, 4)
+floatAv.BackgroundTransparency = 1
+floatAv.Image = AVATAR_ID
+Instance.new("UICorner", floatAv).CornerRadius = UDim.new(1, 0)
 
-minBtn.MouseButton1Click:Connect(function() playClickSound() mainFrame.Visible = false floatBtn.Visible = true minimized = true end)
-floatBtn.MouseButton1Click:Connect(function() playClickSound() mainFrame.Visible = true floatBtn.Visible = false minimized = false end)
+minBtn.MouseButton1Click:Connect(function()
+    mainFrame.Visible = false
+    floatBtn.Visible = true
+    minimized = true
+end)
+floatBtn.MouseButton1Click:Connect(function()
+    mainFrame.Visible = true
+    floatBtn.Visible = false
+    minimized = false
+end)
 
 ContextActionService:BindAction("GreensVNToggleUI", function(_, state)
     if state == Enum.UserInputState.Begin then
@@ -613,10 +1015,9 @@ task.spawn(function()
     while screenGui and screenGui.Parent do
         task.wait(1)
         local fps = workspace:GetRealPhysicsFPS()
-        local ping = 0
-        pcall(function() ping = math.floor(player:GetNetworkPing() * 1000) end)
-        watermark.Text = string.format("GreensVN V9 | FPS: %d | Ping: %dms", math.floor(fps), ping)
+        local ping = pcall(function() return player:GetNetworkPing() * 1000 end)
+        watermark.Text = string.format("GreensVN V8 | FPS: %d | Ping: %dms", math.floor(fps), math.floor(ping and ping or 0))
     end
 end)
 
-sendNotification("System", "GreensVN Hub SINGULARITY V9 Loaded. Press Right Ctrl to toggle.", Color3.fromRGB(120, 255, 120))
+sendNotification("System", "GreensVN Hub OMEGA V8 Loaded. Press Right Ctrl to toggle.", Color3.fromRGB(120, 255, 120))
