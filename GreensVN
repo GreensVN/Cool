@@ -1,4 +1,5 @@
--- GreensVN Hub ULTIMATE V3.0 - Final Masterpiece (All Features Merged)
+-- GreensVN Hub ULTIMATE V5.0 - Absolute Final Masterpiece (All 9 Files Merged)
+-- Features: Full UI, Stealth, Admin Detect (Group Check), 75+ Scripts, Multi-Click Library, Full Home API.
 -- By Oxbl149 & GreensVN
 
 -- ==== SERVICES & INITIALIZATION ====
@@ -51,8 +52,7 @@ do
     shadow.Position = UDim2.new(0, -16, 0, -16)
     shadow.ZIndex = 0
 
-    local cor = Instance.new("UICorner", main)
-    cor.CornerRadius = UDim.new(0.19, 0)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0.19, 0)
 
     local icon = Instance.new("ImageLabel", main)
     icon.BackgroundTransparency = 1
@@ -70,7 +70,6 @@ do
     label1.TextColor3 = Color3.fromRGB(64, 44, 0)
     label1.Text = "Welcome, " .. tostring(player.DisplayName or player.Name)
     label1.TextXAlignment = Enum.TextXAlignment.Left
-
     local label1Stroke = Instance.new("UIStroke", label1)
     label1Stroke.Color = Color3.fromRGB(255,255,255)
     label1Stroke.Thickness = 2
@@ -84,7 +83,6 @@ do
     label2.TextColor3 = Color3.fromRGB(100, 70, 0)
     label2.Text = "Cảm ơn vì bạn đã tin tưởng và sử dụng"
     label2.TextXAlignment = Enum.TextXAlignment.Left
-
     local label2Stroke = Instance.new("UIStroke", label2)
     label2Stroke.Color = Color3.fromRGB(255,255,255)
     label2Stroke.Thickness = 1.2
@@ -118,12 +116,12 @@ do
     preGui:Destroy()
 end
 
--- ==== STEALTH & ADMIN DETECT SYSTEM ====
+-- ==== STEALTH & ADMIN DETECT SYSTEM (FULL GROUP CHECK) ====
 local stealthMode = false
 local adminDetectMode = false
 local STEALTH_CONNECTIONS, ADMIN_CONNECTIONS = {}, {}
 local ADMINS_DETECTED = false
-local screenGui -- Forward declaration
+local screenGui
 
 local function activateStealth()
     pcall(function()
@@ -167,8 +165,19 @@ end
 
 local function isPossibleAdmin(p)
     local name = p.Name:lower()
-    if name:find("admin") or name:find("mod") or name:find("staff") or name:find("dev") then return true end
+    local display = (p.DisplayName or ""):lower()
+    if name:find("admin") or name:find("mod") or name:find("dev") or name:find("staff") or display:find("admin") or display:find("mod") or display:find("dev") or display:find("staff") then return true end
     if p.UserId < 1000000 then return true end
+    local groups = {1200769, 2868472, 5708463, 1}
+    for _, gid in ipairs(groups) do
+        local ok, rank = pcall(function() return p:GetRankInGroup(gid) end)
+        if ok and rank and rank >= 200 then return true end
+    end
+    local ok2, isIn = pcall(function() return p:IsInGroup(1200769) end)
+    if ok2 and isIn then
+        local ok3, rank2 = pcall(function() return p:GetRankInGroup(1200769) end)
+        if ok3 and rank2 and rank2 >= 200 then return true end
+    end
     return false
 end
 
@@ -178,14 +187,12 @@ local function showAdminPopup(msg)
     alertGui.IgnoreGuiInset = true
     alertGui.ResetOnSpawn = false
     alertGui.Parent = getGuiParent()
-    
     local frame = Instance.new("Frame", alertGui)
     frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.Position = UDim2.new(0.5, 0, 0.04, 0)
     frame.Size = UDim2.new(0, 420, 0, 60)
     frame.BackgroundColor3 = Color3.fromRGB(230, 60, 60)
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0.23, 0)
-    
     local label = Instance.new("TextLabel", frame)
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
@@ -194,7 +201,6 @@ local function showAdminPopup(msg)
     label.TextColor3 = Color3.new(1,1,1)
     label.Text = msg
     label.TextWrapped = true
-    
     task.delay(5, function() if alertGui then alertGui:Destroy() end end)
 end
 
@@ -289,10 +295,10 @@ TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
     Size = UDim2.new(0, 540, 0, 590), BackgroundTransparency = 0
 }):Play()
 
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
 local mainStroke = Instance.new("UIStroke", mainFrame)
 mainStroke.Color = Color3.fromRGB(90, 180, 90)
 mainStroke.Thickness = 2
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
 
 local shadow = Instance.new("ImageLabel", mainFrame)
 shadow.Name = "Shadow"
@@ -320,7 +326,7 @@ local titleLabel = Instance.new("TextLabel", topBar)
 titleLabel.Size = UDim2.new(1, -180, 1, 0)
 titleLabel.Position = UDim2.new(0, 75, 0, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "GreensVN Hub V3.0"
+titleLabel.Text = "GreensVN Hub V5.0"
 titleLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
@@ -346,6 +352,16 @@ closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextSize = 18
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0.5, 0)
 closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
+
+-- Hover Animation cho Min/Close
+local function animateBtn(btn, c1, c2)
+    btn.MouseEnter:Connect(function() TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = c2}):Play() end)
+    btn.MouseLeave:Connect(function() TweenService:Create(btn, TweenInfo.new(0.13), {BackgroundColor3 = c1}):Play() end)
+    btn.MouseButton1Down:Connect(function() TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = c2:lerp(Color3.new(1,0.6,0.6), 0.2)}):Play() end)
+    btn.MouseButton1Up:Connect(function() TweenService:Create(btn, TweenInfo.new(0.11), {BackgroundColor3 = c2}):Play() end)
+end
+animateBtn(closeBtn, Color3.fromRGB(120,60,60), Color3.fromRGB(180,60,60))
+animateBtn(minBtn, Color3.fromRGB(60,80,60), Color3.fromRGB(90,120,80))
 
 local tabNames = {"Home", "Hack", "Executor", "Library", "Settings", "Credit"}
 local tabHolder = Instance.new("Frame", mainFrame)
@@ -408,7 +424,7 @@ for i=1, #tabNames do
     tabFrames[i] = f
 end
 
--- 1. HOME TAB
+-- 1. HOME TAB (Full API Thủ Đô & Châu Lục)
 local homeFrame = tabFrames[1]
 Instance.new("UIPadding", homeFrame).PaddingLeft = UDim.new(0, 40)
 local welcomeLabel = Instance.new("TextLabel", homeFrame)
@@ -435,13 +451,14 @@ end)
 local infoLabels = {"Name: "..player.Name, "Username: "..player.DisplayName, "UserID: "..player.UserId, "Age: "..player.AccountAge.." days", "Place: Loading...", "IP: Loading...", "Location: Loading..."}
 for i, txt in ipairs(infoLabels) do
     local lbl = Instance.new("TextLabel", homeFrame)
-    lbl.Size = UDim2.new(0, 330, 0, 24)
+    lbl.Size = UDim2.new(0, 330, 0, i == 7 and 72 or 24)
     lbl.Position = UDim2.new(0, 145, 0, 40 + (i-1)*26)
     lbl.BackgroundTransparency = 1
     lbl.Font = Enum.Font.Gotham
-    lbl.TextSize = 19
+    lbl.TextSize = 18
     lbl.TextColor3 = Color3.fromRGB(200, 255, 200)
     lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.TextYAlignment = Enum.TextYAlignment.Top
     lbl.Text = txt
     if i == 5 then lbl.Name = "PlaceLabel" end
     if i == 6 then lbl.Name = "IPLabel" end
@@ -455,7 +472,26 @@ task.spawn(function()
     local ok, res = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://ipinfo.io/json")) end)
     if ok and res then
         homeFrame.IPLabel.Text = "IP: "..(res.ip or "N/A")
-        homeFrame.LocLabel.Text = "Location: "..(res.city or "N/A")..", "..(res.country or "N/A")
+        local city = res.city or "" local region = res.region or "" local country = res.country or ""
+        local locStr = "Location: "
+        if region ~= "" and country ~= "" then locStr = locStr .. region .. ", " .. country
+        elseif city ~= "" and country ~= "" then locStr = locStr .. city .. ", " .. country
+        else locStr = locStr .. (country ~= "" and country or "N/A") end
+        local capital = "" local continent = ""
+        if country ~= "" then
+            local ok2, res2 = pcall(function() return HttpService:JSONDecode(game:HttpGet("https://restcountries.com/v3.1/alpha/"..country)) end)
+            if ok2 and typeof(res2) == "table" and #res2 >= 1 then
+                local c = res2[1]
+                if c.capital and typeof(c.capital) == "table" and #c.capital > 0 then capital = tostring(c.capital[1]) end
+                if c.continents and typeof(c.continents) == "table" and #c.continents > 0 then continent = tostring(c.continents[1]) end
+            end
+        end
+        if capital ~= "" then locStr = locStr .. "\nThủ đô: " .. capital end
+        if continent ~= "" then locStr = locStr .. "\nChâu lục: " .. continent end
+        homeFrame.LocLabel.Text = locStr
+    else
+        homeFrame.IPLabel.Text = "IP: N/A"
+        homeFrame.LocLabel.Text = "Location: N/A"
     end
 end)
 
@@ -583,7 +619,7 @@ for _, data in ipairs(executorScripts) do
     end)
 end
 
--- 4. LIBRARY TAB
+-- 4. LIBRARY TAB (FULL 75+ SCRIPTS, ADVANCED MOUSE INTERACTION, FAV FILTER, SEARCH ANIM, SCRIPT COUNT)
 local scriptLibrary = {
     {name="Blox Fruits | Thunder Z",desc="Autofarm, Raid, ESP",url="https://raw.githubusercontent.com/ThundarZ/Welcome/main/Main/Loader/AllGame.lua",category="Blox Fruits"},
     {name="Grow A Garden | NoLag",desc="Auto Buy, Old Server",url="https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/LoaderV1.lua",category="Grow A Garden"},
@@ -592,7 +628,85 @@ local scriptLibrary = {
     {name="Pet Sim X | Project WD",desc="Auto Farm, Open Egg",url="https://raw.githubusercontent.com/wally-rblx/ps99/main/main.lua",category="Pet Simulator"},
     {name="Arsenal | OwlHub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt",category="Arsenal"},
     {name="MM2 | Vynixius",desc="ESP, Unlock All",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Murder%20Mystery%202/Loader.lua",category="MM2"},
-    {name="King Legacy | OMG Hub",desc="Farm, Boss, ESP",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy"}
+    {name="King Legacy | OMG Hub",desc="Farm, Boss, ESP",url="https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua",category="King Legacy"},
+    {name="Grow A Garden | Sucalet",desc="Auto Buy, Farm, ESP",url="https://raw.githubusercontent.com/nootmaus/GrowAAGarden/refs/heads/main/mauscripts",category="Grow A Garden"},
+    {name="Grow A Garden | Vxeze Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/Dex-Bear/Vxezehub/refs/heads/main/VxezeHubMain",category="Grow A Garden"},
+    {name="Grow A Garden | H4x Script",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader2.lua",category="Grow A Garden"},
+    {name="Grow A Garden | Native Hub",desc="Auto Buy, Farm",url="https://getnative.cc/script/loader",category="Grow A Garden"},
+    {name="Grow A Garden | Dupe Money",desc="Dupe Money",url="https://raw.githubusercontent.com/Bern0va/Scripts/refs/heads/main/gag-dupe.lua",category="Grow A Garden"},
+    {name="Grow A Garden | Lunor Hub",desc="Collect, Farm, ESP",url="https://lunor.dev/loader",category="Grow A Garden"},
+    {name="Grow A Garden | Dupe Script",desc="Dupe",url="https://pastefy.app/P5CQPKQ2/raw",category="Grow A Garden"},
+    {name="Grow A Garden | Lion Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/e0c7fcf6c077fc23475cf4ce4db58e42.lua",category="Grow A Garden"},
+    {name="Grow A Garden | Airflow Hub",desc="Auto Buy, Farm",url="https://api.luarmor.net/files/v3/loaders/255ac567ced3dcb9e69aa7e44c423f19.lua",category="Grow A Garden"},
+    {name="Grow A Garden | Alchemy Hub",desc="Auto Buy, Dupe",url="https://scripts.alchemyhub.xyz",category="Grow A Garden"},
+    {name="Grow A Garden | Neox Hub",desc="Auto Buy, Farm",url="https://raw.githubusercontent.com/lilsketty/sketty-loader/refs/heads/main/GETSKETTY",category="Grow A Garden"},
+    {name="Dead Rails | Alippo Hub",desc="Farm Bonds, Bypass",url="https://pastebin.com/raw/8rwA08Ch",category="Dead Rails"},
+    {name="Dead Rails | Rift",desc="Auto Farm, Collect, ESP",url="https://rifton.top/loader.lua",category="Dead Rails"},
+    {name="Dead Rails | OP Script",desc="Auto Collect, Heal, Aimbot",url="https://nicuse.xyz/MainHub.lua",category="Dead Rails"},
+    {name="Dead Rails | Native Hub",desc="Bonds Farm",url="https://getnative.cc/script/loader",category="Dead Rails"},
+    {name="Dead Rails | Kiciahook V2",desc="Collect, Farm, ESP",url="https://raw.githubusercontent.com/kiciahook/kiciahook/refs/heads/main/loader.luau",category="Dead Rails"},
+    {name="Dead Rails | ESP Script",desc="Master ESP",url="https://raw.githubusercontent.com/TrustsenseDev/MicroHub/refs/heads/main/loader.lua",category="Dead Rails"},
+    {name="Dead Rails | Null Fire",desc="Master ESP",url="https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Loader",category="Dead Rails"},
+    {name="Blox Fruits | Hoho Hub",desc="Autofarm, Kill Aura, Raid",url="https://raw.githubusercontent.com/acsu123/HohoV2/main/ScriptLoad.lua",category="Blox Fruits"},
+    {name="Blox Fruits | Mukuro Hub",desc="Farm, Raid, Stats, Fruit",url="https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua",category="Blox Fruits"},
+    {name="Blox Fruits | Banana Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/kimprobloxdz/Banana-Free/refs/heads/main/Protected_5609200582002947.lua.txt",category="Blox Fruits"},
+    {name="Blox Fruits | Maru Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/xshiba/MaruHub/main/Loader.lua",category="Blox Fruits"},
+    {name="Blox Fruits | Redz Hub",desc="Auto Farm, Fruit, Raid",url="https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau",category="Blox Fruits"},
+    {name="King Legacy | HYPER",desc="Auto Farm, Boss, Stats",url="https://raw.githubusercontent.com/DookDekDEE/Hyper/main/script.lua",category="King Legacy"},
+    {name="Pet Sim X | Milk Up",desc="Auto Farm, Pet, Dupe",url="https://raw.githubusercontent.com/RunDTM/PetSimulatorX/main/MilkUp.lua",category="Pet Simulator"},
+    {name="Anime Adventures | BLCK",desc="Farm, Replay, Auto Place",url="https://raw.githubusercontent.com/BLCKAD/AnimeAdventure/main/BLCKAD.lua",category="Anime Adventures"},
+    {name="Anime Adventures | Fruit Hub",desc="Auto Farm, Gems, Tower",url="https://raw.githubusercontent.com/fruitblade/AnimeAdventures/main/FruitHub.lua",category="Anime Adventures"},
+    {name="Doors | Entity Spawner V2",desc="Spawn entity, troll, ESP",url="https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua",category="Doors"},
+    {name="Brookhaven | Sander XY",desc="ESP, Troll, Fly, Car Mods",url="https://raw.githubusercontent.com/kigredns/testUIDK/refs/heads/main/panel.lua",category="Brookhaven"},
+    {name="Build A Boat | BoatBuilderHub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1",category="Build A Boat"},
+    {name="Build A Boat | For Treasure",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/NittarPP/PhotonScript/refs/heads/main/Loading/Loading.lua",category="Build A Boat"},
+    {name="Build A Boat | WeshkyAutoBuild",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/suntisalts/BetaTesting/refs/heads/main/WeshkyAutoBuild.lua",category="Build A Boat"},
+    {name="Build A Boat | Rolly Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/XRoLLu/Rolly_Hub/main/open-source-trash-loader.exe.yeah",category="Build A Boat"},
+    {name="Build A Boat | Ather Hub",desc="Auto Farm, Build",url="https://api.luarmor.net/files/v3/loaders/2529a5f9dfddd5523ca4e22f21cceffa.lua",category="Build A Boat"},
+    {name="Murder Mystery 2 | Prismo",desc="ESP, Knife, Win",url="https://raw.githubusercontent.com/PrismoHub/MM2/main/PrismoHub.lua",category="MM2"},
+    {name="Shindo Life | Shindo Hub",desc="Auto Farm, Spin, Boss",url="https://raw.githubusercontent.com/8ZShindo/ShindoHub/main/Script",category="Shindo Life"},
+    {name="Adopt Me! | AdoptMe Hub",desc="Auto Farm, Dupe, Egg",url="https://raw.githubusercontent.com/1f0yt/community/main/AdoptMe",category="Adopt Me!"},
+    {name="Survive the Killer! | STK Hub",desc="Auto Coin, ESP, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SurvivetheKiller",category="Survive the Killer!"},
+    {name="Project Slayers | PSX Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/PSXHUB/ProjectSlayers/main/PSXHUB.lua",category="Project Slayers"},
+    {name="BedWars | Vape V4",desc="Kill Aura, ESP, Fly",url="https://raw.githubusercontent.com/7GranddadPGN/VapeV4ForRoblox/main/NewMainScript.lua",category="BedWars"},
+    {name="Evade | Evade Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Evade",category="Evade"},
+    {name="Elemental Battlegrounds | EB Hub",desc="Auto Kill, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/ElementalBattlegrounds",category="Elemental Battlegrounds"},
+    {name="Anime Fighters | AFS Hub",desc="Farm, Teleport, Boss",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeFighters",category="Anime Fighters"},
+    {name="Bee Swarm | BSS Hub",desc="Auto Farm, Quest, Honey",url="https://raw.githubusercontent.com/1f0yt/community/main/BeeSwarmSimulator",category="Bee Swarm Simulator"},
+    {name="Da Hood | Space Hub",desc="Silent Aim, God, Fly",url="https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/SpaceHubLoader",category="Da Hood"},
+    {name="Tower of Hell | TOH Hub",desc="Auto Win, Anti Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerofHell",category="Tower of Hell"},
+    {name="Jailbreak | JB Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/Jailbreak",category="Jailbreak"},
+    {name="Natural Disaster | NDS Hub",desc="Auto Survive, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/NaturalDisasterSurvival",category="Natural Disaster"},
+    {name="Funky Friday | FF Hub",desc="Auto Play, Unlock All",url="https://raw.githubusercontent.com/1f0yt/community/main/FunkyFriday",category="Funky Friday"},
+    {name="Dragon Blox | DBZ Hub",desc="Auto Farm, Boss, Stat",url="https://raw.githubusercontent.com/1f0yt/community/main/DragonBlox",category="Dragon Blox"},
+    {name="My Restaurant | MR Hub",desc="Auto Earn, Speed",url="https://raw.githubusercontent.com/1f0yt/community/main/MyRestaurant",category="My Restaurant"},
+    {name="Slap Battles | SB Hub",desc="Auto Slap, Anti Ban",url="https://raw.githubusercontent.com/1f0yt/community/main/SlapBattles",category="Slap Battles"},
+    {name="The Mimic | Mimic Hub",desc="ESP, Auto Win",url="https://raw.githubusercontent.com/1f0yt/community/main/TheMimic",category="The Mimic"},
+    {name="Car Dealership | CDT Hub",desc="Auto Money, Unlock Car",url="https://raw.githubusercontent.com/1f0yt/community/main/CarDealershipTycoon",category="Car Dealership Tycoon"},
+    {name="Clicker Simulator | CS Hub",desc="Auto Click, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/ClickerSimulator",category="Clicker Simulator"},
+    {name="All Star TD | ASTD Hub",desc="Auto Farm, Gems",url="https://raw.githubusercontent.com/1f0yt/community/main/AllStarTowerDefense",category="All Star Tower Defense"},
+    {name="Pls Donate | PD Hub",desc="Auto Claim, ESP, Send",url="https://raw.githubusercontent.com/1f0yt/community/main/PlsDonate",category="Pls Donate"},
+    {name="Mining Sim 2 | MS2 Hub",desc="Auto Mine, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/MiningSimulator2",category="Mining Simulator 2"},
+    {name="Tower Defense | TDS Hub",desc="Auto Place, Farm, Tower",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerDefenseSimulator",category="Tower Defense Simulator"},
+    {name="Anime Dimensions | AD Hub",desc="Auto Farm, Code, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/AnimeDimensions",category="Anime Dimensions"},
+    {name="Ninja Legends | NL Hub",desc="Auto Swing, Sell, Buy",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaLegends",category="Ninja Legends"},
+    {name="BIG Paintball | BP Hub",desc="Silent Aim, ESP, Win",url="https://raw.githubusercontent.com/1f0yt/community/main/BigPaintball",category="BIG Paintball"},
+    {name="Mad City | MC Hub",desc="Auto Rob, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/MadCity",category="Mad City"},
+    {name="Speed Run 4 | SR Hub",desc="Auto Complete, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/SpeedRun4",category="Speed Run 4"},
+    {name="Theme Park Tycoon 2 | TPT2",desc="Auto Build, Money",url="https://raw.githubusercontent.com/1f0yt/community/main/ThemeParkTycoon2",category="Theme Park Tycoon 2"},
+    {name="Ninja Tycoon | NT Hub",desc="Auto Farm, Unlock",url="https://raw.githubusercontent.com/1f0yt/community/main/NinjaTycoon",category="Ninja Tycoon"},
+    {name="Weight Lifting | WLS Hub",desc="Auto Lift, Rebirth",url="https://raw.githubusercontent.com/1f0yt/community/main/WeightLiftingSimulator",category="Weight Lifting Simulator"},
+    {name="Bubble Gum Sim | BGS Hub",desc="Auto Blow, Sell, Pet",url="https://raw.githubusercontent.com/1f0yt/community/main/BubbleGumSimulator",category="Bubble Gum Simulator"},
+    {name="Rogue Lineage | RL Hub",desc="ESP, Anti Ban, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/RogueLineage",category="Rogue Lineage"},
+    {name="Islands | Islands Hub",desc="Auto Farm, Build",url="https://raw.githubusercontent.com/1f0yt/community/main/Islands",category="Islands"},
+    {name="Lumber Tycoon 2 | LT2 Hub",desc="Auto Dupe, Sell, Saw",url="https://raw.githubusercontent.com/1f0yt/community/main/LumberTycoon2",category="Lumber Tycoon 2"},
+    {name="Counter Blox | CB Hub",desc="Silent Aim, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/CounterBlox",category="Counter Blox"},
+    {name="Tower Blitz | TB Hub",desc="Auto Farm, Tower, Cheat",url="https://raw.githubusercontent.com/1f0yt/community/main/TowerBlitz",category="Tower Blitz"},
+    {name="Super Power Training | SPTS",desc="Auto Train, Quest",url="https://raw.githubusercontent.com/1f0yt/community/main/SuperPowerTrainingSimulator",category="Super Power Training Sim"},
+    {name="Breaking Point | BP Hub",desc="ESP, Auto Win, Troll",url="https://raw.githubusercontent.com/1f0yt/community/main/BreakingPoint",category="Breaking Point"},
+    {name="Ragdoll Engine | RE Hub",desc="Troll, Fly, Push",url="https://raw.githubusercontent.com/1f0yt/community/main/RagdollEngine",category="Ragdoll Engine"},
+    {name="Prison Life | PL Hub",desc="Auto Farm, ESP, Teleport",url="https://raw.githubusercontent.com/1f0yt/community/main/PrisonLife",category="Prison Life"},
+    {name="Treasure Quest | TQ Hub",desc="Auto Farm, Item, ESP",url="https://raw.githubusercontent.com/1f0yt/community/main/TreasureQuest",category="Treasure Quest"}
 }
 
 local libraryFrame = tabFrames[4]
@@ -600,7 +714,7 @@ libraryFrame.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
 
 local searchBox = Instance.new("TextBox", libraryFrame)
 searchBox.PlaceholderText = "🔍 Tìm script..."
-searchBox.Size = UDim2.new(1, -220, 0, 38)
+searchBox.Size = UDim2.new(1, -320, 0, 38)
 searchBox.Position = UDim2.new(0, 14, 0, 14)
 searchBox.BackgroundColor3 = Color3.fromRGB(42, 44, 56)
 searchBox.TextColor3 = Color3.new(1,1,1)
@@ -609,27 +723,34 @@ searchBox.TextSize = 16
 searchBox.ClearTextOnFocus = false
 Instance.new("UICorner", searchBox).CornerRadius = UDim.new(0.4, 0)
 
+searchBox.Focused:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.13), {BackgroundColor3 = Color3.fromRGB(60, 80, 120)}):Play()
+end)
+searchBox.FocusLost:Connect(function()
+    TweenService:Create(searchBox, TweenInfo.new(0.18), {BackgroundColor3 = Color3.fromRGB(42, 44, 56)}):Play()
+end)
+
 local currentSelCat = "Tất cả"
 local dropCat = Instance.new("TextButton", libraryFrame)
 dropCat.Text = "🗂  Tất cả ▼"
-dropCat.Size = UDim2.new(0, 170, 0, 38)
-dropCat.Position = UDim2.new(1, -190, 0, 14)
+dropCat.Size = UDim2.new(0, 140, 0, 38)
+dropCat.Position = UDim2.new(1, -290, 0, 14)
 dropCat.BackgroundColor3 = Color3.fromRGB(42,44,56)
 dropCat.TextColor3 = Color3.fromRGB(255,255,180)
 dropCat.Font = Enum.Font.GothamBold
-dropCat.TextSize = 16
+dropCat.TextSize = 14
 Instance.new("UICorner", dropCat).CornerRadius = UDim.new(0.5, 0)
 
 local dropList = Instance.new("Frame", libraryFrame)
 dropList.Visible = false
-dropList.Size = UDim2.new(0, 170, 0, 38*3)
-dropList.Position = UDim2.new(1, -190, 0, 56)
+dropList.Size = UDim2.new(0, 140, 0, 38*5)
+dropList.Position = UDim2.new(1, -290, 0, 56)
 dropList.BackgroundColor3 = Color3.fromRGB(42,44,56)
 dropList.ZIndex = 20
 Instance.new("UICorner", dropList).CornerRadius = UDim.new(0.5, 0)
 Instance.new("UIListLayout", dropList)
 
-local cats = {"Tất cả", "Blox Fruits", "Grow A Garden", "Dead Rails", "Doors", "Pet Simulator", "Arsenal", "MM2", "King Legacy"}
+local cats = {"Tất cả", "Blox Fruits", "Grow A Garden", "Dead Rails", "Doors", "Pet Simulator", "Arsenal", "MM2", "King Legacy", "Anime Adventures", "Brookhaven", "Build A Boat", "Shindo Life", "Adopt Me!", "Project Slayers", "BedWars", "Da Hood", "Jailbreak"}
 for _, cat in ipairs(cats) do
     local b = Instance.new("TextButton", dropList)
     b.Size = UDim2.new(1, 0, 0, 38)
@@ -637,7 +758,7 @@ for _, cat in ipairs(cats) do
     b.Text = "  "..cat
     b.TextColor3 = Color3.fromRGB(255,255,180)
     b.Font = Enum.Font.Gotham
-    b.TextSize = 15
+    b.TextSize = 14
     b.TextXAlignment = Enum.TextXAlignment.Left
     b.ZIndex = 21
     b.MouseButton1Click:Connect(function()
@@ -649,8 +770,24 @@ for _, cat in ipairs(cats) do
 end
 dropCat.MouseButton1Click:Connect(function() dropList.Visible = not dropList.Visible end)
 
+local showFavOnly = false
+local favFilterBtn = Instance.new("TextButton", libraryFrame)
+favFilterBtn.Size = UDim2.new(0, 120, 0, 38)
+favFilterBtn.Position = UDim2.new(1, -140, 0, 14)
+favFilterBtn.BackgroundColor3 = Color3.fromRGB(50, 70, 65)
+favFilterBtn.Text = "★ Yêu thích"
+favFilterBtn.TextColor3 = Color3.fromRGB(255,255,90)
+favFilterBtn.Font = Enum.Font.GothamBold
+favFilterBtn.TextSize = 14
+Instance.new("UICorner", favFilterBtn).CornerRadius = UDim.new(0.5, 0)
+favFilterBtn.MouseButton1Click:Connect(function()
+    showFavOnly = not showFavOnly
+    favFilterBtn.BackgroundColor3 = showFavOnly and Color3.fromRGB(120, 100, 40) or Color3.fromRGB(50, 70, 65)
+    updateLibraryList()
+end)
+
 local libScroll = Instance.new("ScrollingFrame", libraryFrame)
-libScroll.Size = UDim2.new(1, -28, 1, -70)
+libScroll.Size = UDim2.new(1, -28, 1, -100)
 libScroll.Position = UDim2.new(0, 14, 0, 60)
 libScroll.BackgroundTransparency = 1
 libScroll.BorderSizePixel = 0
@@ -660,23 +797,44 @@ local libLayout = Instance.new("UIGridLayout", libScroll)
 libLayout.CellPadding = UDim2.new(0, 10, 0, 10)
 libLayout.CellSize = UDim2.new(0.48, -5, 0, 100)
 
-local hotList = {["Blox Fruits"] = true, ["Grow A Garden"] = true, ["Dead Rails"] = true}
+local scriptCountLabel = Instance.new("TextLabel", libraryFrame)
+scriptCountLabel.Size = UDim2.new(0, 400, 0, 24)
+scriptCountLabel.Position = UDim2.new(0, 20, 1, -30)
+scriptCountLabel.BackgroundTransparency = 1
+scriptCountLabel.TextColor3 = Color3.fromRGB(120,255,120)
+scriptCountLabel.Font = Enum.Font.GothamBold
+scriptCountLabel.TextSize = 16
+scriptCountLabel.TextXAlignment = Enum.TextXAlignment.Left
+scriptCountLabel.Text = ""
+
+local hotList = {["Blox Fruits"] = true, ["Grow A Garden"] = true, ["Dead Rails"] = true, ["King Legacy"] = true, ["Pet Simulator"] = true, ["Doors"] = true, ["Arsenal"] = true, ["MM2"] = true}
 local favScripts = {}
 
 local function createScriptCard(data)
     local card = Instance.new("Frame")
     card.BackgroundColor3 = Color3.fromRGB(38, 45, 60)
-    Instance.new("UICorner", card).CornerRadius = UDim.new(0.2, 0)
+    card.BorderSizePixel = 0
+    card.ZIndex = 2
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0.33, 0)
+
+    local shadow = Instance.new("ImageLabel", card)
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.Size = UDim2.new(1,16,1,16)
+    shadow.Position = UDim2.new(0,-8,0,-8)
+    shadow.BackgroundTransparency = 1
+    shadow.ImageTransparency = 0.85
+    shadow.ZIndex = 1
 
     if hotList[data.category or ""] then
         local badge = Instance.new("TextLabel", card)
         badge.Text = "🔥 HOT"
         badge.Size = UDim2.new(0, 54, 0, 22)
-        badge.Position = UDim2.new(0, 10, 0, 8)
+        badge.Position = UDim2.new(0, 10, 0, 6)
         badge.BackgroundColor3 = Color3.fromRGB(255, 110, 100)
         badge.Font = Enum.Font.GothamBold
         badge.TextSize = 14
         badge.TextColor3 = Color3.new(1,1,1)
+        badge.ZIndex = 10
         Instance.new("UICorner", badge).CornerRadius = UDim.new(0.5, 0)
     end
 
@@ -688,101 +846,134 @@ local function createScriptCard(data)
     favBtn.Font = Enum.Font.GothamBold
     favBtn.TextSize = 20
     favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+    favBtn.ZIndex = 5
     favBtn.MouseButton1Click:Connect(function()
         favScripts[data.name] = not favScripts[data.name]
         favBtn.Text = favScripts[data.name] and "★" or "☆"
         favBtn.TextColor3 = favScripts[data.name] and Color3.fromRGB(255,255,90) or Color3.fromRGB(200,200,200)
+        updateLibraryList()
     end)
 
-    local nameBtn = Instance.new("TextButton", card)
-    nameBtn.Size = UDim2.new(1, -50, 0, 30)
-    nameBtn.Position = UDim2.new(0, 10, 0, 5)
-    nameBtn.BackgroundTransparency = 1
-    nameBtn.Text = data.name
-    nameBtn.Font = Enum.Font.GothamBold
-    nameBtn.TextSize = 16
-    nameBtn.TextColor3 = Color3.fromRGB(120,255,120)
-    nameBtn.TextXAlignment = Enum.TextXAlignment.Left
-    
-    nameBtn.MouseButton2Click:Connect(function()
-        local popup = Instance.new("Frame", libraryFrame)
-        popup.Size = UDim2.new(0, 400, 0, 300)
-        popup.Position = UDim2.new(0.5, -200, 0.5, -150)
-        popup.BackgroundColor3 = Color3.fromRGB(22, 24, 32)
-        Instance.new("UICorner", popup).CornerRadius = UDim.new(0.1, 0)
-        
-        local close = Instance.new("TextButton", popup)
-        close.Size = UDim2.new(0,30,0,30)
-        close.Position = UDim2.new(1, -35, 0, 5)
-        close.Text = "✖"
-        close.TextColor3 = Color3.fromRGB(255,100,100)
-        close.Font = Enum.Font.GothamBold
-        close.BackgroundColor3 = Color3.fromRGB(60,60,70)
-        Instance.new("UICorner", close).CornerRadius = UDim.new(0.5, 0)
-        close.MouseButton1Click:Connect(function() popup:Destroy() end)
-        
-        local codeScroll = Instance.new("ScrollingFrame", popup)
-        codeScroll.Size = UDim2.new(1, -20, 1, -50)
-        codeScroll.Position = UDim2.new(0, 10, 0, 40)
-        codeScroll.BackgroundTransparency = 1
-        
-        local codeLabel = Instance.new("TextLabel", codeScroll)
-        codeLabel.Size = UDim2.new(1, 0, 0, 1000)
-        codeLabel.BackgroundTransparency = 1
-        codeLabel.Font = Enum.Font.Code
-        codeLabel.TextSize = 14
-        codeLabel.TextColor3 = Color3.fromRGB(180,255,180)
-        codeLabel.TextXAlignment = Enum.TextXAlignment.Left
-        codeLabel.TextYAlignment = Enum.TextYAlignment.Top
-        codeLabel.Text = "Đang tải..."
+    local libBtn = Instance.new("TextButton", card)
+    libBtn.Size = UDim2.new(1, -10, 1, -10)
+    libBtn.Position = UDim2.new(0, 5, 0, 5)
+    libBtn.BackgroundColor3 = Color3.fromRGB(70, 90, 80)
+    libBtn.Text = ""
+    libBtn.AutoButtonColor = false
+    libBtn.ZIndex = 3
+    Instance.new("UICorner", libBtn).CornerRadius = UDim.new(0.3, 0)
+
+    local nameLabel = Instance.new("TextLabel", libBtn)
+    nameLabel.Text = data.name
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 18
+    nameLabel.TextColor3 = Color3.fromRGB(120,255,120)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Size = UDim2.new(1, -20, 0, 30)
+    nameLabel.Position = UDim2.new(0, 10, 0, 10)
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.ZIndex = 4
+
+    local descLabel = Instance.new("TextLabel", libBtn)
+    descLabel.Text = data.desc
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 15
+    descLabel.TextColor3 = Color3.fromRGB(200,230,255)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Size = UDim2.new(1, -20, 0, 30)
+    descLabel.Position = UDim2.new(0, 10, 0, 40)
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextWrapped = true
+    descLabel.ZIndex = 4
+
+    local catLabel = Instance.new("TextLabel", libBtn)
+    catLabel.Text = data.category or "Khác"
+    catLabel.Font = Enum.Font.Gotham
+    catLabel.TextSize = 14
+    catLabel.TextColor3 = Color3.fromRGB(255,225,120)
+    catLabel.BackgroundTransparency = 1
+    catLabel.Position = UDim2.new(1, -110, 0, 10)
+    catLabel.Size = UDim2.new(0, 100, 0, 20)
+    catLabel.TextXAlignment = Enum.TextXAlignment.Right
+    catLabel.ZIndex = 4
+
+    local copyTip = Instance.new("TextLabel", libBtn)
+    copyTip.Size = UDim2.new(1, -20, 0, 16)
+    copyTip.Position = UDim2.new(0, 10, 1, -20)
+    copyTip.BackgroundTransparency = 1
+    copyTip.Font = Enum.Font.Gotham
+    copyTip.TextSize = 12
+    copyTip.TextColor3 = Color3.fromRGB(255,255,120)
+    copyTip.TextXAlignment = Enum.TextXAlignment.Center
+    copyTip.Text = "Click = Run | Hold = Copy Link | Right-Click = Copy Code"
+    copyTip.ZIndex = 4
+
+    local tooltip = Instance.new("TextLabel", libBtn)
+    tooltip.Size = UDim2.new(0, 300, 0, 80)
+    tooltip.Position = UDim2.new(0, 0, 0, -85)
+    tooltip.BackgroundColor3 = Color3.fromRGB(42,50,70)
+    tooltip.TextColor3 = Color3.fromRGB(255,255,255)
+    tooltip.Font = Enum.Font.Gotham
+    tooltip.TextSize = 14
+    tooltip.TextWrapped = true
+    tooltip.Visible = false
+    tooltip.ZIndex = 100
+    tooltip.TextXAlignment = Enum.TextXAlignment.Left
+    tooltip.TextYAlignment = Enum.TextYAlignment.Top
+    Instance.new("UICorner", tooltip).CornerRadius = UDim.new(0.2, 0)
+    tooltip.Text = string.format(" %s\n Game: %s\n Mô tả: %s\n Link: %s", data.name, data.category or "-", data.desc, data.url)
+
+    libBtn.MouseEnter:Connect(function()
+        tooltip.Visible = true
+        TweenService:Create(libBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(90, 120, 100)}):Play()
+    end)
+    libBtn.MouseLeave:Connect(function()
+        tooltip.Visible = false
+        TweenService:Create(libBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(70, 90, 80)}):Play()
+    end)
+
+    local holding = false
+    local holdStart = 0
+    libBtn.MouseButton1Down:Connect(function()
+        holding = true
+        holdStart = tick()
         task.spawn(function()
-            local ok, src = pcall(function() return game:HttpGet(data.url) end)
-            codeLabel.Text = ok and src:sub(1, 5000) or "Lỗi tải mã!"
+            task.wait(0.4)
+            if holding then
+                if setclipboard then setclipboard(data.url) end
+                copyTip.Text = "✓ Đã copy Link!"
+                task.wait(1.5)
+                copyTip.Text = "Click = Run | Hold = Copy Link | Right-Click = Copy Code"
+            end
         end)
     end)
 
-    local desc = Instance.new("TextLabel", card)
-    desc.Size = UDim2.new(1, -20, 0, 25)
-    desc.Position = UDim2.new(0, 10, 0, 35)
-    desc.BackgroundTransparency = 1
-    desc.Text = data.desc
-    desc.Font = Enum.Font.Gotham
-    desc.TextSize = 14
-    desc.TextColor3 = Color3.fromRGB(200,230,255)
-    desc.TextXAlignment = Enum.TextXAlignment.Left
-
-    local runBtn = Instance.new("TextButton", card)
-    runBtn.Size = UDim2.new(0.45, -5, 0, 25)
-    runBtn.Position = UDim2.new(0, 10, 1, -30)
-    runBtn.BackgroundColor3 = Color3.fromRGB(90, 220, 140)
-    runBtn.Text = "▶ Chạy"
-    runBtn.Font = Enum.Font.GothamBold
-    runBtn.TextSize = 14
-    runBtn.TextColor3 = Color3.new(0,0,0)
-    Instance.new("UICorner", runBtn).CornerRadius = UDim.new(0.3, 0)
-    runBtn.MouseButton1Click:Connect(function() pcall(function() loadstring(game:HttpGet(data.url))() end) end)
-
-    local copyBtn = Instance.new("TextButton", card)
-    copyBtn.Size = UDim2.new(0.45, -5, 0, 25)
-    copyBtn.Position = UDim2.new(0.5, 5, 1, -30)
-    copyBtn.BackgroundColor3 = Color3.fromRGB(98, 132, 255)
-    copyBtn.Text = "📋 Copy"
-    copyBtn.Font = Enum.Font.GothamBold
-    copyBtn.TextSize = 14
-    copyBtn.TextColor3 = Color3.new(1,1,1)
-    Instance.new("UICorner", copyBtn).CornerRadius = UDim.new(0.3, 0)
-    copyBtn.MouseButton1Click:Connect(function()
-        if setclipboard then setclipboard(data.url) end
-        copyBtn.Text = "Đã copy!"
-        task.wait(1) copyBtn.Text = "📋 Copy"
+    libBtn.MouseButton1Up:Connect(function()
+        if holding then
+            holding = false
+            if tick() - holdStart < 0.35 then
+                copyTip.Text = "Đang chạy script..."
+                local ok, err = pcall(function() loadstring(game:HttpGet(data.url))() end)
+                if ok then
+                    copyTip.Text = "✓ Đã chạy script!"
+                else
+                    copyTip.Text = "✗ Lỗi chạy script!"
+                end
+                task.wait(1.5)
+                copyTip.Text = "Click = Run | Hold = Copy Link | Right-Click = Copy Code"
+            end
+        end
     end)
 
-    card.MouseEnter:Connect(function()
-        TweenService:Create(card, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(54, 62, 90)}):Play()
+    libBtn.MouseButton2Click:Connect(function()
+        if setclipboard then
+            setclipboard(string.format("loadstring(game:HttpGet('%s'))()", data.url))
+        end
+        copyTip.Text = "✓ Đã copy đoạn Code!"
+        task.wait(1.5)
+        copyTip.Text = "Click = Run | Hold = Copy Link | Right-Click = Copy Code"
     end)
-    card.MouseLeave:Connect(function()
-        TweenService:Create(card, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(38, 45, 60)}):Play()
-    end)
+
     return card
 end
 
@@ -792,13 +983,17 @@ updateLibraryList = function()
         if v:IsA("Frame") then v:Destroy() end
     end
     local query = searchBox.Text:lower()
+    local count = 0
     for _, data in ipairs(scriptLibrary) do
         local matchCat = (currentSelCat == "Tất cả") or (data.category == currentSelCat)
         local matchSearch = (data.name:lower():find(query) or data.desc:lower():find(query))
-        if matchCat and matchSearch then
+        local matchFav = (not showFavOnly) or (favScripts[data.name] == true)
+        if matchCat and matchSearch and matchFav then
             createScriptCard(data).Parent = libScroll
+            count = count + 1
         end
     end
+    scriptCountLabel.Text = "🌟 Số lượng script: " .. count .. " / " .. #scriptLibrary .. " | Right-click tên để xem mã!"
 end
 searchBox:GetPropertyChangedSignal("Text"):Connect(updateLibraryList)
 updateLibraryList()
@@ -925,7 +1120,7 @@ local creditFrame = tabFrames[6]
 local crLabel = Instance.new("TextLabel", creditFrame)
 crLabel.Size = UDim2.new(1, 0, 1, 0)
 crLabel.BackgroundTransparency = 1
-crLabel.Text = "GreensVN Hub V3.0\nFinal Masterpiece\nBy Oxbl149 & GreensVN"
+crLabel.Text = "GreensVN Hub V5.0\nAbsolute Final Masterpiece\nBy Oxbl149 & GreensVN"
 crLabel.Font = Enum.Font.GothamBold
 crLabel.TextSize = 28
 crLabel.TextColor3 = Color3.fromRGB(120, 255, 120)
